@@ -1,0 +1,43 @@
+[
+  {
+    "id": "essential",
+    "title": "Essential",
+    "targetPriceInr": 199,
+    "dailySeconds": 1200,
+    "modules": [
+      "daily"
+    ]
+  },
+  {
+    "id": "professional",
+    "title": "Professional",
+    "targetPriceInr": 299,
+    "dailySeconds": 1200,
+    "modules": [
+      "daily",
+      "management"
+    ]
+  },
+  {
+    "id": "executive",
+    "title": "Executive",
+    "targetPriceInr": 699,
+    "dailySeconds": 1200,
+    "modules": [
+      "daily",
+      "management",
+      "leadership"
+    ]
+  },
+  {
+    "id": "extended",
+    "title": "Extended Practice",
+    "targetPriceInr": 799,
+    "dailySeconds": 2400,
+    "modules": [
+      "daily",
+      "management",
+      "leadership"
+    ]
+  }
+]

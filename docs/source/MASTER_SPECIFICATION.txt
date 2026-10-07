@@ -1,0 +1,1174 @@
+
+You are my founding CTO, principal software architect, senior full-stack engineer, React Native engineer, AI voice engineer, learning-experience designer, product designer, security engineer, and QA lead.
+
+Your task is to DESIGN, BUILD, TEST, and PREPARE FOR RELEASE a complete, production-oriented AI-powered communication-development application for Android and iOS, with a companion web portal for enterprise learning and development.
+
+Do not stop after generating a proposal, wireframe, architecture document, or nonfunctional UI. Implement real working code, functional backend services, database migrations, AI integrations, tests, and deployment configurations.
+
+Work systematically in phases. Keep the repository runnable after each phase. Report actual implementation status and blockers honestly.
+
+============================================================
+A. PRODUCT VISION
+============================================================
+
+WORKING PRODUCT NAME:
+Communication Coach
+
+Make the product name, logo, icons, colors, store listings, domain, application identifiers, and company information configurable. Do not embed the working name throughout the codebase.
+
+TAGLINE:
+From thought to impact.
+
+PRODUCT PURPOSE:
+Help people communicate their thoughts, knowledge, ideas, data, decisions, and recommendations clearly through personalized voice-first coaching.
+
+This is NOT merely:
+- An English grammar application.
+- A filler-word detector.
+- A speech-to-text application.
+- A generic chatbot.
+- A collection of prerecorded speaking lessons.
+- A public-speaking timer.
+
+This is a PERSONALIZED COMMUNICATION DEVELOPMENT ENGINE.
+
+It must investigate how the individual communicates, identify observable development needs, conduct realistic role-specific conversations, provide evidence-backed coaching, adapt exercises, and evaluate improvement over time.
+
+PRIMARY CUSTOMERS:
+1. Individual professionals.
+2. Managers and functional specialists.
+3. Leaders and entrepreneurs.
+4. Organizations purchasing employee learning and development programs.
+
+PLATFORMS:
+- Android mobile application.
+- iOS mobile application.
+- Web-based enterprise/L&D administration portal.
+- Shared backend and AI communication engine.
+
+INITIAL MARKET:
+India, with internationalization built into the architecture.
+
+INITIAL LANGUAGE:
+English, including support for understandable regional accents and varying English proficiency.
+
+Architect for future multilingual support without claiming that unsupported languages are already available.
+
+============================================================
+B. PRODUCT PRINCIPLES
+============================================================
+
+1. VOICE FIRST
+The primary training experience must be a natural spoken conversation with an AI coach. Text entry is an optional alternative, not the default learning experience.
+
+2. PERSONALIZED
+The user's function, role, seniority, audience, goals, observed difficulties, and learning history must influence the exercises.
+
+3. DIAGNOSTIC BEFORE PRESCRIPTIVE
+Do not prescribe generic communication training without first investigating the user's actual needs.
+
+4. EVIDENCE-BASED FEEDBACK
+Feedback must refer to observable details of the user's response. Do not fabricate mistakes or infer unsupported psychological explanations.
+
+5. ONE PRIORITY AT A TIME
+Give one or two targeted improvements per exercise instead of overwhelming the learner.
+
+6. LEARN THROUGH PRACTICE
+Provide hints and examples when needed, but ensure users also attempt comparable tasks independently.
+
+7. MEASURE TRANSFER
+Improvement means performing better in new scenarios, not memorizing sample answers.
+
+8. PROFESSIONAL BUT ENGAGING
+The UI must be clean, premium, intuitive, animated, and encouraging without feeling childish.
+
+9. PRIVACY BY DESIGN
+A learner's recordings and personal coaching feedback must remain private by default.
+
+10. COMMERCIAL VIABILITY
+AI voice usage, infrastructure cost, and subscription entitlements must be measured and controlled from the first release.
+
+============================================================
+C. REQUIRED TECHNOLOGY ARCHITECTURE
+============================================================
+
+Use a TypeScript-first monorepo.
+
+Preferred stack:
+
+MOBILE:
+- React Native.
+- Expo with development builds.
+- Expo Router.
+- TypeScript.
+- React Native Reanimated.
+- A maintainable design system and reusable components.
+- Native-compatible microphone, audio playback, and recording support.
+- Secure token handling.
+- Push notifications only after obtaining permission.
+
+WEB:
+- Next.js.
+- TypeScript.
+- Responsive enterprise administration portal.
+- Shared types and design tokens where practical.
+
+BACKEND:
+- Node.js and TypeScript.
+- Fastify or a comparable well-supported API framework.
+- PostgreSQL.
+- Prisma ORM.
+- Background workers for longer-running assessments.
+- Structured logging.
+- Error monitoring.
+- Rate limiting.
+
+AI:
+- Configurable conversational AI provider.
+- Realtime voice conversation capability.
+- Speech transcription.
+- Separate post-session evaluation pipeline.
+- Typed and schema-validated assessment results.
+- Model and prompt versioning.
+- Configurable provider/model selection.
+- Provider usage and cost metering.
+
+INFRASTRUCTURE:
+- Development, staging, and production environments.
+- Containerized local services.
+- Environment-based secrets.
+- Secure object storage for optional recordings.
+- Automated CI checks.
+- Expo EAS development, preview, and production profiles.
+- Documented backend deployment process.
+
+ARCHITECTURAL REQUIREMENT:
+The mobile application must never contain permanent AI provider API keys or privileged database credentials.
+
+All sessions must be authenticated and authorized by the backend.
+
+Implement provider-specific integrations behind interfaces so models and vendors can be changed without rewriting the learning engine.
+
+Before implementing realtime voice, verify current SDK and platform compatibility. A browser-based voice example must not be assumed to work unchanged in React Native.
+
+Create a small Android/iOS voice-connectivity proof of concept before committing to the final realtime implementation.
+
+If an integration is unavailable in the development environment, implement the verified working portion, document the blocker, and provide a testable fallback. Never present mocked voice interactions as real AI functionality.
+
+============================================================
+D. THREE SUBSCRIPTION MODULES
+============================================================
+
+MODULE 1: DAILY COMMUNICATION
+
+Target audience:
+Individual contributors, early-career professionals, job seekers, and anyone who wants stronger spoken communication.
+
+Learning objectives:
+- Start conversations comfortably.
+- Select the first thought to communicate.
+- Translate thoughts into words.
+- Construct complete sentences.
+- Retrieve or paraphrase words.
+- Reduce unnecessary sentence restarts.
+- Improve clear, natural expression.
+- Explain ideas in a logical sequence.
+- Respond spontaneously.
+- Participate in workplace discussions.
+- Improve intelligibility and spoken delivery.
+
+Framework:
+TASC:
+Think -> Anchor -> Speak -> Continue.
+
+Progressive exercises:
+1. Convert a provided thought into a sentence.
+2. Independently select an opening sentence.
+3. Explain one idea in three sentences.
+4. Respond to unexpected questions.
+5. Maintain a short natural conversation.
+6. Recover after losing a train of thought.
+7. Explain an unfamiliar scenario without relying on a script.
+
+Do not interpret all pauses or sentence restarts as defects. Evaluate their impact on the communication task.
+
+MODULE 2: MANAGEMENT & BUSINESS COMMUNICATION
+
+Target audience:
+People managers, HR professionals, engineering managers, product managers, finance managers, project managers, sales managers, and other business-facing professionals.
+
+Learning objectives:
+- Convert data into meaningful business information.
+- Identify the central message.
+- Distinguish observed facts from interpretations.
+- Explain specific business implications.
+- Make evidence-based recommendations.
+- Give and receive feedback.
+- Delegate and clarify expectations.
+- Explain business decisions.
+- Manage stakeholders.
+- Respond to objections.
+- Conduct difficult conversations.
+- Provide executive updates.
+- Communicate risks and trade-offs.
+
+Frameworks:
+DIMA:
+Data -> Information -> Meaning -> Action.
+
+CLEAR:
+Context -> Listen -> Explain -> Align -> Review.
+
+Include simulations involving:
+- Leadership meetings.
+- Project reviews.
+- Employee feedback.
+- Performance management.
+- Stakeholder conflicts.
+- Resource constraints.
+- Business risk discussions.
+- Escalations.
+- Change management.
+
+MODULE 3: LEADERSHIP & PUBLIC SPEAKING
+
+Target audience:
+Executives, senior leaders, entrepreneurs, founders, and aspiring leaders.
+
+Learning objectives:
+- Executive communication.
+- Public speaking.
+- Storytelling.
+- Strategic presentations.
+- Vision communication.
+- Audience engagement.
+- Investor and business pitches.
+- Explaining complex ideas simply.
+- Handling challenging questions.
+- Opening and concluding presentations.
+- Speaking spontaneously.
+- Communicating through uncertainty.
+- Facilitating group discussions.
+
+Framework:
+MESSAGE:
+Main message -> Evidence -> Significance -> Story -> Audience -> Goal -> Ending.
+
+Include scenarios involving:
+- Executive presentations.
+- Town halls.
+- Board reviews.
+- Investor pitches.
+- Product launches.
+- Strategy discussions.
+- Media-style interviews.
+- Challenging audience questions.
+
+For entrepreneur scenarios, include:
+Customer problem, proposed solution, differentiation, business model, evidence, growth strategy, and the requested next step.
+
+A user may have development needs across multiple modules. The three modules must share one diagnostic engine while using task-specific learning objectives and evaluation rubrics.
+
+============================================================
+E. PRICING AND SUBSCRIPTIONS
+============================================================
+
+The app is FREE TO DOWNLOAD.
+
+Implement three configurable monthly subscription tiers.
+
+ESSENTIAL:
+Display target price: ₹199/month.
+Access: Daily Communication.
+
+PROFESSIONAL:
+Display target price: ₹299/month.
+Access: Daily Communication + Management & Business Communication.
+
+EXECUTIVE:
+Display target price: ₹699/month.
+Access: All three modules.
+
+IMPORTANT:
+The quoted prices are business targets. Actual storefront prices, product IDs, taxes, and regional availability must be configured through the relevant app stores.
+
+Do not hardcode prices throughout the application.
+
+Allow a limited free onboarding and diagnostic experience before asking users to subscribe.
+
+Subscriptions must support:
+- Apple In-App Purchase.
+- Google Play Billing.
+- Purchase restoration.
+- Cross-device entitlement synchronization.
+- Renewal and expiration.
+- Upgrades and downgrades.
+- Grace periods when supported.
+- Appropriate cancellation handling.
+- Store-approved subscription disclosures.
+- Server-side purchase validation.
+- Secure billing webhook processing.
+- Sandbox testing.
+
+Use a supported subscription integration with a server-authoritative entitlement service.
+
+Do not unlock paid capabilities merely because the client reports an active subscription.
+
+Create configurable per-plan voice-minute allowances, session limits, and fair-use policies.
+
+Do not promise unlimited conversational AI usage.
+
+Track provider costs and prevent a user from consuming more server-side voice allowance than their entitlement permits.
+
+Previously earned personal learning records should remain accessible in a reasonable read-only form after subscription expiration.
+
+============================================================
+F. ROLE- AND FUNCTION-BASED PERSONALIZATION
+============================================================
+
+ONBOARDING FIELDS:
+
+- Name or preferred display name.
+- Primary language.
+- Preferred coaching language.
+- Function.
+- Job title.
+- Career level.
+- Industry.
+- Typical audience.
+- Professional communication situations.
+- Learning goals.
+- Self-reported communication challenges.
+- Preferred daily practice duration.
+- Accessibility preferences.
+- Recording preferences.
+
+Supported functions at launch:
+- Human Resources.
+- Engineering.
+- Product Management.
+- Finance.
+- Sales.
+- Marketing.
+- Operations.
+- Procurement.
+- Customer Success.
+- General Management.
+- Entrepreneurship.
+- Other/custom.
+
+Supported career levels:
+- Early-career professional.
+- Experienced individual contributor.
+- First-time manager.
+- Experienced manager.
+- Senior leader.
+- Executive.
+- Founder/entrepreneur.
+
+Do not derive communication ability from job title or seniority.
+
+PERSONALIZATION FORMULA:
+
+Professional context
++ selected learning module
++ target communication skill
++ diagnostic profile
++ previous attempts
++ user preferences
+= selected training scenario and coaching strategy.
+
+Build function-specific scenario packs.
+
+Examples:
+
+HRBP:
+Present engagement findings to a business leader, explain attrition trends, discuss succession planning, conduct employee feedback conversations, or communicate an organization-change decision.
+
+Engineering Manager:
+Explain sprint slippage, respond to a production incident, discuss technical trade-offs, request resources, or communicate architecture decisions.
+
+Finance Manager:
+Explain budget variances, communicate forecast risks, present cost-control recommendations, or respond to a CFO's challenge.
+
+Product Manager:
+Explain prioritization decisions, defend roadmap trade-offs, communicate customer insights, or negotiate feature scope.
+
+Founder:
+Explain the customer problem, present a product pitch, respond to an investor objection, discuss unit economics, or describe the company's strategy.
+
+The scenarios must reflect the user's role and level rather than merely inserting the job title into a generic prompt.
+
+Store scenario definitions separately from the application code so new functions, roles, and industries can be added without rewriting the learning engine.
+
+============================================================
+G. COMMUNICATION INVESTIGATION ENGINE
+============================================================
+
+Create a diagnostic system that evaluates several independent communication dimensions.
+
+DIMENSIONS:
+
+1. Conversation initiation.
+2. Thought selection and organization.
+3. Sentence construction.
+4. Word retrieval and paraphrasing.
+5. Information synthesis.
+6. Evidence-based reasoning.
+7. Business implications and recommendations.
+8. Conversational responsiveness.
+9. Spoken intelligibility and delivery.
+10. Audience-appropriate communication.
+
+The system must differentiate:
+- A user-reported difficulty.
+- An observed communication behavior.
+- A possible explanation requiring more evidence.
+- A confirmed learning need supported by repeated observations.
+
+Do not diagnose medical, psychological, or cognitive conditions.
+
+Do not infer intelligence, personality, employability, or professional fitness from speech.
+
+INITIAL DIAGNOSTIC:
+
+Conduct short voice exercises:
+
+1. Introduce yourself or explain your professional role.
+2. Start a conversation about a familiar topic.
+3. Explain a provided idea in one sentence.
+4. Answer an open-ended question without a provided framework.
+5. Interpret a small set of role-relevant facts.
+6. Respond to a challenging follow-up.
+7. Complete a short speech-delivery task.
+
+Use controlled diagnostic probes.
+
+Example:
+
+Observation:
+A user repeatedly restarts sentences during an open-ended business question.
+
+Probe A:
+Provide the central thought and ask the user to express it.
+
+Probe B:
+Remove the central thought and ask a comparable question.
+
+Probe C:
+Provide a short opening-sentence anchor.
+
+Probe D:
+Introduce a new comparable question without the anchor.
+
+Compare results before assigning a primary development need.
+
+Store:
+- Assessment date.
+- Scenario and version.
+- Transcript.
+- Relevant audio metadata when available.
+- User-reported experience.
+- Observable evidence.
+- Assessed skill dimensions.
+- Confidence or uncertainty.
+- Recommended next exercise.
+- Rubric and model versions.
+
+Do not assign an arbitrary overall score based on one short answer.
+
+============================================================
+H. NATURAL AI VOICE CONVERSATION
+============================================================
+
+The core product is a LIVE CONVERSATIONAL AI COACH.
+
+Required behavior:
+
+1. The AI introduces the exercise verbally.
+2. The user replies by speaking naturally.
+3. The AI understands the answer in context.
+4. The AI asks an appropriate follow-up.
+5. The user can interrupt the AI.
+6. The AI tolerates reasonable thinking pauses.
+7. The user can ask for a hint or clarification.
+8. The AI adapts the conversation to the user's response.
+9. The AI concludes the exercise naturally.
+10. The system provides focused feedback and an independent retry.
+
+Provide controls for:
+- Start.
+- Pause.
+- Resume where supported.
+- Mute.
+- End session.
+- Repeat question.
+- Request a hint.
+- Switch to text fallback.
+- View transcript when available.
+
+Design a session state machine:
+
+CREATED
+-> AUTHORIZED
+-> CONNECTING
+-> ACTIVE
+-> PAUSED
+-> COMPLETED
+-> ASSESSING
+-> FEEDBACK_READY.
+
+Also support:
+FAILED, INTERRUPTED, CANCELLED, and EXPIRED.
+
+Implement microphone permission handling, network recovery, call interruption behavior, audio-session cleanup, and safe session termination.
+
+Use appropriate native-compatible audio transport.
+
+Never ship permanent AI API credentials to mobile devices.
+
+Provide server-issued short-lived connection credentials or another verified secure pattern.
+
+Enforce session and subscription limits on the server.
+
+============================================================
+I. AUDIO RECORDING, TRANSCRIPTION, AND ASSESSMENT
+============================================================
+
+Implement separate but coordinated processing streams.
+
+STREAM 1: WORDS AND MEANING
+
+Evaluate:
+- Whether the user answered the question.
+- Central message clarity.
+- Relevance.
+- Logical sequence.
+- Sentence completeness.
+- Word choice.
+- Information synthesis.
+- Fact versus interpretation.
+- Specific business implications.
+- Actionable recommendations.
+- Conversational responsiveness.
+
+STREAM 2: AUDIO AND DELIVERY
+
+Evaluate only when the actual audio supports it:
+- Speaking rate.
+- Pauses.
+- Audible restarts.
+- Intelligibility.
+- Pronunciation where supported.
+- Emphasis.
+- Audible delivery patterns.
+
+Do not claim to assess pronunciation, pitch, or vocal pace from text alone.
+
+Do not penalize understandable regional accents.
+
+Do not use voice characteristics to make unsupported claims about confidence, nervousness, emotional state, or intelligence.
+
+Allow the user to correct transcription errors, especially for technical terminology and proper names.
+
+Recordings:
+- Obtain explicit consent.
+- Show a clear recording indicator.
+- Allow replay.
+- Allow deletion.
+- Use encrypted storage.
+- Apply configurable retention.
+- Do not make recordings visible to enterprise administrators by default.
+
+Where possible, separate transient audio required to conduct a live session from optional persistent recordings used for learner review.
+
+============================================================
+J. PERSONALIZED COACHING ENGINE
+============================================================
+
+The coaching system must behave like an experienced professional communication trainer.
+
+It should:
+- Ask one question at a time.
+- Let the user finish their thought.
+- Avoid unnecessary interruptions.
+- Avoid excessive praise.
+- Give specific and constructive feedback.
+- Identify no more than one or two priority improvements per attempt.
+- Explain improvements using examples from the user's response.
+- Adapt to the user's demonstrated skill level.
+- Ask follow-up questions that test comprehension and real-world application.
+- Avoid repeating exercises the user has already mastered.
+
+Each training cycle:
+
+1. Introduce the objective.
+2. Ask a role-relevant question.
+3. Capture the user's natural response.
+4. Evaluate the response.
+5. Identify one priority development area.
+6. Give concise feedback.
+7. Provide a hint or example when necessary.
+8. Ask the user to retry independently.
+9. Introduce a new comparable scenario.
+10. Update the learning profile based on repeated evidence.
+
+EXAMPLE:
+
+Scenario:
+A manager explains why a product release is delayed.
+
+User response:
+A long description of multiple issues without identifying the main cause.
+
+AI feedback:
+"You explained several dependencies, but the main cause of the delay was not clear. State the principal cause in one sentence."
+
+Follow-up:
+"Now explain the impact on the launch date."
+
+Transfer exercise:
+Introduce a different project-delay scenario and assess whether the user can communicate the cause and impact independently.
+
+Do not simply show a perfect script and reward the user for reading it.
+
+============================================================
+K. MODULE-SPECIFIC EVALUATION
+============================================================
+
+Create versioned evaluation rubrics.
+
+Do not assess every communication task using the same criteria.
+
+DAILY COMMUNICATION:
+- Opening clarity.
+- Thought organization.
+- Sentence completion.
+- Word selection.
+- Responsiveness.
+- Intelligibility when audio evidence exists.
+
+MANAGEMENT & BUSINESS COMMUNICATION:
+- Central message.
+- Evidence.
+- Interpretation.
+- Business implications.
+- Practical recommendations.
+- Stakeholder responsiveness.
+- Clarity and conciseness.
+
+LEADERSHIP & PUBLIC SPEAKING:
+- Audience relevance.
+- Message structure.
+- Evidence and reasoning.
+- Storytelling.
+- Spoken delivery.
+- Handling audience questions.
+- Quality of conclusion.
+
+Feedback must cite the specific part of the response that supports the observation.
+
+Keep task-specific results separate from any broader developmental profile.
+
+Clearly distinguish demonstrated performance from the learner's self-reported comfort.
+
+Allow users to challenge or correct inaccurate feedback.
+
+============================================================
+L. DAILY LEARNING EXPERIENCE
+============================================================
+
+Design a daily practice flow:
+
+1. Welcome and progress summary.
+2. Short warm-up.
+3. Primary skill exercise.
+4. Role-specific AI conversation.
+5. One targeted correction.
+6. Independent retry.
+7. Short reflection.
+8. Progress update.
+
+Default target duration:
+Approximately 10-15 minutes, subject to the user's selected plan and voice allowance.
+
+Allow shorter practice sessions.
+
+Provide personalized recommendations based on:
+- Current goals.
+- Recent observations.
+- Prior exercises.
+- Reassessment results.
+- User feedback.
+- Skill transfer performance.
+
+The user must be able to skip an exercise without losing progress.
+
+Avoid resetting achievements or penalizing people for missing a day.
+
+============================================================
+M. PREMIUM UI/UX AND BRANDING
+============================================================
+
+Build a beautiful but simple premium application.
+
+DESIGN PERSONALITY:
+Professional, warm, modern, elegant, calm, and motivating.
+
+COLOR DIRECTION:
+- Deep navy primary.
+- White and off-white surfaces.
+- Refined blue accent.
+- Teal or green for positive progress.
+- Muted gold for milestones.
+- Accessible neutral text colors.
+
+Centralize design tokens.
+
+Provide light and dark modes.
+
+Use consistent typography, spacing, corner radii, buttons, cards, icons, loading indicators, and navigation patterns.
+
+MAIN EXPERIENCE:
+The home screen should immediately communicate:
+- Today's communication goal.
+- A prominent "Start Voice Practice" action.
+- The user's current learning focus.
+- Recommended module.
+- Recent progress.
+- Upcoming practice or reassessment.
+- Earned achievements.
+
+VOICE SCREEN:
+- Large central microphone/voice control.
+- Responsive waveform animation.
+- Clear AI-speaking and user-speaking states.
+- Visible pause/end controls.
+- Brief scenario context.
+- Optional transcript.
+- Minimal visual clutter.
+
+FEEDBACK SCREEN:
+- One clear achievement.
+- One priority improvement.
+- Relevant quote or observation.
+- Suggested retry.
+- Play/replay controls where available.
+
+ANIMATIONS:
+Use polished, lightweight animations for:
+- Launch and navigation.
+- Microphone activation.
+- User speaking.
+- AI speaking.
+- Successful exercise completion.
+- Skill progression.
+- Kudos.
+- Smiley reactions.
+- Achievement unlocks.
+- Positive reinforcement.
+
+Use React Native Reanimated or other verified compatible libraries.
+
+Respect reduced-motion settings.
+
+Do not use a celebratory animation after an unsuccessful or incomplete task merely to increase engagement.
+
+GAMIFICATION:
+Create meaningful milestones such as:
+- First Voice Session.
+- Confident Starter.
+- Clear Thinker.
+- Insight Communicator.
+- Conversation Explorer.
+- Public Speaking Milestone.
+- Consistent Practice.
+
+Achievements must be linked to real completed activity or demonstrated progress.
+
+Include optional kudos, likes, and smiley reactions within the personal learning experience.
+
+Do not create public employee ranking tables by default.
+
+============================================================
+N. REQUIRED MOBILE SCREENS
+============================================================
+
+Implement:
+
+01. Splash and welcome.
+02. Sign-up and sign-in.
+03. Account verification and recovery.
+04. Onboarding.
+05. Function selection.
+06. Role and career-level selection.
+07. Communication goal selection.
+08. Self-reported communication challenges.
+09. Microphone and recording permissions.
+10. Diagnostic introduction.
+11. Live voice diagnostic.
+12. Initial communication profile.
+13. Personalized learning plan.
+14. Home dashboard.
+15. Module selection.
+16. Daily practice.
+17. Live AI conversation.
+18. Scenario library.
+19. Transcript and optional recording replay.
+20. Exercise feedback.
+21. Independent retry.
+22. Progress history.
+23. Skill development dashboard.
+24. Achievements and kudos.
+25. Subscription plans.
+26. Native purchase and restore.
+27. Subscription management.
+28. Voice allowance and usage.
+29. Profile and preferences.
+30. Accessibility settings.
+31. Privacy and recording management.
+32. Account deletion.
+33. Help and support.
+
+Each screen must have:
+- Functional navigation.
+- Appropriate loading states.
+- Empty states.
+- Error states.
+- Accessibility labels.
+- Responsive layout.
+- No fabricated real-user statistics.
+
+============================================================
+O. ENTERPRISE L&D PORTAL
+============================================================
+
+Build a separate responsive administration portal using the shared backend.
+
+ORGANIZATION CAPABILITIES:
+- Create an enterprise organization.
+- Invite or provision learners.
+- Assign learning modules.
+- Define functional cohorts.
+- Configure approved organization-specific scenarios.
+- Monitor aggregate enrollment and engagement.
+- Review aggregated learning outcomes.
+- Manage organization subscriptions and entitlements.
+- Configure retention and privacy settings.
+- Export permitted aggregate reports.
+
+ROLES:
+- Platform administrator.
+- Organization administrator.
+- L&D administrator.
+- Learner.
+
+Enforce server-side authorization and tenant isolation.
+
+ORGANIZATION-SPECIFIC CONTENT:
+Allow authorized administrators to upload approved training material and create scenarios based on it.
+
+Apply permission-controlled retrieval.
+
+Do not expose one organization's confidential training content to another organization.
+
+LEARNER PRIVACY:
+Personal recordings, transcripts, and detailed private coaching conversations must not become visible to an employer by default.
+
+Design explicit consent and access controls for any individual-level records that an enterprise legitimately needs.
+
+Do not provide covert employee-monitoring features or employment-fitness scoring.
+
+Enterprise reports should emphasize training participation and appropriately aggregated learning outcomes.
+
+============================================================
+P. SUBSCRIPTION COST CONTROL
+============================================================
+
+The business targets low monthly subscription prices and must operate sustainably.
+
+Implement a usage ledger.
+
+Track:
+- Voice session length.
+- Speech processing.
+- Language-model calls.
+- Audio generation.
+- Provider model used.
+- Estimated provider cost.
+- Monthly usage per user.
+- Monthly usage per subscription tier.
+- Infrastructure and storage usage where measurable.
+
+Build configurable:
+- Plan allowances.
+- Per-session limits.
+- Monthly limits.
+- Spending alerts.
+- Rate limits.
+- Provider selection.
+- Lower-cost fallback processing where appropriate.
+
+Provide the platform administrator with a unit-economics dashboard.
+
+Show:
+- Subscription revenue estimate.
+- Store fees.
+- Applicable taxes where configured.
+- AI usage cost.
+- Infrastructure cost estimate.
+- Estimated contribution margin.
+
+Do not confuse revenue with profit.
+
+Do not make final pricing or allowance decisions based on hypothetical cost figures alone. Provide instrumentation so the founder can test actual costs during the pilot.
+
+============================================================
+Q. DATA MODEL
+============================================================
+
+Design an extensible PostgreSQL schema.
+
+Required core entities:
+
+Organization
+OrganizationMember
+User
+UserProfile
+ProfessionalFunction
+ProfessionalRole
+LearningModule
+Skill
+SkillProfile
+LearningGoal
+Scenario
+ScenarioVersion
+ScenarioAssignment
+DiagnosticSession
+ConversationSession
+ConversationTurn
+Transcript
+AudioRecording
+Rubric
+RubricVersion
+Assessment
+AssessmentEvidence
+LearningPlan
+Exercise
+ExerciseAttempt
+ProgressSnapshot
+Achievement
+UserAchievement
+Subscription
+Entitlement
+UsageLedger
+ProviderCost
+OrganizationReport
+AuditLog
+ConsentRecord
+DataDeletionRequest
+
+Use stable identifiers, proper relational constraints, indexes, and migrations.
+
+Model content access and multi-tenant boundaries explicitly.
+
+Persist assessment evidence and version information so historical feedback remains interpretable after evaluation rules or models change.
+
+Do not persist raw audio when the user has not consented to optional recording retention.
+
+============================================================
+R. SECURITY, PRIVACY, AND ACCESSIBILITY
+============================================================
+
+Implement:
+- Secure authentication.
+- Verified email where appropriate.
+- Strong session management.
+- Role-based access control.
+- Tenant isolation.
+- API rate limiting.
+- Secure secret management.
+- Server-side entitlement enforcement.
+- Transport encryption.
+- Encryption for stored sensitive content.
+- Recording consent and retention.
+- Recording deletion.
+- Account deletion.
+- Data export where supported.
+- Appropriate audit logging.
+- AI-processing disclosures.
+- Secure error handling.
+
+Review applicable Indian privacy requirements and relevant destination-market requirements before commercial launch.
+
+Do not claim legal compliance solely because a privacy policy or consent checkbox exists.
+
+ACCESSIBILITY:
+- Screen-reader support.
+- Scalable text.
+- Sufficient color contrast.
+- Large touch targets.
+- Reduced motion.
+- Clear audio controls.
+- Text alternatives.
+- Adjustable playback where supported.
+- Explicit microphone-state indicators.
+
+============================================================
+S. TESTING AND QUALITY
+============================================================
+
+Build meaningful automated tests.
+
+TEST:
+- Authentication and authorization.
+- Tenant isolation.
+- Onboarding and personalization.
+- Scenario selection.
+- Conversation state transitions.
+- Speech-session authorization.
+- Subscription enforcement.
+- Purchase validation.
+- Usage metering.
+- Diagnostic assessment schema validation.
+- Assessment evidence grounding.
+- Learning plan generation.
+- Recording consent and deletion.
+- Account deletion.
+- Navigation and major user flows.
+
+VOICE EDGE CASES:
+- Microphone permission denied.
+- User pauses while thinking.
+- User interrupts the AI.
+- AI interrupts unexpectedly.
+- Network interruption.
+- App backgrounding.
+- Incoming phone call.
+- Bluetooth or headphone change.
+- Incorrect transcription.
+- Session timeout.
+- Provider failure.
+- Voice allowance exhaustion.
+
+ASSESSMENT QUALITY:
+Create anonymized evaluation examples reviewed by human communication trainers.
+
+Measure whether the AI:
+- Identifies observable communication issues correctly.
+- Avoids inventing unsupported explanations.
+- Distinguishes language mistakes from substantive reasoning issues.
+- Selects appropriate targeted exercises.
+- Produces consistent feedback for comparable responses.
+
+Do not label the diagnostic system scientifically validated without appropriate validation evidence.
+
+Use actual device testing for Android and iOS voice functionality.
+
+============================================================
+T. RELEASE PREPARATION
+============================================================
+
+Prepare the application for Google Play and the Apple App Store.
+
+Generate:
+- Android build configuration.
+- iOS build configuration.
+- Separate development and production identifiers.
+- Production environment configuration.
+- Store subscription product configuration instructions.
+- Privacy policy requirements.
+- Account deletion flow.
+- Microphone and recording permission descriptions.
+- App icon and splash assets.
+- Store listing copy.
+- Screenshot checklist.
+- Store review notes.
+- Test-account instructions.
+- Release and rollback checklist.
+
+Do not claim that the application has been published, approved, or tested on a platform unless that has actually occurred.
+
+Some final release actions require my developer accounts, credentials, real devices, and explicit approval. Clearly identify those actions without pretending to complete them.
+
+============================================================
+U. IMPLEMENTATION APPROACH
+============================================================
+
+Work in the following order.
+
+PHASE 1 — FOUNDATION
+Inspect the environment and repository. Establish the monorepo, mobile application, backend, database, design system, navigation, authentication, and initial functional screens.
+
+PHASE 2 — PERSONALIZATION
+Implement onboarding, functions, roles, learning goals, scenario definitions, and user profiles.
+
+PHASE 3 — VOICE PROOF OF CONCEPT
+Implement and verify microphone access, audio playback, secure AI connectivity, natural voice turns, interruptions, and recording controls on supported mobile development builds.
+
+PHASE 4 — COMMUNICATION ENGINE
+Implement conversation orchestration, diagnostic exercises, skill profiles, assessment rubrics, evidence-backed feedback, and adaptive learning plans.
+
+PHASE 5 — THREE MODULES
+Implement Daily Communication, Management & Business Communication, and Leadership & Public Speaking, with curated role-specific scenarios.
+
+PHASE 6 — PERSONALIZATION AND PROGRESS
+Implement session history, independent retries, reassessments, achievements, kudos, progress dashboards, and meaningful animations.
+
+PHASE 7 — COMMERCE AND COST CONTROL
+Implement subscriptions, restore purchases, server-side entitlements, usage metering, limits, and unit-economics monitoring.
+
+PHASE 8 — ENTERPRISE
+Implement organizations, administrators, cohort assignments, content management, and privacy-preserving L&D reporting.
+
+PHASE 9 — QUALITY AND RELEASE
+Complete security review, accessibility checks, automated tests, device testing, release configuration, and app-store submission preparation.
+
+DELIVERY RULES:
+
+- Produce real working code rather than mockups alone.
+- Make sensible implementation decisions without asking me to approve every minor technical detail.
+- Keep the app runnable after every phase.
+- Run relevant tests and report actual results.
+- Make incremental Git commits when repository access permits.
+- Do not fabricate completed features.
+- Do not silently substitute simulated AI responses for real functionality.
+- Document external credentials and accounts I must configure.
+- Never request secrets in chat or commit them to source control.
+- If a feature is blocked, implement the independent parts and clearly report the blocker.
+- Prioritize functional voice coaching and assessment over decorative features.
+
+============================================================
+V. YOUR IMMEDIATE FIRST TASK
+============================================================
+
+Start building now.
+
+1. Inspect the current repository.
+2. Check the available development tools and versions.
+3. Verify current official SDK documentation for the selected voice and mobile technologies.
+4. Establish the monorepo and package structure.
+5. Create the mobile app and backend.
+6. Configure PostgreSQL and Prisma.
+7. Implement the shared design system and navigation.
+8. Build functional onboarding and profile screens.
+9. Create the initial role-specific scenario model.
+10. Implement a small voice-connectivity proof of concept.
+11. Add setup instructions and test commands.
+12. Run the available tests.
+
+After the first implementation phase, report:
+
+- What is implemented and working.
+- What is demonstrated only in local development.
+- What remains incomplete.
+- The repository structure.
+- Exact commands to run the application.
+- Test results.
+- Android and iOS build status.
+- Required developer accounts and environment variables.
+- The next implementation phase.
+
+Continue implementing subsequent phases as the development environment and available session permit, while preserving functional code and reporting genuine limitations.
+
+Your ultimate deliverable is a working, maintainable, commercially deployable communication-development product—not a static prototype.

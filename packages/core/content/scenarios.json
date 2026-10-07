@@ -1,0 +1,90 @@
+[
+  {
+    "id": "daily-opening",
+    "version": 1,
+    "module": "daily",
+    "functions": [],
+    "goal": "Start conversations",
+    "title": "Your first thirty seconds",
+    "context": "You are meeting a new colleague before a project meeting.",
+    "question": "Start the conversation and explain one thing you are working on.",
+    "independentQuestion": "You meet a colleague from another team at lunch. Open the conversation without using your previous opening.",
+    "rubricVersion": "daily-1",
+    "focus": "Conversation initiation"
+  },
+  {
+    "id": "engineering-delay",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Engineering"
+    ],
+    "goal": "Present recommendations",
+    "title": "A release needs a decision",
+    "context": "Two integration tests are failing. The release is due Friday. Fixing both is estimated to take three days. Your product partner needs a recommendation.",
+    "question": "Explain what is known, the release impact, and the decision you recommend.",
+    "independentQuestion": "A dependency team moves its delivery by a week. Give a new recommendation to your product partner.",
+    "rubricVersion": "management-1",
+    "focus": "Evidence, implications and action"
+  },
+  {
+    "id": "hr-engagement",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Make the survey useful",
+    "context": "Survey participation fell from 80% to 62%. Among respondents, 45% request clearer career paths. The data does not explain why participation fell.",
+    "question": "Brief a business leader on the findings, their limitations, and a practical next step.",
+    "independentQuestion": "Exit interviews from six employees mention workload. Explain what can and cannot be concluded.",
+    "rubricVersion": "management-1",
+    "focus": "Facts versus interpretation"
+  },
+  {
+    "id": "finance-variance",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Finance"
+    ],
+    "goal": "Present recommendations",
+    "title": "Explain the variance",
+    "context": "Monthly costs are 12% above budget. A one-off equipment purchase accounts for eight percentage points; recurring supplier costs account for four.",
+    "question": "Explain the variance to the CFO and recommend what to investigate next.",
+    "independentQuestion": "Revenue is 8% below forecast while new orders are flat. Explain what further evidence you need.",
+    "rubricVersion": "management-1",
+    "focus": "Information synthesis"
+  },
+  {
+    "id": "product-scope",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Product Management"
+    ],
+    "goal": "Handle challenging questions",
+    "title": "Defend a trade-off",
+    "context": "A customer requests an export feature. Engineering estimates two weeks, which would delay a reliability improvement requested by five customers.",
+    "question": "Explain a prioritization recommendation to the customer success lead.",
+    "independentQuestion": "A sales prospect requests a custom dashboard that would delay onboarding fixes. Explain your trade-off.",
+    "rubricVersion": "management-1",
+    "focus": "Audience and trade-offs"
+  },
+  {
+    "id": "founder-pitch",
+    "version": 1,
+    "module": "leadership",
+    "functions": [
+      "Entrepreneurship"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Make the problem matter",
+    "context": "A potential investor has one minute to understand your business. Use your own facts; do not invent traction.",
+    "question": "Describe your customer problem, your solution, evidence you have, and the next step you are asking for.",
+    "independentQuestion": "Explain the same business to a potential customer rather than an investor.",
+    "rubricVersion": "leadership-1",
+    "focus": "Audience-appropriate message"
+  }
+]

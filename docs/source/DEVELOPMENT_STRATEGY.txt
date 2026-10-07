@@ -1,0 +1,350 @@
+
+============================================================
+W. CODEX MODEL STRATEGY, PLUS USAGE, AND DEVELOPMENT BUDGET
+============================================================
+
+PROJECT CONTEXT
+
+I am developing this application using Codex through my ChatGPT Plus subscription.
+
+The product is a voice-first AI Communication Development Platform for Android and iOS, with:
+
+- Three communication-development modules.
+- Four proposed subscription tiers.
+- A 20-minute daily AI voice-practice limit for standard plans.
+- An Extended Practice plan at ₹799/month, initially configured for 40 minutes per day.
+- Role- and function-specific AI conversations.
+- A communication investigation and diagnostic engine.
+- Adaptive learning and feedback.
+- Professional UI, animations, kudos, and achievements.
+- A companion enterprise L&D portal.
+
+I want to use my included Codex allowance efficiently without compromising the architecture, security, or quality of the application.
+
+Do not interpret this section as authorization to purchase credits, upgrade my subscription, or incur paid services without my explicit approval.
+
+------------------------------------------------------------
+1. MODEL SELECTION STRATEGY
+------------------------------------------------------------
+
+Use the available Codex models selectively.
+
+ASTRA:
+Reserve for the most difficult engineering and architectural work, including:
+
+- Initial application and backend architecture.
+- Real-time voice integration strategy.
+- Mobile audio and interruption handling.
+- Communication diagnostic and personalization architecture.
+- Complex problems spanning multiple application layers.
+- Security and privacy design.
+- Subscription entitlement and usage-limit enforcement.
+- Difficult debugging and major architectural reviews.
+
+SOL:
+Prefer for substantial implementation work, including:
+
+- Building full application features.
+- Connecting frontend screens to backend services.
+- Database design and API implementation.
+- Personalized learning logic.
+- AI conversation orchestration.
+- Integrating and testing major features.
+- Reviewing complex code changes.
+
+LUNA:
+Prefer for focused, well-specified tasks, including:
+
+- Building individual UI components.
+- Styling and visual refinements.
+- Simple animations.
+- Updating screen content.
+- Creating basic forms.
+- Small bug fixes.
+- Straightforward tests and documentation.
+
+If the selected model is not appropriate for a task, recommend another available model and explain why.
+
+IMPORTANT:
+Codex may not be able to switch the user's selected model automatically. When a model change is needed, clearly indicate which model I should select before starting the next task.
+
+Do not assume that a model described in this prompt is available in my current Codex interface. Verify the actual available model options.
+
+------------------------------------------------------------
+2. DEVELOPMENT EFFORT ESTIMATES
+------------------------------------------------------------
+
+Use the following estimates for initial planning only.
+
+INITIAL PROTOTYPE:
+Approximately 20–50 focused Codex requests.
+
+Target:
+- Working onboarding.
+- Professional UI.
+- One basic AI voice-coaching flow.
+
+WORKING MVP:
+Approximately 80–180 focused Codex requests in total.
+
+Target:
+- Functional voice interaction.
+- Basic diagnostic assessment.
+- Personalized training.
+- Evidence-backed feedback.
+- User progress tracking.
+
+FULLER CONSUMER APPLICATION:
+Approximately 180–350+ focused Codex requests in total.
+
+Target:
+- Three modules.
+- Four subscription tiers.
+- Daily voice allowances.
+- Additional scenario libraries.
+- Achievements and animations.
+- Extensive mobile testing.
+
+CONSUMER APPLICATION WITH ENTERPRISE L&D PORTAL:
+Approximately 250–600+ focused Codex requests in total.
+
+Target:
+- All consumer application capabilities.
+- Organization management.
+- Enterprise content configuration.
+- Cohort learning assignments.
+- Privacy-preserving reporting.
+- Enterprise security and additional testing.
+
+These ranges are cumulative and overlapping. Do not add them together.
+
+They are engineering planning estimates, not guaranteed completion counts or official Codex limits.
+
+Actual effort may be substantially higher, particularly for native voice integrations, billing, device compatibility, security, and production release requirements.
+
+A Codex request may involve multiple internal tool operations and different amounts of context. Do not equate one request with a fixed number of tokens or a predictable amount of completed work.
+
+------------------------------------------------------------
+3. ASTRA USAGE ALLOCATION
+------------------------------------------------------------
+
+For initial planning, aim to reserve approximately 15–30 Astra requests across major architectural and technical decisions.
+
+Suggested allocation:
+
+Initial architecture:
+2–4 Astra requests.
+
+Real-time voice and mobile integration:
+4–8 Astra requests.
+
+Diagnostic and personalization engine:
+4–8 Astra requests.
+
+Subscriptions, usage enforcement, and security:
+3–6 Astra requests.
+
+Complex debugging and release review:
+2–4 Astra requests.
+
+These allocations are flexible estimates, not strict quotas.
+
+Do not use Astra simply because a task is important to the product. Use it when the task genuinely benefits from more complex architectural reasoning or difficult cross-system problem-solving.
+
+For straightforward implementation, prefer Sol or Luna where available.
+
+Do not compromise security, correctness, or testing merely to reduce model usage.
+
+------------------------------------------------------------
+4. DEVELOPMENT SESSION PLANNING
+------------------------------------------------------------
+
+Organize the overall project into approximately 20–40 focused development sessions for planning purposes.
+
+A development session is a coherent unit of work with a specific outcome. It is not necessarily a single Codex message or a single five-hour usage window.
+
+Each session should have:
+
+- A clearly defined objective.
+- A limited implementation scope.
+- Relevant acceptance criteria.
+- A test plan.
+- A documented result.
+- A Git commit when appropriate and repository access permits.
+
+Example development sessions:
+
+Session 1:
+Initialize the monorepo and establish the mobile application, backend, database, and shared tooling.
+
+Session 2:
+Build the professional design system, navigation, and application shell.
+
+Session 3:
+Implement account creation, authentication, and user profiles.
+
+Session 4:
+Implement function, role, career-level, and communication-goal onboarding.
+
+Session 5:
+Design and test the native mobile voice-connectivity proof of concept.
+
+Session 6:
+Implement secure session authorization and the voice-conversation lifecycle.
+
+Session 7:
+Implement transcription and conversation-history handling.
+
+Session 8:
+Implement initial diagnostic exercises and skill-profile storage.
+
+Session 9:
+Implement evidence-backed feedback and independent retries.
+
+Session 10:
+Deliver the first complete, functioning end-to-end communication-coaching experience.
+
+Continue with the remaining modules, subscriptions, enterprise capabilities, and release preparation in subsequent focused sessions.
+
+Adjust session count and scope based on actual technical complexity.
+
+Do not assume that the entire application can be completed in one Codex conversation.
+
+------------------------------------------------------------
+5. FIRST DEVELOPMENT MILESTONE
+------------------------------------------------------------
+
+The first major milestone is a WORKING VOICE-FIRST MVP.
+
+A user must be able to:
+
+1. Create an account.
+2. Enter their function and role.
+3. Select a communication goal.
+4. Start a real AI voice conversation.
+5. Hear the AI coach ask a relevant question.
+6. Respond naturally by speaking.
+7. Receive an appropriate spoken follow-up.
+8. End the session.
+9. Review evidence-backed feedback.
+10. Retry the exercise independently.
+11. See their learning history updated.
+
+Build and test this core learning loop before implementing the complete achievement system, extensive scenario libraries, or advanced enterprise features.
+
+The application must not claim that an AI conversation or communication assessment works if it is only simulated using hardcoded text.
+
+------------------------------------------------------------
+6. PLUS USAGE MANAGEMENT
+------------------------------------------------------------
+
+My ChatGPT Plus subscription provides access to Codex subject to applicable usage limits.
+
+It does not provide unlimited development requests or unlimited API usage for the published application.
+
+Do not assume that the subscription includes a fixed monthly token allowance.
+
+Do not assume that planning estimates for a model's messages per usage window are guaranteed.
+
+I will check my actual remaining Codex allowance in the available usage interface.
+
+After the first 10–15 focused development requests, provide a development checkpoint covering:
+
+- Features implemented.
+- Features verified through testing.
+- Outstanding blockers.
+- Remaining development priorities.
+- Actual progress against the MVP requirements.
+- A revised estimate of the remaining work.
+- Recommended model selection for the next development phase.
+
+If available, incorporate actual usage information that I provide.
+
+Do not fabricate account-specific token balances, remaining messages, or usage statistics.
+
+When the included Codex allowance is exhausted, preserve the current repository state and document the next actionable task.
+
+Do not purchase credits or initiate a subscription upgrade without my explicit authorization.
+
+------------------------------------------------------------
+7. MODEL-EFFICIENT TASK EXECUTION
+------------------------------------------------------------
+
+Before beginning a major implementation task:
+
+1. Inspect the existing repository and relevant files.
+2. Identify the exact objective.
+3. Determine which components require changes.
+4. Reuse existing code and architecture where appropriate.
+5. Specify acceptance criteria.
+6. Implement the smallest coherent working feature.
+7. Run relevant tests.
+8. Fix errors.
+9. Summarize the actual changes.
+
+Avoid repeatedly rewriting the entire codebase when a focused change is sufficient.
+
+Use the master product specification as the source of product requirements, but use focused implementation tasks for day-to-day development.
+
+Do not load or rewrite unrelated files unnecessarily.
+
+Maintain concise, accurate project documentation so new Codex sessions can resume work without reconstructing the entire project history.
+
+------------------------------------------------------------
+8. PROJECT CONTINUITY
+------------------------------------------------------------
+
+Maintain these repository documents:
+
+docs/PRODUCT_SPECIFICATION.md
+docs/ARCHITECTURE.md
+docs/DEVELOPMENT_ROADMAP.md
+docs/DECISION_LOG.md
+docs/IMPLEMENTATION_STATUS.md
+docs/TESTING_STATUS.md
+docs/KNOWN_ISSUES.md
+docs/RELEASE_CHECKLIST.md
+
+Update these files whenever material decisions or implementation milestones change.
+
+At the end of each focused development session, provide:
+
+COMPLETED:
+What was implemented.
+
+VERIFIED:
+What was actually tested and the test results.
+
+INCOMPLETE:
+What remains unfinished.
+
+BLOCKERS:
+External credentials, accounts, devices, dependencies, or technical issues requiring attention.
+
+NEXT TASK:
+One clearly scoped implementation task.
+
+RECOMMENDED MODEL:
+Astra, Sol, or Luna, depending on the complexity of the next task and actual model availability.
+
+Do not promise autonomous development between sessions.
+
+All implementation work must take place in the active development session.
+
+============================================================
+X. BEGIN DEVELOPMENT
+============================================================
+
+Treat this entire master prompt as the product specification.
+
+Begin with the first focused development session.
+
+Use Astra for the initial architecture review if it is available and appropriate.
+
+Inspect the repository, establish the project foundation, and implement the first working increment.
+
+Do not attempt to generate the entire application in one response.
+
+Prioritize a working Android/iOS voice-coaching experience, then expand systematically toward the complete consumer application and enterprise L&D platform.
+
+At the end of the session, report genuine implementation progress, test results, remaining work, and the recommended model for the next task.

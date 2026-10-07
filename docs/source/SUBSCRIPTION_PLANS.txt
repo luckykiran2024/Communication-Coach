@@ -1,0 +1,195 @@
+
+============================================================
+SUBSCRIPTION PLANS AND DAILY PRACTICE LIMITS
+============================================================
+
+The application must enforce a strict daily AI voice-practice allowance.
+
+STANDARD DAILY LIMIT:
+Every standard subscription plan includes a maximum of 20 minutes of AI voice practice per day.
+
+This limit applies regardless of:
+- Learning module.
+- Professional function.
+- User role.
+- AI conversation mode.
+- AI model used.
+- Number of individual practice sessions.
+
+A user cannot obtain additional included voice minutes by switching modules, changing AI models, starting another session, logging in on another device, or restarting the application.
+
+SUBSCRIPTION PLANS:
+
+ESSENTIAL — ₹199/month
+- Daily Communication module.
+- Maximum 20 minutes of AI voice practice per day.
+
+PROFESSIONAL — ₹299/month
+- Daily Communication module.
+- Management & Business Communication module.
+- Maximum 20 minutes of AI voice practice per day, shared across both modules.
+
+EXECUTIVE — ₹699/month
+- Access to all three communication modules.
+- Maximum 20 minutes of AI voice practice per day, shared across all modules.
+
+EXTENDED PRACTICE — ₹799/month
+- Access to all three communication modules.
+- Initially configure a maximum of 40 minutes of AI voice practice per day.
+- Make the extended allowance configurable so it can be adjusted after real-world AI cost testing.
+
+The ₹799 plan is an additional subscription tier, not an automatic surcharge.
+
+Users must explicitly purchase or upgrade to it.
+
+Do not automatically charge users when they exhaust their daily allowance.
+
+All subscription prices are proposed Indian-market targets and must be configured through the relevant app stores.
+
+============================================================
+DAILY VOICE USAGE ENFORCEMENT
+============================================================
+
+Implement server-authoritative usage metering.
+
+The daily limit must be calculated across all sessions, modules, AI models, and devices associated with the same user account.
+
+Use the user's configured IANA timezone to determine the daily reset boundary.
+
+For users in India, default to Asia/Kolkata unless they select another supported timezone.
+
+Prevent users from repeatedly changing their timezone to reset their allowance.
+
+VOICE SESSION RULES:
+
+1. Before starting a voice session, verify the user's subscription and remaining daily allowance.
+
+2. Display the remaining practice time before the session begins.
+
+3. Count actual billable AI voice-session time using server-side timestamps and provider usage data where available.
+
+4. Do not rely on a client-side timer as the authoritative usage record.
+
+5. Apply the same allowance across every AI model and conversation mode.
+
+6. Stop or prevent further billable voice processing when the user's allowance is exhausted.
+
+7. Display a warning when the user has approximately five minutes remaining.
+
+8. Display another warning when approximately one minute remains.
+
+9. When the remaining allowance is insufficient for a new exercise, offer a shorter exercise or allow the user to return the next day.
+
+10. When the daily allowance is exhausted, end the active AI voice session gracefully.
+
+11. Save the completed portion of the conversation and generate appropriate feedback.
+
+12. Do not start additional billable voice sessions until the allowance resets or the user purchases an eligible upgrade.
+
+13. Handle interrupted sessions fairly, so users are not charged for substantial periods when no AI voice service was available.
+
+14. Protect against concurrent sessions exceeding the allowance by using server-side reservations, atomic updates, or equivalent concurrency controls.
+
+15. Enforce limits even when users attempt to bypass the mobile UI or call backend endpoints directly.
+
+COUNTDOWN AND USAGE DISPLAY:
+
+The application should display:
+- Daily allowance.
+- Minutes consumed.
+- Minutes remaining.
+- Time of the next reset.
+- Current subscription tier.
+
+Allow users to review previous sessions and feedback after their daily limit is reached.
+
+Do not count passive activities such as:
+- Reading previous feedback.
+- Viewing the progress dashboard.
+- Reviewing completed transcripts.
+- Viewing achievements.
+- Managing account settings.
+
+If playback of stored recordings or generated audio incurs additional provider costs, meter those costs separately and define the applicable product policy.
+
+============================================================
+DAILY TRAINING DESIGN
+============================================================
+
+Standard learning sessions must fit within the user's available daily voice allowance.
+
+Default daily practice:
+20 minutes maximum.
+
+Suggested session structure:
+
+2 minutes:
+Warm-up and conversation initiation.
+
+4 minutes:
+Primary communication-skill exercise.
+
+8 minutes:
+Role-specific conversational simulation.
+
+4 minutes:
+Targeted feedback and independent retry.
+
+2 minutes:
+Reflection and next-step guidance.
+
+Treat this structure as a configurable learning design, not as a reason to exceed the user's available voice allowance.
+
+If the user has already consumed part of the day's allowance, dynamically shorten the remaining training session.
+
+A user may complete multiple shorter sessions, but total billable AI voice practice must not exceed the applicable daily allowance.
+
+The user should be allowed to stop a session at any time.
+
+Never require the user to complete the entire 20 minutes.
+
+============================================================
+EXTENDED PRACTICE UPGRADE
+============================================================
+
+When a standard-plan user reaches the daily limit, display a professional, nonintrusive message:
+
+"You have completed your 20 minutes of AI voice practice for today. Your learning progress has been saved. You can review your feedback now or continue your voice practice after your daily allowance resets."
+
+Provide an optional upgrade action:
+
+"Need more practice? Explore Extended Practice."
+
+EXTENDED PRACTICE:
+₹799/month, with an initial configured allowance of 40 minutes per day.
+
+The application must explain the additional allowance and subscription terms before purchase.
+
+Do not interrupt an active learning conversation with a payment screen.
+
+Do not use manipulative countdowns or pressure-based upgrade messaging.
+
+Allow users to decline the upgrade and continue accessing their existing learning records.
+
+============================================================
+COST MONITORING
+============================================================
+
+Track actual AI costs separately for:
+- Essential.
+- Professional.
+- Executive.
+- Extended Practice.
+
+Calculate:
+- Average voice minutes used per subscriber.
+- Average cost per completed session.
+- Average monthly AI cost per subscriber.
+- Subscription revenue after applicable store fees and taxes.
+- Estimated contribution margin per tier.
+
+Make all plan allowances configurable without requiring mobile application updates.
+
+Use actual provider usage and pilot results to validate whether the ₹199, ₹299, ₹699, and ₹799 plans are commercially sustainable.
+
+Never offer unlimited AI voice practice by default.
