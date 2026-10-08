@@ -140,6 +140,7 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
     return { token, expiresAt: expiresAt.toISOString(), user: { id: user.id, email: user.email } };
   }
   async function verifiedOAuthIdentity(provider: "google" | "microsoft", accessToken: string) {
+    if (provider === "google" && !(options.oauth?.googleClientIds?.length)) throw new ApiError(503, "Google sign-in is not configured for this deployment.");
     type ProviderIdentityResponse = { email?: string; mail?: string; userPrincipalName?: string; sub?: string; id?: string; aud?: string | string[]; email_verified?: boolean | string };
     const response = provider === "google"
       ? await (options.oauth?.fetchImpl ?? fetch)(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`)
