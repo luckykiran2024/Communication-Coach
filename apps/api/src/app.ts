@@ -5,7 +5,7 @@ import rateLimit from "@fastify/rate-limit";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { assessCommunicationEvidence, conversationCreateSchema, credentialsSchema, getEngagementLevel, getMasteryLevel, isPublishedScenario, masteryLevels, oauthSchema, profileSchema, recommendScenarios, modules, plansSchema, scenarioSchema, scenarios, userConversationTurnSchema, voiceTransportStatus } from "@coach/core";
-import planData from "../config/plans.json";
+import planData from "../config/plans.json" with { type: "json" };
 import { ConflictError, type Entitlement, type OAuthIdentity, type PurchaseIntent, type Store, type VoiceSession } from "./store";
 import { hashPassword, verifyPassword } from "./password";
 import { ProviderUnavailableError, startLiveConversation } from "./conversation-service";
