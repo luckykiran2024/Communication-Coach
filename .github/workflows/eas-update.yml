@@ -43,7 +43,8 @@ jobs:
       - run: npm ci --workspace @coach/mobile
         if: steps.expo-token.outputs.skip != 'true'
         working-directory: .
-      - run: npm run typecheck
+      - run: npm run typecheck -w @coach/mobile
         if: steps.expo-token.outputs.skip != 'true'
       - run: npx --yes eas-cli@24.11.0 update --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
         if: steps.expo-token.outputs.skip != 'true'
+        working-directory: apps/mobile
