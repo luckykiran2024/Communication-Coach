@@ -161,6 +161,7 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
   }
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof ConflictError) return reply.code(409).send({ error: error.message || "Unable to create account. Try signing in." });
+    if (error instanceof ApiError) return reply.code(error.statusCode).send({ error: error.message });
     const failure = error instanceof Error ? error as Error & { statusCode?: number } : new Error("Unknown error");
     const status = "statusCode" in failure && typeof failure.statusCode === "number" && failure.statusCode >= 400 && failure.statusCode < 500 ? failure.statusCode : 500;
     if (status === 500) request.log.error({ errorType: failure.name }, "Request failed");
