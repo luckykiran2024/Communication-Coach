@@ -3,6 +3,12 @@
   "framework": null,
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/api/:__route*",
+      "destination": "/api/index"
+    }
+  ],
   "functions": {
     "api/index.js": {
       "maxDuration": 30
