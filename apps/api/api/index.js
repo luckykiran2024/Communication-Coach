@@ -1373,6 +1373,7 @@ async function handler(request, response) {
 }
 export {
   app,
+  database,
   handler as default
 };
 
