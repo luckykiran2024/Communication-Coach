@@ -22,7 +22,6 @@
     "db:generate": "npm run db:generate -w @coach/api",
     "db:migrate": "npm run db:migrate -w @coach/api",
     "build:portal": "npm run build -w @coach/portal",
-    "postinstall": "npm run build -w @coach/core",
     "pretest": "npm run build -w @coach/core"
   },
   "devDependencies": {
