@@ -1,0 +1,31 @@
+{
+  "name": "communication-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev:api": "npm run dev -w @coach/api",
+    "dev:mobile": "npm run start -w @coach/mobile",
+    "dev:portal": "npm run dev -w @coach/portal",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test packages/core/test/*.test.ts apps/api/test/*.test.ts scripts/*.test.ts",
+    "test:regression": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test packages/core/test/*.test.ts apps/api/test/regression.test.ts",
+    "test:database": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --env-file-if-exists=apps/api/.env --test apps/api/test/database.integration.ts",
+    "release:preflight": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --env-file-if-exists=apps/api/.env scripts/release-preflight.ts",
+    "content:hash": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs scripts/content-release-hash.ts",
+    "db:generate": "npm run db:generate -w @coach/api",
+    "db:migrate": "npm run db:migrate -w @coach/api",
+    "build:portal": "npm run build -w @coach/portal"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "4.23.15",
+    "typescript": "~5.9.2"
+  }
+}

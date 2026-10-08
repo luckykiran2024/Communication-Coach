@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id           String @id @default(uuid()) @db.Uuid
+  email        String @unique
+  passwordHash String
+  role         String @default("learner")
+  createdAt    DateTime @default(now())
+  profile      UserProfile?
+  sessions     AuthSession[]
+  usageReservations UsageReservation[]
+  conversations Conversation[]
+  entitlements Entitlement[]
+  oauthIdentities OAuthIdentity[]
+  purchaseIntents PurchaseIntent[]
+  voiceSessions VoiceSession[]
+}
+
+model UsageReservation {
+  id              String   @id @db.Uuid
+  userId          String   @db.Uuid
+  dayKey          String
+  reservedSeconds Int
+  consumedSeconds Int      @default(0)
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, dayKey])
+  @@index([expiresAt])
+}
+
+model Conversation {
+  id        String   @id @db.Uuid
+  userId    String   @db.Uuid
+  scenarioId String
+  scenarioData Json?
+  state     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  turns     ConversationTurn[]
+  voiceSessions VoiceSession[]
+  @@index([userId, createdAt])
+}
+
+model ConversationTurn {
+  id        String   @id @db.Uuid
+  sessionId String   @db.Uuid
+  role      String
+  phase     String   @default("primary")
+  text      String
+  createdAt DateTime @default(now())
+  session   Conversation @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  @@index([sessionId, createdAt])
+}
+model CustomScenario {
+  id        String   @id
+  data      Json
+  createdAt DateTime @default(now())
+  revisions CustomScenarioRevision[]
+}
+model CustomScenarioRevision {
+  id        String   @id @default(uuid()) @db.Uuid
+  scenarioId String
+  version   Int
+  data      Json
+  changedBy String?  @db.Uuid
+  createdAt DateTime @default(now())
+  scenario  CustomScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  @@index([scenarioId, createdAt])
+}
+model Entitlement {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @db.Uuid
+  provider      String
+  productId     String
+  transactionId String   @unique
+  originalTransactionId String?
+  purchaseToken String?  @db.Text
+  status        String
+  environment   String
+  expiresAt     DateTime?
+  providerEventDate DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, status])
+  @@index([provider, purchaseToken])
+  @@index([provider, originalTransactionId])
+}
+model OAuthIdentity {
+  id        String   @id @default(uuid()) @db.Uuid
+  provider  String
+  subject   String
+  userId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, subject])
+  @@index([userId])
+}
+model PurchaseIntent {
+  id        String   @id @db.Uuid
+  userId    String   @db.Uuid
+  provider  String
+  productId String
+  nonce     String   @unique
+  status    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, status])
+  @@index([expiresAt])
+}
+model VoiceSession {
+  id                String   @id @db.Uuid
+  userId            String   @db.Uuid
+  conversationId    String   @db.Uuid
+  reservationId     String   @db.Uuid
+  providerSessionId String
+  providerCallId    String?
+  providerTerminatedAt DateTime?
+  status            String
+  startedAt         DateTime
+  expiresAt         DateTime
+  endedAt           DateTime?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation      Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@index([userId, status])
+  @@index([expiresAt])
+}
+model UserProfile {
+  userId    String @id @db.Uuid
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  data      Json
+  timezone  String @default("Asia/Kolkata")
+  updatedAt DateTime @updatedAt
+}
+model AuthSession {
+  tokenHash String @id
+  userId    String @db.Uuid
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+  @@index([expiresAt])
+}
