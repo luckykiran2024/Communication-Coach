@@ -1369,7 +1369,14 @@ var app = await buildApp(store, { logger: true, origins: env.CORS_ORIGINS.split(
 // src/vercel-handler.ts
 async function handler(request, response) {
   await app.ready();
-  request.url = request.url?.replace(/^\/api(?=\/|\?|$)/, "") || "/";
+  const requestUrl = new URL(request.url ?? "/", "http://vercel.local");
+  const originalPath = requestUrl.searchParams.get("__route");
+  if (originalPath !== null) {
+    requestUrl.searchParams.delete("__route");
+    request.url = `/${originalPath}${requestUrl.search}`;
+  } else {
+    request.url = requestUrl.pathname.replace(/^\/api(?=\/|$)/, "") + requestUrl.search;
+  }
   app.server.emit("request", request, response);
 }
 export {
