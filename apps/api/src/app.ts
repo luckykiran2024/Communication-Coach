@@ -1,237 +1,590 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×½vá:-jZ.¶›­–)Ş³V–×÷'Bf7F–g’Â²G—Rf7F–g•&WVW7BÒg&öÒ&f7F–g’#°¦–×÷'B6÷'2g&öÒ$f7F–g’ö6÷'2#°¦–×÷'B†VÆÖWBg&öÒ$f7F–g’ö†VÆÖWB#°¦–×÷'B&FTÆ–Ö—Bg&öÒ$f7F–g’÷&FRÖÆ–Ö—B#°¦–×÷'B²7&VFT†6‚Â&æFöÔ'—FW2Â&æFöÕUT”BÒg&öÒ&æöFS¦7'—Fò#°¦–×÷'B²¢Òg&öÒ'¦öB#°¦–×÷'B²76W746öÖ×Væ–6F–öäWf–FVæ6RÂ6öçfW'6F–öä7&VFU66†VÖÂ7&VFVçF–Ç566†VÖÂvWDVævvVÖVçDÆWfVÂÂvWDÖ7FW'”ÆWfVÂÂ—5V&Æ—6†VE66Væ&–òÂÖ7FW'”ÆWfVÇ2ÂöWF…66†VÖÂ&öf–ÆU66†VÖÂ&V6öÖÖVæE66Væ&–÷2ÂÖöGVÆW2ÂÆç566†VÖÂ66Væ&–õ66†VÖÂ66Væ&–÷2ÂW6W$6öçfW'6F–öåGW&å66†VÖÂfö–6UG&ç7÷'E7FGW2Òg&öÒ$6ö6‚ö6÷&R#°¦–×÷'BÆäFFg&öÒ"ââö6öæf–r÷Æç2æ§6öâ#°¦–×÷'B²6öæfÆ–7DW'&÷"ÂG—RVçF—FÆVÖVçBÂG—RôWF„–FVçF—G’ÂG—RW&6†6T–çFVçBÂG—R7F÷&RÂG—Rfö–6U6W76–öâÒg&öÒ"â÷7F÷&R#°¦–×÷'B²†6…77v÷&BÂfW&–g•77v÷&BÒg&öÒ"â÷77v÷&B#°¦–×÷'B²&÷f–FW%Væf–Æ&ÆTW'&÷"Â7F'DÆ—fT6öçfW'6F–öâÒg&öÒ"âö6öçfW'6F–öâ×6W'f–6R#°¦–×÷'B²&VÇF–ÖUfö–6U&÷f–FW"Òg&öÒ"â÷&VÇF–ÖR×fö–6R×&÷f–FW"#°¦–×÷'BG—R²fW&–f–VDÆTæ÷F–f–6F–öâÂfW&–f–VE7F÷&UW&6†6RÒg&öÒ"â÷7F÷&R×fW&–f–W"#° ¦6Æ72”W'&÷"W‡FVæG2W'&÷"°¢6öç7G'V7F÷"‡V&Æ–27FGW46öFS¢çVÖ&W"ÂÖW76vS¢7G&–ær’²7WW"†ÖW76vR“²Ğ§Ğ¦6öç7BF–vW7BÒ‡fÇVS¢7G&–ær’Óâ7&VFT†6‚‚'6†#Sb"’çWFFR‡fÇVR’æF–vW7B‚&†W‚"“°¦gVæ7F–öâF”¶W’†FFS¢FFRÂF–ÖW¦öæS¢7G&–ær’°¢6öç7B'G2ÒæWr–çFÂäFFUF–ÖTf÷&ÖB‚&Vâ"Â²F–ÖU¦öæS¢F–ÖW¦öæRÂ–V#¢&çVÖW&–2"ÂÖöçFƒ¢#"ÖF–v—B"ÂF“¢#"ÖF–v—B"Ò’æf÷&ÖEFõ'G2†FFR“°¢6öç7BfÇVW2Òö&¦V7Bæg&öÔVçG&–W2‡'G2æf–ÇFW"‡'BÓâ'BçG—RÓÒ&Æ—FW&Â"’æÖ‡'BÓâ·'BçG—RÂ'BçfÇVUÒ’“°¢&WGW&âG·fÇVW2ç–V'ÒÒG·fÇVW2æÖöçF‡ÒÒG·fÇVW2æF—Ö°§Ğ¦gVæ7F–öâæW‡E&W6WB†FFS¢FFRÂF–ÖW¦öæS¢7G&–ær’°¢6öç7B7W'&VçBÒF”¶W’†FFRÂF–ÖW¦öæR“°¢f÷"†ÆWBÖ–çWFRÒ²Ö–çWFRÃÒ3b¢c²Ö–çWFR²²’°¢6öç7B6æF–FFRÒæWrFFR†FFRævWEF–ÖR‚’²Ö–çWFR¢có“°¢–b†F”¶W’†6æF–FFRÂF–ÖW¦öæR’ÓÒ7W'&VçB’&WGW&â6æF–FFRçFô•4õ7G&–ær‚“°¢Ğ¢&WGW&âæWrFFR†FFRævWEF–ÖR‚’²#B¢c¢có’çFô•4õ7G&–ær‚“°§Ğ¦gVæ7F–öâ&–ÆÆ–æu&öGV7DÖ‡fÇVS¢7G&–ærÂVæFVf–æVB’°¢–b‚fÇVR’&WGW&â·Ò2&V6÷&CÇ7G&–ærÂ7G&–æsã°¢G'’²6öç7B'6VBÒ¥4ôâç'6R‡fÇVR’2Væ¶æ÷vã²&WGW&â'6VBbbG—Vöb'6VBÓÓÒ&ö&¦V7B"bb'&’æ—4'&’‡'6VB’ò'6VB2&V6÷&CÇ7G&–ærÂ7G&–æsâ¢·Ó²Ò6F6‚²&WGW&â·Ó²Ğ§Ğ¦W‡÷'B7–æ2gVæ7F–öâ'V–ÆD‡7F÷&S¢7F÷&RÂ÷F–öç3¢²ÆövvW#ó¢&ööÆVã²÷&–v–ç3ó¢7G&–æuµÓ²æ÷só¢‚’ÓâFFS²ÖævW$VÖ–Ç3ó¢7G&–æuµÓ²&–ÆÆ–æsó¢²Væ&ÆVCó¢&ööÆVã²vV&†ööµ6V7&WCó¢7G&–æs²vöövÆTæ÷F–f–6F–öå6V7&WCó¢7G&–æs²fW&–g”vöövÆTæ÷F–f–6F–öå&WVW7Có¢†WF†÷&—¦F–öã¢7G&–ærÂVæFVf–æVB’Óâ&öÖ—6SÆ&ööÆVãã²&öGV7DÖó¢&V6÷&CÇ7G&–ærÂ7G&–æsã²fW&–g•W&6†6Só¢†–çWC¢²&÷f–FW#¢&ÆR"Â&vöövÆR#²&öGV7D–C¢7G&–æs²G&ç67F–öä–C¢7G&–æs²W&6†6UFö¶Vã¢7G&–ærÒ’Óâ&öÖ—6SÅfW&–f–VE7F÷&UW&6†6RÂçVÆÃã²fW&–g”ÆTæ÷F–f–6F–öãó¢‡6–væVE–ÆöC¢7G&–ær’Óâ&öÖ—6SÅfW&–f–VDÆTæ÷F–f–6F–öâÂçVÆÃâÓ²fö–6Só¢²Væ&ÆVCó¢&ööÆVã²”¶W“ó¢7G&–æs²ÖöFVÃó¢7G&–æs²fö–6Só¢7G&–æs²fWF6„–×Ãó¢G—VöbfWF6‚Ó²öWFƒó¢²vöövÆT6Æ–VçD–G3ó¢7G&–æuµÓ²fWF6„–×Ãó¢G—VöbfWF6‚ÒÒÒ·Ò’°¢6öç7Bæ÷rÒ÷F–öç2ææ÷róò‚‚’ÓâæWrFFR‚’“°¢6öç7BÒf7F–g’‡²ÆövvW#¢÷F–öç2æÆövvW"ò²&VF7C¢²'&Wæ†VFW'2æWF†÷&—¦F–öâ"Â'&Wæ†VFW'2æ6öö¶–R%ÒÂ6W&–Æ—¦W'3¢²&W¢&WVW7BÓâ‡²ÖWF†öC¢&WVW7BæÖWF†öBÂW&Ã¢&WVW7BçW&ÂÒ’ÒÒ¢fÇ6RÂ&öG”Æ–Ö—C¢c3ƒBÂG'W7E&÷‡“¢fÇ6RÒ“°¢v—Bç&Vv—7FW"††VÆÖWB“°¢v—Bç&Vv—7FW"†6÷'2Â²÷&–v–ã¢÷F–öç2æ÷&–v–ç2óò²&‡GG¢òöÆö6Æ†÷7C£3"Â&‡GG¢òöÆö6Æ†÷7C£ƒƒ%ÒÒ“°¢v—Bç&Vv—7FW"‡&FTÆ–Ö—BÂ²Öƒ¢ÂF–ÖUv–æF÷s¢#Ö–çWFR"Ò“°¢6öç7BÆç2ÒÆç566†VÖç'6R‡ÆäFF“°¢6öç7B7FæF&DF–Ç”ÆÆ÷væ6U6V6öæG2ÒÆç2æf–æB‡ÆâÓâÆâæ–BÓÓÒ&W†V7WF—fR"“òæF–Ç•6V6öæG2óò#¢c°¢6öç7BGVÖ×”†6‚Òv—B†6…77v÷&B‡&æFöÔ'—FW2ƒ3"’çFõ7G&–ær‚&†W‚"’“°¢6öç7Bf–Æ&ÆU66Væ&–÷2Ò7–æ2‚’Óâ²ââç66Væ&–÷2Ââââ†v—B7F÷&Ræ7W7FöÕ66Væ&–÷2‚’•Ó°¢6öç7B6öæf–wW&VDÖævW$¶W’Ò&ö6W72æVçbäÔätU%õ44Tä$”õô´U’óò‡&ö6W72æVçbääôDUôTåbÓÓÒ'&öGV7F–öâ"ò""¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"“°¢6öç7B6öæf–wW&VDÖævW$VÖ–Ç2ÒæWr6WB‚†÷F–öç2æÖævW$VÖ–Ç2óò‡&ö6W72æVçbäÔätU%ôTÔ”Å2óò""’ç7Æ—B‚"Â"’’æÖ†VÖ–ÂÓâVÖ–ÂçG&–Ò‚’çFôÆ÷vW$66R‚’’æf–ÇFW"„&ööÆVâ’“°¢6öç7B&–ÆÆ–ætVæ&ÆVBÒ÷F–öç2æ&–ÆÆ–æsòæVæ&ÆVBóò&ö6W72æVçbä$”ÄÄ”äuôTä$ÄTBÓÓÒ'G'VR#°¢6öç7B&–ÆÆ–æuvV&†ööµ6V7&WBÒ÷F–öç2æ&–ÆÆ–æsòçvV&†ööµ6V7&WBóò&ö6W72æVçbä$”ÄÄ”äuõtT$„ôôµõ4T5$UBóò"#°¢6öç7BvöövÆTæ÷F–f–6F–öå6V7&WBÒ÷F–öç2æ&–ÆÆ–æsòævöövÆTæ÷F–f–6F–öå6V7&WBóò&ö6W72æVçbätôôtÄUõT%5T%õtT$„ôôµõ4T5$UBóò&–ÆÆ–æuvV&†ööµ6V7&WC°¢6öç7B6öæf–wW&VD&–ÆÆ–æu&öGV7DÖÒ÷F–öç2æ&–ÆÆ–æsòç&öGV7DÖóò&–ÆÆ–æu&öGV7DÖ‡&ö6W72æVçbä$”ÄÄ”äuõ$ôET5EôÔ“°¢6öç7B&VÇF–ÖTVæ&ÆVBÒ÷F–öç2çfö–6SòæVæ&ÆVBóò&ö6W72æVçbäõTä•õ$TÅD”ÔUôTä$ÄTBÓÓÒ'G'VR#°¢6öç7B&VÇF–ÖT”¶W’Ò÷F–öç2çfö–6Sòæ”¶W’óò&ö6W72æVçbäõTä•ô•ô´U’óò"#°¢6öç7B&VÇF–ÖT6öæf–wW&VBÒ&VÇF–ÖTVæ&ÆVBbb&VÇF–ÖT”¶W’æÆVæwF‚â°¢6öç7B&VÇF–ÖU&÷f–FW"Ò&VÇF–ÖT6öæf–wW&VBòæWr&VÇF–ÖUfö–6U&÷f–FW"‡²”¶W“¢&VÇF–ÖT”¶W’ÂÖöFVÃ¢÷F–öç2çfö–6SòæÖöFVÂóò&ö6W72æVçbäõTä•õ$TÅD”ÔUôÔôDTÂóò&wB×&VÇF–ÖRÓ"ã"Âfö–6S¢÷F–öç2çfö–6Sòçfö–6Róò&ö6W72æVçbäõTä•õ$TÅD”ÔUõdô”4Róò&Ö&–â"ÂfWF6„–×Ã¢÷F–öç2çfö–6SòæfWF6„–×ÂÒ’¢çVÆÃ°¢7–æ2gVæ7F–öâ&Vfö–6U6W76–öç2‚’°¢v—B7F÷&RæW‡—&Ufö–6U6W76–öç2†æ÷r‚’“°¢–b‚&VÇF–ÖU&÷f–FW"’&WGW&ã°¢6öç7BVæF–ærÒv—B7F÷&RçVæF–æufö–6U&÷f–FW$6ÆÇ2‚“°¢v—B&öÖ—6RæÆÂ‡VæF–æræÖ†7–æ26W76–öâÓâ°¢–b‚6W76–öâç&÷f–FW$6ÆÄ–B’&WGW&ã°¢G'’²v—B&VÇF–ÖU&÷f–FW"çFW&Ö–æFR‡6W76–öâç&÷f–FW$6ÆÄ–B“²v—B7F÷&RæÖ&µfö–6U&÷f–FW%FW&Ö–æFVB‡6W76–öâæ–BÂæ÷r‚’“²Ğ¢6F6‚²&WGW&ã²Ğ¢Ò’“°¢Ğ¢6öç7BW‡—'•F–ÖW"Ò6WD–çFW'fÂ‚‚’Óâ²fö–B&Vfö–6U6W76–öç2‚’æ6F6‚‚‚’ÓâVæFVf–æVB“²ÒÂ3ó“°¢W‡—'•F–ÖW"çVç&Vb‚“°¢æFD†öö²‚&öä6Æ÷6R"Â7–æ2‚’Óâ²6ÆV$–çFW'fÂ†W‡—'•F–ÖW"“²Ò“°¢gVæ7F–öâÆäf÷%&öGV7B‡&öGV7D–C¢7G&–ær’°¢6öç7B6öæf–wW&VEÆä–BÒ6öæf–wW&VD&–ÆÆ–æu&öGV7DÖ·&öGV7D–EÓ°¢6öç7BÆâÒÆç2æf–æB†—FVÒÓâ—FVÒæ–BÓÓÒ6öæf–wW&VEÆä–B“°¢–b‡Æâ’&WGW&âÆã°¢–b‡&ö6W72æVçbääôDUôTåbÓÓÒ'&öGV7F–öâ"’&WGW&âVæFVf–æVC°¢&WGW&âÆç2æf–æB†—FVÒÓâ&öGV7D–BæVæG5v—F‚†âG¶—FVÒæ–GÒæÖöçF†Ç–’ÇÂ&öGV7D–BæVæG5v—F‚†âG¶—FVÒæ–GÖ’“°¢Ğ¢7–æ2gVæ7F–öâF–Ç”ÆÆ÷væ6R‡W6W$–C¢7G&–ær’°¢–b‚&–ÆÆ–ætVæ&ÆVB’&WGW&â7FæF&DF–Ç”ÆÆ÷væ6U6V6öæG3°¢6öç7BVçF—FÆVÖVçBÒv—B7F÷&RæVçF—FÆVÖVçB‡W6W$–B“°¢–b‚VçF—FÆVÖVçBÇÂVçF—FÆVÖVçBç7FGW2ÓÒ&7F—fR"ÇÂ†VçF—FÆVÖVçBæW‡—&W4BbbVçF—FÆVÖVçBæW‡—&W4BÃÒæ÷r‚’’’&WGW&â°¢&WGW&âÆäf÷%&öGV7B†VçF—FÆVÖVçBç&öGV7D–B“òæF–Ç•6V6öæG2óò°¢Ğ¢6öç7B&–ÆÆ–æuvV&†ööµ66†VÖÒ¢æö&¦V7B‡°¢W&6†6T–çFVçD–C¢¢ç7G&–ær‚’çWV–B‚’À¢&öGV7D–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ#’À¢G&ç67F–öä–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ3’À¢÷&–v–æÅG&ç67F–öä–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ3’æ÷F–öæÂ‚’À¢W&6†6UFö¶Vã¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒS’æ÷F–öæÂ‚’À¢7FGW3¢¢æVçVÒ…²&7F—fR"Â&W‡—&VB"Â'&Wfö¶VB%Ò’À¢Vçf—&öæÖVçC¢¢æVçVÒ…²'6æF&÷‚"Â'&öGV7F–öâ%Ò’À¢W‡—&W4C¢¢ç7G&–ær‚’æFFWF–ÖR‚’æçVÆÆ&ÆR‚’æ÷F–öæÂ‚’À¢Ò’ç7G&–7B‚“°¢6öç7B&–ÆÆ–æuW&6†6U66†VÖÒ¢æö&¦V7B‡²W&6†6T–çFVçD–C¢¢ç7G&–ær‚’çWV–B‚’Â&÷f–FW#¢¢æVçVÒ…²&ÆR"Â&vöövÆR%Ò’Â&öGV7D–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ#’ÂG&ç67F–öä–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ3’ÂW&6†6UFö¶Vã¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒS’Ò’ç7G&–7B‚“°¢6öç7BÆTæ÷F–f–6F–öå66†VÖÒ¢æö&¦V7B‡²6–væVE–ÆöC¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ’Ò’ç7G&–7B‚“°¢6öç7BvöövÆUV%7V%66†VÖÒ¢æö&¦V7B‡²ÖW76vS¢¢æö&¦V7B‡²FF¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ’ÂÖW76vT–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ#’æ÷F–öæÂ‚’Ò’ç7G&–7B‚’Â7V'67&—F–öã¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒS’æ÷F–öæÂ‚’Ò’ç7G&–7B‚“°¢6öç7BvöövÆU7V'67&—F–öäæ÷F–f–6F–öå66†VÖÒ¢æö&¦V7B‡²6¶vTæÖS¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ3’ÂWfVçEF–ÖTÖ–ÆÆ—3¢¢ç7G&–ær‚’ç&VvW‚‚õåÆB²Bò’Â7V'67&—F–öäæ÷F–f–6F–öã¢¢æö&¦V7B‡²W&6†6UFö¶Vã¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒS’Â7V'67&—F–öä–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ#’Âæ÷F–f–6F–öåG—S¢¢æçVÖ&W"‚’æ–çB‚’æÖ–âƒ’æÖ‚ƒ#’Ò’ç7G&–7B‚’æ÷F–öæÂ‚’Ò’ç7G&–7B‚“°¢6öç7BW&6†6T–çFVçE66†VÖÒ¢æö&¦V7B‡²&÷f–FW#¢¢æVçVÒ…²&ÆR"Â&vöövÆR%Ò’Â&öGV7D–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ#’Ò’ç7G&–7B‚“°¢6öç7Bfö–6U6W76–öå66†VÖÒ¢æö&¦V7B‡²6öçfW'6F–öä–C¢¢ç7G&–ær‚’çWV–B‚’Â66Væ&–ô–C¢¢ç7G&–ær‚’æÖ–âƒ’æÖ‚ƒ’Ò’ç7G&–7B‚“°¢6öç7Bfö–6U7F÷66†VÖÒ¢æö&¦V7B‡²6öç7VÖVE6V6öæG3¢¢æçVÖ&W"‚’æ–çB‚’æÖ–âƒ’æÖ‚ƒ#’æFVfVÇBƒ’Ò’ç7G&–7B‚’æFVfVÇB‡·Ò“°¢6öç7Bfö–6U&÷f–FW$6ÆÅ66†VÖÒ¢æö&¦V7B‡²&÷f–FW$6ÆÄ–C¢¢ç7G&–ær‚’ç&VvW‚‚õå´Õ¦×£Ó’åó¢Õ×³Ã#ÒBò’Ò’ç7G&–7B‚“°¢6öç7Bfö–6UG&ç67&—E66†VÖÒ¢æö&¦V7B‡²&öÆS¢¢æVçVÒ…²'W6W""Â&76—7FçB%Ò’Â†6S¢¢æVçVÒ…²'&–Ö'’"Â&–æFWVæFVçE÷&WG'’%Ò’æFVfVÇB‚'&–Ö'’"’ÂFW‡C¢¢ç7G&–ær‚’çG&–Ò‚’æÖ–âƒ’æÖ‚ƒ’Ò’ç7G&–7B‚“°¢6öç7B&Wf–Wu66Væ&–õ66†VÖÒ¢æö&¦V7B‡²7FGW3¢¢æVçVÒ…²&G&gB"Â'V&Æ—6†VB"Â&FW&V6FVB%Ò’Ò’ç7G&–7B‚“°¢6öç7B&öÆÆ&6µ66Væ&–õ66†VÖÒ¢æö&¦V7B‡²&Wf—6–öä–C¢¢ç7G&–ær‚’çWV–B‚’Ò’ç7G&–7B‚“°¢7–æ2gVæ7F–öâ&WV—&TÖævW"‡&WVW7C¢f7F–g•&WVW7B’°¢–b‡&ö6W72æVçbääôDUôTåbÓÒ'&öGV7F–öâ"bb6öæf–wW&VDÖævW$¶W’bb&WVW7Bæ†VFW'5²'‚ÖÖævW"Ö¶W’%ÒÓÓÒ6öæf–wW&VDÖævW$¶W’’&WGW&â²W6W$–C¢çVÆÂ27G&–ærÂçVÆÂÓ°¢6öç7B²W6W"ÒÒv—BWF†VçF–6FR‡&WVW7B“°¢–b‡W6W"ç&öÆRÓÒ&ÖævW""bb6öæf–wW&VDÖævW$VÖ–Ç2æ†2‡W6W"æVÖ–Â’’F‡&÷ræWr”W'&÷"ƒC2Â$ÖævW"66W72—2&WV—&VBâ"“°¢&WGW&â²W6W$–C¢W6W"æ–BÓ°¢Ğ¢6öç7B6ö×ÆWFVE7FFW2ÒæWr6WB…²$4ôÕÄUDTB"Â$54U54”är"Â$dTTD$4µõ$TE’%Ò“°¢7–æ2gVæ7F–öâÆV&æW%66Væ&–õ&öw&W72‡W6W$–C¢7G&–ærÂ&öf–ÆS¢v—FVCÅ&WGW&åG—SÅ7F÷&U²'&öf–ÆR%Óãâ’°¢–b‚&öf–ÆR’&WGW&â²Ö7FW'“¢vWDÖ7FW'”ÆWfVÂ‡²&7F–6TF—3¢Â6ö×ÆWFVE66Væ&–÷3¢Â7V66W76gVÅ&WG&–W3¢ÂWf–FVæ6T76W76ÖVçG3¢Ò’Â6ö×ÆWFVE66Væ&–ô–G3¢µÒ27G&–æuµÒÓ°¢6öç7B6öçfW'6F–öç2Òv—B7F÷&Ræ6öçfW'6F–öç2‡W6W$–B“°¢6öç7B6ö×ÆWFVBÒ6öçfW'6F–öç2æf–ÇFW"†6öçfW'6F–öâÓâ6ö×ÆWFVE7FFW2æ†2†6öçfW'6F–öâç7FFR’“°¢6öç7BWf–FVæ6U&÷w2Òv—B&öÖ—6RæÆÂ†6ö×ÆWFVBæÖ†7–æ26öçfW'6F–öâÓâ°¢6öç7BGW&ç2Òv—B7F÷&Ræ6öçfW'6F–öåGW&ç2‡W6W$–BÂ6öçfW'6F–öâæ–B“°¢6öç7B&–Ö'’ÒGW&ç2æf–æB‡GW&âÓâGW&âç&öÆRÓÓÒ'W6W""bbGW&âç†6RÓÓÒ'&–Ö'’"“°¢6öç7B&WG'’Ò²ââçGW&ç5Òç&WfW'6R‚’æf–æB‡GW&âÓâGW&âç&öÆRÓÓÒ'W6W""bbGW&âç†6RÓÓÒ&–æFWVæFVçE÷&WG'’"“°¢&WGW&â&–Ö'’bb&WG'’ò76W746öÖ×Væ–6F–öäWf–FVæ6R‡²&–Ö'“¢&–Ö'’çFW‡BÂ&WG'“¢&WG'’çFW‡BÒ’¢çVÆÃ°¢Ò’“°¢6öç7B76W76ÖVçG2ÒWf–FVæ6U&÷w2æf–ÇFW"‚†76W76ÖVçB“¢76W76ÖVçB—2æöäçVÆÆ&ÆSÇG—Vöb76W76ÖVçCâÓâ76W76ÖVçBÓÒçVÆÂ“°¢6öç7B&7F–6TF—2ÒæWr6WB†6ö×ÆWFVBæÖ†6öçfW'6F–öâÓâF”¶W’†6öçfW'6F–öâæ7&VFVDBÂ&öf–ÆRçF–ÖW¦öæR’’’ç6—¦S°¢6öç7B6ö×ÆWFVE66Væ&–ô–G2Ò²ââææWr6WB†6ö×ÆWFVBæÖ†6öçfW'6F–öâÓâ6öçfW'6F–öâç66Væ&–ô–B’•Ó°¢&WGW&â²Ö7FW'“¢vWDÖ7FW'”ÆWfVÂ‡²&7F–6TF—2Â6ö×ÆWFVE66Væ&–÷3¢6ö×ÆWFVE66Væ&–ô–G2æÆVæwF‚Â7V66W76gVÅ&WG&–W3¢76W76ÖVçG2æf–ÇFW"†76W76ÖVçBÓâ76W76ÖVçBç76VB’æÆVæwF‚ÂWf–FVæ6T76W76ÖVçG3¢76W76ÖVçG2æÆVæwF‚Ò’Â6ö×ÆWFVE66Væ&–ô–G2Ó°¢Ğ ¢7–æ2gVæ7F–öâWF†VçF–6FR‡&WVW7C¢f7F–g•&WVW7B’°¢6öç7BFö¶VâÒ&WVW7Bæ†VFW'2æWF†÷&—¦F–öãòæÖF6‚‚õä&V&W"…¶ÖcÓ•×³cGÒ’Bò“òå³Ó°¢–b‚Fö¶Vâ’F‡&÷ræWr”W'&÷"ƒCÂ%6–vâ–âFò6öçF–çVRâ"“°¢6öç7BFö¶Vä†6‚ÒF–vW7B‡Fö¶Vâ“°¢6öç7B6W76–öâÒv—B7F÷&Rç6W76–öä'”†6‚‡Fö¶Vä†6‚“°¢–b‚6W76–öâÇÂ6W76–öâæW‡—&W4BÃÒæ÷r‚’’F‡&÷ræWr”W'&÷"ƒCÂ%–÷W"6W76–öâ†2W‡—&VBâÆV6R6–vâ–ââ"“°¢6öç7BW6W"Òv—B7F÷&Ræ66÷VçD'”–B‡6W76–öâçW6W$–B“°¢–b‚W6W"’F‡&÷ræWr”W'&÷"ƒCÂ%6–vâ–âFò6öçF–çVRâ"“°¢&WGW&â²W6W"ÂFö¶Vä†6‚Ó°¢Ğ¢7–æ2gVæ7F–öâ—77VU6W76–öâ‡W6W#¢²–C¢7G&–æs²VÖ–Ã¢7G&–ærÒ’°¢6öç7BFö¶VâÒ&æFöÔ'—FW2ƒ3"’çFõ7G&–ær‚&†W‚"“°¢6öç7BW‡—&W4BÒæWrFFR†æ÷r‚’ævWEF–ÖR‚’²r¢ƒcC“°¢v—B7F÷&Ræ7&VFU6W76–öâ‡²Fö¶Vä†6ƒ¢F–vW7B‡Fö¶Vâ’ÂW6W$–C¢W6W"æ–BÂW‡—&W4BÒ“°¢&WGW&â²Fö¶VâÂW‡—&W4C¢W‡—&W4BçFô•4õ7G&–ær‚’ÂW6W#¢²–C¢W6W"æ–BÂVÖ–Ã¢W6W"æVÖ–ÂÒÓ°¢Ğ¢7–æ2gVæ7F–öâfW&–f–VDôWF„–FVçF—G’‡&÷f–FW#¢&vöövÆR"Â&Ö–7&÷6ögB"Â66W75Fö¶Vã¢7G&–ær’°¢G—R&÷f–FW$–FVçF—G•&W7öç6RÒ²VÖ–Ãó¢7G&–æs²Ö–Ãó¢7G&–æs²W6W%&–æ6—ÄæÖSó¢7G&–æs²7V#ó¢7G&–æs²–Có¢7G&–æs²VCó¢7G&–ærÂ7G&–æuµÓ²VÖ–Å÷fW&–f–VCó¢&ööÆVâÂ7G&–ærÓ°¢6öç7B&W7öç6RÒ&÷f–FW"ÓÓÒ&vöövÆR ¢òv—B†÷F–öç2æöWFƒòæfWF6„–×ÂóòfWF6‚’†‡GG3¢òööWFƒ"ævöövÆV—2æ6öÒ÷Fö¶Væ–æfóö66W75÷Fö¶VãÒG¶Væ6öFUU$”6ö×öæVçB†66W75Fö¶Vâ—Ö¢¢v—B†÷F–öç2æöWFƒòæfWF6„–×ÂóòfWF6‚’‚&‡GG3¢òöw&‚æÖ–7&÷6ögBæ6öÒ÷cãöÖR"Â²†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G¶66W75Fö¶VçÖÒÒ“°¢–b‚&W7öç6Ræö²’F‡&÷ræWr”W'&÷"ƒCÂ%F†R&÷f–FW"6–vâÖ–âFö¶Vâ—2–çfÆ–B÷"W‡—&VBâ"“°¢6öç7BFFÒv—B&W7öç6Ræ§6öâ‚’2&÷f–FW$–FVçF—G•&W7öç6S°¢6öç7BVÖ–ÂÒ†FFæVÖ–ÂóòFFæÖ–ÂóòFFçW6W%&–æ6—ÄæÖRóò""’çG&–Ò‚’çFôÆ÷vW$66R‚“°¢–b‚VÖ–ÂÇÂVÖ–Âæ–æ6ÇVFW2‚$"’’F‡&÷ræWr”W'&÷"ƒCÂ%F†R&÷f–FW"F–Bæ÷B&WGW&ââVÖ–ÂFG&W72â"“°¢6öç7B7V&¦V7BÒ‡&÷f–FW"ÓÓÒ&vöövÆR"òFFç7V"¢FFæ–B“òçG&–Ò‚’óò"#°¢–b‚7V&¦V7B’F‡&÷ræWr”W'&÷"ƒCÂ%F†R&÷f–FW"F–Bæ÷B&WGW&â7F&ÆR66÷VçB–FVçF–f–W"â"“°¢–b‡&÷f–FW"ÓÓÒ&vöövÆR"bbFFæVÖ–Å÷fW&–f–VBÓÒG'VRbbFFæVÖ–Å÷fW&–f–VBÓÒ'G'VR"’F‡&÷ræWr”W'&÷"ƒCÂ%F†RvöövÆRVÖ–Â—2æ÷BfW&–f–VBâ"“°¢–b‡&÷f–FW"ÓÓÒ&vöövÆR"’°¢6öç7BÆÆ÷vVD6Æ–VçD–G2Ò÷F–öç2æöWFƒòævöövÆT6Æ–VçD–G2óòµÓ°¢6öç7BVF–Væ6W2ÒFFæVBò„'&’æ—4'&’†FFæVB’òFFæVB¢¶FFæVEÒ’¢µÓ°¢–b†ÆÆ÷vVD6Æ–VçD–G2æÆVæwF‚âbbVF–Væ6W2ç6öÖR†VF–Væ6RÓâÆÆ÷vVD6Æ–VçD–G2æ–æ6ÇVFW2†VF–Væ6R’’’F‡&÷ræWr”W'&÷"ƒCÂ%F†RvöövÆR6–vâÖ–âFö¶Vâv2—77VVBf÷"âVç&V6övæ—¦VBÆ–6F–öââ"“°¢Ğ¢&WGW&â²VÖ–ÂÂ7V&¦V7BÓ°¢Ğ¢ç6WDW'&÷$†æFÆW"‚†W'&÷"Â&WVW7BÂ&WÇ’’Óâ°¢–b†W'&÷"–ç7Fæ6Vöb6öæfÆ–7DW'&÷"’&WGW&â&WÇ’æ6öFRƒC’’ç6VæB‡²W'&÷#¢W'&÷"æÖW76vRÇÂ%Væ&ÆRFò7&VFR66÷VçBâG'’6–væ–ær–ââ"Ò“°¢6öç7Bf–ÇW&RÒW'&÷"–ç7Fæ6VöbW'&÷"òW'&÷"2W'&÷"b²7FGW46öFSó¢çVÖ&W"Ò¢æWrW'&÷"‚%Væ¶æ÷vâW'&÷""“°¢6öç7B7FGW2Ò'7FGW46öFR"–âf–ÇW&RbbG—Vöbf–ÇW&Rç7FGW46öFRÓÓÒ&çVÖ&W""bbf–ÇW&Rç7FGW46öFRãÒCbbf–ÇW&Rç7FGW46öFRÂSòf–ÇW&Rç7FGW46öFR¢S°¢–b‡7FGW2ÓÓÒS’&WVW7BæÆöræW'&÷"‡²W'&÷%G—S¢f–ÇW&RææÖRÒÂ%&WVW7Bf–ÆVB"“°¢&WGW&â&WÇ’æ6öFR‡7FGW2’ç6VæB‡²W'&÷#¢7FGW2ÓÓÒSò%6W'f–6RVæf–Æ&ÆRâÆV6RG'’v–ââ"¢f–ÇW&RæÖW76vRÒ“°¢Ò“°¢æFD†öö²‚&öå6VæB"Â7–æ2…÷&WVW7BÂ&WÇ’Â–ÆöB’Óâ²&WÇ’æ†VFW"‚$66†RÔ6öçG&öÂ"Â&æò×7F÷&R"“²&WGW&â–ÆöC²Ò“°¢ævWB‚"ö†VÇF‚"Â7–æ2‚’Óâ‡²7FGW3¢&ö²"ÂfW'6–öã¢#ãã"Ò’“°¢ævWB‚"÷&VG’"Â7–æ2…÷&WVW7BÂ&WÇ’’Óâ°¢G'’²v—B7F÷&Rç&VG’‚“²&WGW&â²7FGW3¢'&VG’"Ó²Ğ¢6F6‚²&WGW&â&WÇ’æ6öFRƒS2’ç6VæB‡²7FGW3¢&FF&6U÷Væf–Æ&ÆR"Ò“²Ğ¢Ò“°¢ævWB‚"÷cö6FÆör"Â7–æ2‚’Óâ‡²ÖöGVÆW2ÂÆç2Â&–6Tæ÷F–6S¢%&÷÷6VBÖöçF†Ç’”å"&–6W2â7F÷&R&–6–æræBW&6†6W2&Ræ÷B6öæf–wW&VBâ"ÂÆ—fUfö–6Tf–Æ&ÆS¢fÇ6RÒ’“°¢ævWB‚"÷cöÖRöVçF—FÆVÖVçB"Â7–æ2&WVW7BÓâ°¢6öç7B²W6W"ÒÒv—BWF†VçF–6FR‡&WVW7B“°¢&WGW&â²VçF—FÆVÖVçC¢v—B7F÷&RæVçF—FÆVÖVçB‡W6W"æ–B’Ó°¢Ò“°¢ç÷7B‚"÷cö&–ÆÆ–ærö–çFVçG2"Â7–æ2‡&WVW7BÂ&WÇ’’Óâ°¢6öç7B²W6W"ÒÒv—BWF†VçF–6FR‡&WVW7B“°¢–b‚&–ÆÆ–ætVæ&ÆVBÇÂ&–ÆÆ–æuvV&†ööµ6V7&WB’F‡&÷ræWr”W'&÷"ƒS2Â$&–ÆÆ–ær&÷f–FW"—2æ÷B6öæf–wW&VBâ"“°¢6öç7B'6VBÒW&6†6T–çFVçE66†VÖç6fU'6R‡&WVW7Bæ&öG’“°¢–b‚'6VBç7V66W72’F‡&÷ræWr”W'&÷"ƒCÂ$6†ö÷6RfÆ–BÆR÷"vöövÆR&öGV7Bâ"“°¢6öç7BF–ÖW7F×Òæ÷r‚“°¢6öç7B–çFVçC¢W&6†6T–çFVçBÒ²–C¢&æFöÕUT”B‚’ÂW6W$–C¢W6W"æ–BÂ&÷f–FW#¢'6VBæFFç&÷f–FW"Â&öGV7D–C¢'6VBæFFç&öGV7D–BÂæöæ6S¢&æFöÔ'—FW2ƒ#B’çFõ7G&–ær‚&&6ScGW&Â"’Â7FGW3¢'VæF–ær"Â7&VFVDC¢F–ÖW7F×ÂW‡—&W4C¢æWrFFR‡F–ÖW7F×ævWEF–ÖR‚’²R¢có’Ó°¢v—B7F÷&Ræ7&VFUW&6†6T–çFVçB†–çFVçB“°¢&WGW&â&WÇ’æ6öFRƒ#’ç6VæB‡²–çFVçC¢²–C¢–çFVçBæ–BÂ&÷f–FW#¢–çFVçBç&÷f–FW"Â&öGV7D–C¢–çFVçBç&öGV7D–BÂæöæ6S¢–çFVçBææöæ6RÂ7FGW3¢–çFVçBç7FGW2ÂW‡—&W4C¢–çFVçBæW‡—&W4BçFô•4õ7G&–ær‚’ÒÂÖW76vS¢%W&6†6R–çFVçB7&VFVBâ–æ6ÇVFRF†Ræöæ6R–âF†R7F÷&RW&6†6RæB6VæBöæÇ’fW&–f–VB7F÷&RWfVçG2FòF†RvV&†öö²â"Ò“°¢Ò“°¢ç÷7B‚"÷cö&–ÆÆ–ær÷vV&†öö·2ó§&÷f–FW""Â7–æ2‡&WVW7BÂ&WÇ’’Óâ°¢–b‚&–ÆÆ–ætVæ&ÆVBÇÂ&–ÆÆ–æuvV&†ööµ6V7&WB’F‡&÷ræWr”W'&÷"ƒS2Â$&–ÆÆ–ær&÷f–FW"—2æ÷B6öæf–wW&VBâ"“°¢6öç7B&÷f–FW"Ò‡&WVW7Bç&×22²&÷f–FW#ó¢7G&–ærÒ’ç&÷f–FW#°¢–b‡&÷f–FW"ÓÒ&ÆR"bb&÷f–FW"ÓÒ&vöövÆR"’F‡&÷ræWr”W'&÷"ƒCÂ$6†ö÷6RÆR÷"vöövÆR2F†R&–ÆÆ–ær&÷f–FW"â"“°¢–b‡&WVW7Bæ†VFW'5²'‚Ö&–ÆÆ–ær×vV&†öö²×6V7&WB%ÒÓÒ&–ÆÆ–æuvV&†ööµ6V7&WB’F‡&÷ræWr”W'&÷"ƒCÂ$&–ÆÆ–ærvV&†öö²WF†VçF–6F–öâf–ÆVBâ"“°¢6öç7B'6VBÒ&–ÆÆ–æuvV&†ööµ66†VÖç6fU'6R‡&WVW7Bæ&öG’“°¢–b‚'6VBç7V66W72’F‡&÷ræWr”W'&÷"ƒCÂ%&÷f–FRfÆ–BVçF—FÆVÖVçBWfVçBâ"“°¢6öç7B–çFVçBÒv—B7F÷&RçW&6†6T–çFVçB‡'6VBæFFçW&6†6T–çFVçD–B“°¢–b‚–çFVçBÇÂ–çFVçBç7FGW2ÓÓÒ&6æ6VÆÆVB"ÇÂ†–çFVçBç7FGW2ÓÓÒ'VæF–ær"bb–çFVçBæW‡—&W4BÃÒæ÷r‚’’’F‡&÷ræWr”W'&÷"ƒC’Â%F†RW&6†6R–çFVçB—2Ö—76–ær÷"W‡—&VBâ"“°¢–b†–çFVçBç&÷f–FW"ÓÒ&÷f–FW"ÇÂ–çFVçBç&öGV7D–BÓÒ'6VBæFFç&öGV7D–B’F‡&÷ræWr”W'&÷"ƒC’Â%F†R7F÷&RWfVçBFöW2æ÷BÖF6‚F†RW&6†6R–çFVçBâ"“°¢6öç7BW6W"Òv—B7F÷&Ræ66÷VçD'”–B†–çFVçBçW6W$–B“°¢–b‚W6W"’F‡&÷ræWr”W'&÷"ƒCBÂ%F†RVçF—FÆVÖVçB66÷VçBv2æ÷Bf÷VæBâ"“°¢6öç7BW†—7F–ærÒv—B7F÷&RæVçF—FÆVÖVçD'•G&ç67F–öä–B‡'6VBæFFçG&ç67F–öä–B“°¢–b†W†—7F–ærbb†W†—7F–ærçW6W$–BÓÒ–çFVçBçW6W$–BÇÂW†—7F–ærç&÷f–FW"ÓÒ&÷f–FW"ÇÂW†—7F–ærç&öGV7D–BÓÒ'6VBæFFç&öGV7D–B’’F‡&÷ræWr”W'&÷"ƒC’Â%F†RG&ç67F–öâ—2Ç&VG’Æ–æ¶VBFòæ÷F†W"VçF—FÆVÖVçBâ"“°¢6öç7BF–ÖW7F×Òæ÷r‚“°¢6öç7BVçF—FÆVÖVçC¢VçF—FÆVÖVçBÒ°¢–C¢W†—7F–æsòæ–Bóò&æFöŞuÛ‹h‘éì¶»§q«^w˜Ü™X]Y]ÒTÓÔİš[™Ê
-K\]Y]ˆÛÛ™\œØ][Û‹\]Y]ÒTÓÔİš[™Ê
-HKØÙ[˜\š[ÎˆÛÛ™\œØ][Û‹œØÙ[˜\š[ÔÛ˜\ÚİÏÈØ][ÙË™š[™
-][HOˆ][KšYOOHÛÛ™\œØ][Û‹œØÙ[˜\š[ÒY
-HJJK™š[\Š][HOˆ][KœØÙ[˜\š[ÊNÂˆ™]\›ˆÈÛÛ™\œØ][ÛœÎˆ][\ÈNÂˆJNÂˆ\™Ù]
-‹İŒKÛYKÜ›ÙÜ™\ÜÈ‹\Ş[˜È™\]Y\İOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆYˆ
-\›Ùš[JH›İÈ™]È\Q\œ›ÜŠKÛÛ\]H[İ\ˆ›Ùš[Hš\œİˆŠNÂˆÛÛœİÛÛ™\œØ][ÛœÈH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛœÊ\Ù\‹šY
-NÂˆÛÛœİÛÛ\]YHÛÛ™\œØ][ÛœË™š[\ŠÛÛ™\œØ][ÛˆOˆÛÛ\]Yİ]\Ëš\ÊÛÛ™\œØ][Û‹œİ]JJNÂˆÛÛœİ]šY[˜ÙT›İÜÈH]ØZ]›ÛZ\ÙK˜[
-ÛÛ\]Y›X\
-\Ş[˜ÈÛÛ™\œØ][ÛˆOˆÂˆÛÛœİ\›œÈH]ØZ]İÜ™K˜ÛÛ™\œØ][Û•\›œÊ\Ù\‹šYÛÛ™\œØ][Û‹šY
-NÂˆÛÛœİš[X\HH\›œË™š[™
-\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHœš[X\HŠNÂˆÛÛœİ™]HHË‹‹\›œ×Kœ™]™\œÙJ
-K™š[™
-\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHš[™\[™[Ü™]HŠNÂˆ™]\›ˆš[X\H	‰ˆ™]HÈ\ÜÙ\ÜĞÛÛ[][šXØ][Û‘]šY[˜ÙJÈš[X\Nˆš[X\K^™]Nˆ™]K^JHˆ[ÂˆJJNÂˆÛÛœİ\ÜÙ\ÜÛY[ÈH]šY[˜ÙT›İÜË™š[\Š
-\ÜÙ\ÜÛY[
-Nˆ\ÜÙ\ÜÛY[\È›Û“[X›O\[Ùˆ\ÜÙ\ÜÛY[ˆOˆ\ÜÙ\ÜÛY[OOH[
-NÂˆÛÛœİÙYZÔİ\H›İÊ
-K™Ù][YJ
-HHÈ
-ˆÂˆÛÛœİÙYZÛHHÛÛ™\œØ][ÛœË™š[\ŠÛÛ™\œØ][ÛˆOˆÛÛ™\œØ][Û‹˜Ü™X]Y]™Ù][YJ
-HHÙYZÔİ\
-NÂˆÛÛœİXİ]™Q^\ÈH™]ÈÙ]
-ÛÛ™\œØ][ÛœË›X\
-ÛÛ™\œØ][ÛˆOˆ^RÙ^JÛÛ™\œØ][Û‹˜Ü™X]Y]›Ùš[K[Y^›Û™JJJNÂˆ]İ\œ™[İ™XZÑ^\ÈHÂˆ›Üˆ
-]Ù™œÙ]HÈÙ™œÙ]ÍNÈÙ™œÙ]
-ÏHJHÂˆÛÛœİ^HH™]È]J›İÊ
-K™Ù][YJ
-HHÙ™œÙ]
-ˆ
-NÂˆYˆ
-XXİ]™Q^\Ëš\Ê^RÙ^J^K›Ùš[K[Y^›Û™JJJHœ™XZÎÂˆİ\œ™[İ™XZÑ^\È
-ÏHNÂˆBˆÛÛœİ˜XİXÙSZ[]\ÈHÛÛ\]Y›[™İ
-ˆ›Ùš[Kœ˜XİXÙSZ[]\ÎÂˆÛÛœİ[™ØYÙ[Y[HÙ][™ØYÙ[Y[]™[
-ÈÛÛ\]YÙ\ÜÚ[ÛœÎˆÛÛ\]Y›[™İ˜XİXÙSZ[]\Ëİ\œ™[İ™XZÑ^\ÈJNÂˆÛÛœİ˜XİXÙQ^\ÈH™]ÈÙ]
-ÛÛ\]Y›X\
-ÛÛ™\œØ][ÛˆOˆ^RÙ^JÛÛ™\œØ][Û‹˜Ü™X]Y]›Ùš[K[Y^›Û™JJJKœÚ^™NÂˆÛÛœİÛÛ\]YØÙ[˜\š[ÜÈH™]ÈÙ]
-ÛÛ\]Y›X\
-ÛÛ™\œØ][ÛˆOˆÛÛ™\œØ][Û‹œØÙ[˜\š[ÒY
-JKœÚ^™NÂˆÛÛœİİXØÙ\ÜÙ[™]šY\ÈH\ÜÙ\ÜÛY[Ë™š[\Š\ÜÙ\ÜÛY[Oˆ\ÜÙ\ÜÛY[œ\ÜÙY
-K›[™İÂˆÛÛœİX\İ\HHÙ]X\İ\S]™[
-È˜XİXÙQ^\ËÛÛ\]YØÙ[˜\š[ÜËİXØÙ\ÜÙ[™]šY\Ë]šY[˜ÙP\ÜÙ\ÜÛY[Îˆ\ÜÙ\ÜÛY[Ë›[™İJNÂˆÛÛœİZ[T˜XİXÙHH\œ˜^K™œ›ÛJÈ[™İˆÈK
-Ë[™^
-HOˆÂˆÛÛœİ]HH™]È]J›İÊ
-K™Ù][YJ
-HH
-ˆH[™^
-H
-ˆ
-NÂˆÛÛœİÙ^HH^RÙ^J]K›Ùš[K[Y^›Û™JNÂˆÛÛœİ^TÙ\ÜÚ[ÛœÈHÛÛ™\œØ][ÛœË™š[\ŠÛÛ™\œØ][ÛˆOˆ^RÙ^JÛÛ™\œØ][Û‹˜Ü™X]Y]›Ùš[K[Y^›Û™JHOOHÙ^JNÂˆÛÛœİ^PÛÛ\]YH^TÙ\ÜÚ[ÛœË™š[\ŠÛÛ™\œØ][ÛˆOˆÛÛ\]Yİ]\Ëš\ÊÛÛ™\œØ][Û‹œİ]JJNÂˆ™]\›ˆÈ^NˆÙ^KœÛXÙJJKZ[]\Îˆ^PÛÛ\]Y›[™İ
-ˆ›Ùš[Kœ˜XİXÙSZ[]\ËÙ\ÜÚ[ÛœÎˆ^TÙ\ÜÚ[ÛœË›[™İNÂˆJNÂˆÛÛœİ]™[˜XÚÈHX\İ\S]™[Ë›X\
-][HOˆ
-È]™[ˆ][K›]™[]Nˆ][K]K™XXÚYˆX\İ\K›]™[H][K›]™[JJNÂˆÛÛœİÚÚ[ÚYÛ˜[H\ÜÙ\ÜÛY[Ë›[™İÈX]œ›İ[™
-\ÜÙ\ÜÛY[Ëœ™YXÙJ
-İ[\ÜÙ\ÜÛY[
-HOˆİ[
-È\ÜÙ\ÜÛY[œØÛÜ™K
-HÈ\ÜÙ\ÜÛY[Ë›[™İ
-Hˆ[Âˆ™]\›ˆÈİ[Ù\ÜÚ[ÛœÎˆÛÛ™\œØ][ÛœË›[™İÛÛ\]YÙ\ÜÚ[ÛœÎˆÛÛ\]Y›[™İÙYZÛTÙ\ÜÚ[ÛœÎˆÙYZÛK›[™İ˜XİXÙSZ[]\ËÙYZÛT˜XİXÙSZ[]\ÎˆÙYZÛK›[™İ
-ˆ›Ùš[Kœ˜XİXÙSZ[]\Ëİ\œ™[İ™XZÑ^\Ë[™ØYÙ[Y[X\İ\K˜XİXÙQ^\ËÛÛ\]YØÙ[˜\š[ÜËİXØÙ\ÜÙ[™]šY\Ë]šY[˜ÙP\ÜÙ\ÜÛY[Îˆ\ÜÙ\ÜÛY[Ë›[™İZ[T˜XİXÙK]™[˜XÚËÚÚ[ÚYÛ˜[ÚÚ[ÚYÛ˜[İ]\ÎˆÚÚ[ÚYÛ˜[OOH[È˜]ØZ][™×Ø\ÜÙ\ÜÛY[ˆ\ÈÛÛœİˆ˜]˜Z[X›Hˆ\ÈÛÛœİNÂˆJNÂˆ\™Ù]
-‹İŒKÛYKÙ^Ü‹\Ş[˜È™\]Y\İOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆYˆ
-\›Ùš[JH›İÈ™]È\Q\œ›ÜŠKÛÛ\]H[İ\ˆ›Ùš[Hš\œİˆŠNÂˆÛÛœİÛÛ™\œØ][ÛœÈH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛœÊ\Ù\‹šY
-NÂˆÛÛœİ™XÛÜ™ÈH]ØZ]›ÛZ\ÙK˜[
-ÛÛ™\œØ][ÛœË›X\
-\Ş[˜ÈÛÛ™\œØ][ÛˆOˆ
-ÈÛÛ™\œØ][ÛˆÈYˆÛÛ™\œØ][Û‹šYØÙ[˜\š[ÒYˆÛÛ™\œØ][Û‹œØÙ[˜\š[ÒYØÙ[˜\š[ÔÛ˜\ÚİˆÛÛ™\œØ][Û‹œØÙ[˜\š[ÔÛ˜\Úİİ]NˆÛÛ™\œØ][Û‹œİ]KÜ™X]Y]ˆÛÛ™\œØ][Û‹˜Ü™X]Y]ÒTÓÔİš[™Ê
-K\]Y]ˆÛÛ™\œØ][Û‹\]Y]ÒTÓÔİš[™Ê
-HK\›œÎˆ]ØZ]İÜ™K˜ÛÛ™\œØ][Û•\›œÊ\Ù\‹šYÛÛ™\œØ][Û‹šY
-HJJJNÂˆ™]\›ˆÈ^ÜY]ˆ›İÊ
-KÒTÓÔİš[™Ê
-K\Ù\ˆÈYˆ\Ù\‹šY[XZ[ˆ\Ù\‹™[XZ[K›Ùš[KÛÛ™\œØ][ÛœÎˆ™XÛÜ™ÈNÂˆJNÂˆ\™Ù]
-‹İŒKÛYKİ›ÚXÙK]\ØYÙH‹\Ş[˜È™\]Y\İOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆÛÛœİ[Y^›Û™HH›Ùš[OË[Y^›Û™HÏÈ\ÚXKÒÛÛØ]HÂˆÛÛœİÙ^HH^RÙ^J›İÊ
-K[Y^›Û™JNÂˆÛÛœİ\ØYÙHH]ØZ]İÜ™K\ØYÙJ\Ù\‹šYÙ^JNÂˆÛÛœİ[İØ[˜ÙTÙXÛÛ™ÈH]ØZ]Z[P[İØ[˜ÙJ\Ù\‹šY
-NÂˆ™]\›ˆÈ[Y^›Û™K^RÙ^NˆÙ^K[İØ[˜ÙTÙXÛÛ™Ë™\Ù\™YÙXÛÛ™Îˆ\ØYÙKœ™\Ù\™YÙXÛÛ™ËÛÛœİ[YYÙXÛÛ™Îˆ\ØYÙK˜ÛÛœİ[YYÙXÛÛ™Ë™[XZ[š[™ÔÙXÛÛ™ÎˆX]›X^
-[İØ[˜ÙTÙXÛÛ™ÈH\ØYÙKœ™\Ù\™YÙXÛÛ™ÊK™\Ù]Ğ]ˆ™^™\Ù]
-›İÊ
-K[Y^›Û™JK[™›Ü˜Ù[Y[ˆœÙ\™\—Ü™\Ù\˜][ÛœÈˆ\ÈÛÛœİ]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙHNÂˆJNÂˆ\œÜİ
-‹İŒKÛYKØÛÛ™\œØ][ÛœÈ‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆYˆ
-\›Ùš[JH›İÈ™]È\Q\œ›ÜŠKÛÛ\]H[İ\ˆ›Ùš[Hš\œİˆŠNÂˆÛÛœİ\œÙYHÛÛ™\œØ][ÛÜ™X]TØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠÚÛÜÙHH˜[Y˜XİXÙHØÙ[˜\š[ËˆŠNÂˆÛÛœİ›ÙÜ™\ÜÈH]ØZ]X\›™\”ØÙ[˜\š[Ô›ÙÜ™\ÜÊ\Ù\‹šY›Ùš[JNÂˆÛÛœİØÙ[˜\š[ÈH™XÛÛ[Y[™ØÙ[˜\š[ÜÊ›Ùš[K
-]ØZ]]˜Z[X›TØÙ[˜\š[ÜÊ
-JK™š[\Š\ÔX›\ÚYØÙ[˜\š[ÊK›ÙÜ™\ÜË›X\İ\K›]™[›ÙÜ™\ÜË˜ÛÛ\]YØÙ[˜\š[ÒYÊK™š[™
-][HOˆ][KšYOOH\œÙY™]KœØÙ[˜\š[ÒY
-NÂˆYˆ
-\ØÙ[˜\š[ÊH›İÈ™]È\Q\œ›ÜŠË•]ØÙ[˜\š[È\È›İ]˜Z[X›H›Üˆ\È›Ùš[KˆŠNÂˆÛÛœİ[Y\İ[\H›İÊ
-NÂˆÛÛœİÛÛ™\œØ][ÛˆHÈYˆ˜[™ÛUURQ
+import Fastify, { type FastifyRequest } from "fastify";
+import cors from "@fastify/cors";
+import helmet from "@fastify/helmet";
+import rateLimit from "@fastify/rate-limit";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { z } from "zod";
+import { assessCommunicationEvidence, conversationCreateSchema, credentialsSchema, getEngagementLevel, getMasteryLevel, isPublishedScenario, masteryLevels, oauthSchema, profileSchema, recommendScenarios, modules, plansSchema, scenarioSchema, scenarios, userConversationTurnSchema, voiceTransportStatus } from "@coach/core";
+import planData from "../config/plans.json";
+import { ConflictError, type Entitlement, type OAuthIdentity, type PurchaseIntent, type Store, type VoiceSession } from "./store";
+import { hashPassword, verifyPassword } from "./password";
+import { ProviderUnavailableError, startLiveConversation } from "./conversation-service";
+import { RealtimeVoiceProvider } from "./realtime-voice-provider";
+import type { VerifiedAppleNotification, VerifiedStorePurchase } from "./store-verifier";
 
-K\Ù\’Yˆ\Ù\‹šYØÙ[˜\š[ÒYˆØÙ[˜\š[ËšYØÙ[˜\š[ÔÛ˜\ÚİˆØÙ[˜\š[Ëİ]NˆÔ‘PUQˆ\ÈÛÛœİÜ™X]Y]ˆ[Y\İ[\\]Y]ˆ[Y\İ[\NÂˆ]ØZ]İÜ™K˜Ü™X]PÛÛ™\œØ][ÛŠÛÛ™\œØ][ÛŠNÂˆ™]\›ˆ™\K˜ÛÙJŒJKœÙ[™
-ÈÛÛ™\œØ][ÛˆÈYˆÛÛ™\œØ][Û‹šYØÙ[˜\š[ÒYˆØÙ[˜\š[ËšYİ]NˆÛÛ™\œØ][Û‹œİ]KÜ™X]Y]ˆ[Y\İ[\ÒTÓÔİš[™Ê
-HKØÙ[˜\š[Ë]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙKY\ÜØYÙNˆ”˜XİXÙHÙ\ÜÚ[ÛˆÜ™X]Yˆ]™HRH›ÚXÙH\È›İÛÛ›™XİYY]ˆˆJNÂˆJNÂˆ\™Ù]
-‹İŒKÛYKØÛÛ™\œØ][ÛœËÎšY‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆYˆ
-ZY
-H›İÈ™]È\Q\œ›ÜŠHÛÛ™\œØ][ÛˆY\È™\]Z\™YˆŠNÂˆÛÛœİÛÛ™\œØ][ÛˆH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\‹šYY
-NÂˆYˆ
-XÛÛ™\œØ][ÛŠH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›ÜˆÛÛ™\œØ][Ûˆ›İ›İ[™ˆˆJNÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆÛÛœİØÙ[˜\š[ÈHÛÛ™\œØ][Û‹œØÙ[˜\š[ÔÛ˜\ÚİÏÈ
-›Ùš[HÈ
-]ØZ]]˜Z[X›TØÙ[˜\š[ÜÊ
-JK™š[™
-][HOˆ][KšYOOHÛÛ™\œØ][Û‹œØÙ[˜\š[ÒY
-Hˆ[™Yš[™Y
-NÂˆYˆ
-\ØÙ[˜\š[ÊH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›ÜˆÛÛ™\œØ][ÛˆØÙ[˜\š[È\È›ÈÛ™Ù\ˆ]˜Z[X›KˆˆJNÂˆ™]\›ˆÈÛÛ™\œØ][ÛˆÈ‹‹˜ÛÛ™\œØ][Û‹Ü™X]Y]ˆÛÛ™\œØ][Û‹˜Ü™X]Y]ÒTÓÔİš[™Ê
-K\]Y]ˆÛÛ™\œØ][Û‹\]Y]ÒTÓÔİš[™Ê
-HKØÙ[˜\š[Ë\›œÎˆ]ØZ]İÜ™K˜ÛÛ™\œØ][Û•\›œÊ\Ù\‹šYY
-K]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙHNÂˆJNÂˆ\œÜİ
-‹İŒKÛYKØÛÛ™\œØ][ÛœËÎšYİ\›œÈ‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆYˆ
-ZY
-H›İÈ™]È\Q\œ›ÜŠHÛÛ™\œØ][ÛˆY\È™\]Z\™YˆŠNÂˆÛÛœİÛÛ™\œØ][ÛˆH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\‹šYY
-NÂˆYˆ
-XÛÛ™\œØ][ÛŠH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›ÜˆÛÛ™\œØ][Ûˆ›İ›İ[™ˆˆJNÂˆYˆ
-VÈÔ‘PUQ‹PÕU‘H‹’S•T”•TQ—Kš[˜ÛY\ÊÛÛ™\œØ][Û‹œİ]JJH›İÈ™]È\Q\œ›ÜŠK•\È˜XİXÙHÙ\ÜÚ[ÛˆØ[››İXØÙ\[›İ\ˆ™\ÜÛœÙKˆŠNÂˆÛÛœİ\œÙYH\Ù\ÛÛ™\œØ][Û•\›”ØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠ‘[\ˆH™\ÜÛœÙH™]ÙY[ˆH[™LÚ\˜Xİ\œËˆŠNÂˆÛÛœİ\›ˆHÈYˆ˜[™ÛUURQ
+class ApiError extends Error {
+  constructor(public statusCode: number, message: string) { super(message); }
+}
+const digest = (value: string) => createHash("sha256").update(value).digest("hex");
+function dayKey(date: Date, timezone: string) {
+  const parts = new Intl.DateTimeFormat("en", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date);
+  const values = Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+function nextReset(date: Date, timezone: string) {
+  const current = dayKey(date, timezone);
+  for (let minute = 1; minute <= 36 * 60; minute++) {
+    const candidate = new Date(date.getTime() + minute * 60_000);
+    if (dayKey(candidate, timezone) !== current) return candidate.toISOString();
+  }
+  return new Date(date.getTime() + 24 * 60 * 60_000).toISOString();
+}
+function billingProductMap(value: string | undefined) {
+  if (!value) return {} as Record<string, string>;
+  try { const parsed = JSON.parse(value) as unknown; return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed as Record<string, string> : {}; } catch { return {}; }
+}
+export async function buildApp(store: Store, options: { logger?: boolean; origins?: string[]; now?: () => Date; managerEmails?: string[]; billing?: { enabled?: boolean; webhookSecret?: string; googleNotificationSecret?: string; verifyGoogleNotificationRequest?: (authorization: string | undefined) => Promise<boolean>; productMap?: Record<string, string>; verifyPurchase?: (input: { provider: "apple" | "google"; productId: string; transactionId: string; purchaseToken: string }) => Promise<VerifiedStorePurchase | null>; verifyAppleNotification?: (signedPayload: string) => Promise<VerifiedAppleNotification | null> }; voice?: { enabled?: boolean; apiKey?: string; model?: string; voice?: string; fetchImpl?: typeof fetch }; oauth?: { googleClientIds?: string[]; fetchImpl?: typeof fetch } } = {}) {
+  const now = options.now ?? (() => new Date());
+  const app = Fastify({ logger: options.logger ? { redact: ["req.headers.authorization", "req.headers.cookie"], serializers: { req: request => ({ method: request.method, url: request.url }) } } : false, bodyLimit: 16384, trustProxy: false });
+  await app.register(helmet);
+  await app.register(cors, { origin: options.origins ?? ["http://localhost:3000", "http://localhost:8081"] });
+  await app.register(rateLimit, { max: 100, timeWindow: "1 minute" });
+  const plans = plansSchema.parse(planData);
+  const standardDailyAllowanceSeconds = plans.find(plan => plan.id === "executive")?.dailySeconds ?? 20 * 60;
+  const dummyHash = await hashPassword(randomBytes(32).toString("hex"));
+  const availableScenarios = async () => [...scenarios, ...(await store.customScenarios())];
+  const configuredManagerKey = process.env.MANAGER_SCENARIO_KEY ?? (process.env.NODE_ENV === "production" ? "" : "development-manager-key");
+  const configuredManagerEmails = new Set((options.managerEmails ?? (process.env.MANAGER_EMAILS ?? "").split(",")).map(email => email.trim().toLowerCase()).filter(Boolean));
+  const billingEnabled = options.billing?.enabled ?? process.env.BILLING_ENABLED === "true";
+  const billingWebhookSecret = options.billing?.webhookSecret ?? process.env.BILLING_WEBHOOK_SECRET ?? "";
+  const googleNotificationSecret = options.billing?.googleNotificationSecret ?? process.env.GOOGLE_PUBSUB_WEBHOOK_SECRET ?? billingWebhookSecret;
+  const configuredBillingProductMap = options.billing?.productMap ?? billingProductMap(process.env.BILLING_PRODUCT_MAP);
+  const realtimeEnabled = options.voice?.enabled ?? process.env.OPENAI_REALTIME_ENABLED === "true";
+  const realtimeApiKey = options.voice?.apiKey ?? process.env.OPENAI_API_KEY ?? "";
+  const realtimeConfigured = realtimeEnabled && realtimeApiKey.length > 0;
+  const realtimeProvider = realtimeConfigured ? new RealtimeVoiceProvider({ apiKey: realtimeApiKey, model: options.voice?.model ?? process.env.OPENAI_REALTIME_MODEL ?? "gpt-realtime-2.1", voice: options.voice?.voice ?? process.env.OPENAI_REALTIME_VOICE ?? "marin", fetchImpl: options.voice?.fetchImpl }) : null;
+  async function reapVoiceSessions() {
+    await store.expireVoiceSessions(now());
+    if (!realtimeProvider) return;
+    const pending = await store.pendingVoiceProviderCalls();
+    await Promise.all(pending.map(async session => {
+      if (!session.providerCallId) return;
+      try { await realtimeProvider.terminate(session.providerCallId); await store.markVoiceProviderTerminated(session.id, now()); }
+      catch { return; }
+    }));
+  }
+  const expiryTimer = setInterval(() => { void reapVoiceSessions().catch(() => undefined); }, 30_000);
+  expiryTimer.unref();
+  app.addHook("onClose", async () => { clearInterval(expiryTimer); });
+  function planForProduct(productId: string) {
+    const configuredPlanId = configuredBillingProductMap[productId];
+    const plan = plans.find(item => item.id === configuredPlanId);
+    if (plan) return plan;
+    if (process.env.NODE_ENV === "production") return undefined;
+    return plans.find(item => productId.endsWith(`.${item.id}.monthly`) || productId.endsWith(`.${item.id}`));
+  }
+  async function dailyAllowance(userId: string) {
+    if (!billingEnabled) return standardDailyAllowanceSeconds;
+    const entitlement = await store.entitlement(userId);
+    if (!entitlement || entitlement.status !== "active" || (entitlement.expiresAt && entitlement.expiresAt <= now())) return 0;
+    return planForProduct(entitlement.productId)?.dailySeconds ?? 0;
+  }
+  const billingWebhookSchema = z.object({
+    purchaseIntentId: z.string().uuid(),
+    productId: z.string().min(1).max(200),
+    transactionId: z.string().min(1).max(300),
+    originalTransactionId: z.string().min(1).max(300).optional(),
+    purchaseToken: z.string().min(1).max(50000).optional(),
+    status: z.enum(["active", "expired", "revoked"]),
+    environment: z.enum(["sandbox", "production"]),
+    expiresAt: z.string().datetime().nullable().optional(),
+  }).strict();
+  const billingPurchaseSchema = z.object({ purchaseIntentId: z.string().uuid(), provider: z.enum(["apple", "google"]), productId: z.string().min(1).max(200), transactionId: z.string().min(1).max(300), purchaseToken: z.string().min(1).max(50000) }).strict();
+  const appleNotificationSchema = z.object({ signedPayload: z.string().min(1).max(100000) }).strict();
+  const googlePubSubSchema = z.object({ message: z.object({ data: z.string().min(1).max(100000), messageId: z.string().min(1).max(200).optional() }).strict(), subscription: z.string().min(1).max(500).optional() }).strict();
+  const googleSubscriptionNotificationSchema = z.object({ packageName: z.string().min(1).max(300), eventTimeMillis: z.string().regex(/^\d+$/), subscriptionNotification: z.object({ purchaseToken: z.string().min(1).max(50000), subscriptionId: z.string().min(1).max(200), notificationType: z.number().int().min(1).max(20) }).strict().optional() }).strict();
+  const purchaseIntentSchema = z.object({ provider: z.enum(["apple", "google"]), productId: z.string().min(1).max(200) }).strict();
+  const voiceSessionSchema = z.object({ conversationId: z.string().uuid(), scenarioId: z.string().min(1).max(100) }).strict();
+  const voiceStopSchema = z.object({ consumedSeconds: z.number().int().min(0).max(1200).default(0) }).strict().default({});
+  const voiceProviderCallSchema = z.object({ providerCallId: z.string().regex(/^[A-Za-z0-9._:-]{1,200}$/) }).strict();
+  const voiceTranscriptSchema = z.object({ role: z.enum(["user", "assistant"]), phase: z.enum(["primary", "independent_retry"]).default("primary"), text: z.string().trim().min(1).max(10000) }).strict();
+  const reviewScenarioSchema = z.object({ status: z.enum(["draft", "published", "deprecated"]) }).strict();
+  const rollbackScenarioSchema = z.object({ revisionId: z.string().uuid() }).strict();
+  async function requireManager(request: FastifyRequest) {
+    if (process.env.NODE_ENV !== "production" && configuredManagerKey && request.headers["x-manager-key"] === configuredManagerKey) return { userId: null as string | null };
+    const { user } = await authenticate(request);
+    if (user.role !== "manager" && !configuredManagerEmails.has(user.email)) throw new ApiError(403, "Manager access is required.");
+    return { userId: user.id };
+  }
+  const completedStates = new Set(["COMPLETED", "ASSESSING", "FEEDBACK_READY"]);
+  async function learnerScenarioProgress(userId: string, profile: Awaited<ReturnType<Store["profile"]>>) {
+    if (!profile) return { mastery: getMasteryLevel({ practiceDays: 0, completedScenarios: 0, successfulRetries: 0, evidenceAssessments: 0 }), completedScenarioIds: [] as string[] };
+    const conversations = await store.conversations(userId);
+    const completed = conversations.filter(conversation => completedStates.has(conversation.state));
+    const evidenceRows = await Promise.all(completed.map(async conversation => {
+      const turns = await store.conversationTurns(userId, conversation.id);
+      const primary = turns.find(turn => turn.role === "user" && turn.phase === "primary");
+      const retry = [...turns].reverse().find(turn => turn.role === "user" && turn.phase === "independent_retry");
+      return primary && retry ? assessCommunicationEvidence({ primary: primary.text, retry: retry.text }) : null;
+    }));
+    const assessments = evidenceRows.filter((assessment): assessment is NonNullable<typeof assessment> => assessment !== null);
+    const practiceDays = new Set(completed.map(conversation => dayKey(conversation.createdAt, profile.timezone))).size;
+    const completedScenarioIds = [...new Set(completed.map(conversation => conversation.scenarioId))];
+    return { mastery: getMasteryLevel({ practiceDays, completedScenarios: completedScenarioIds.length, successfulRetries: assessments.filter(assessment => assessment.passed).length, evidenceAssessments: assessments.length }), completedScenarioIds };
+  }
 
-KÙ\ÜÚ[Û’YˆY›ÛNˆ\Ù\ˆˆ\ÈÛÛœİ\ÙNˆ\œÙY™]Kœ\ÙK^ˆ\œÙY™]K^Ü™X]Y]ˆ›İÊ
-HNÂˆ]ØZ]İÜ™K˜YÛÛ™\œØ][Û•\›Š\›ŠNÂˆ™]\›ˆ™\K˜ÛÙJŒJKœÙ[™
-È\›ˆÈ‹‹\›‹Ü™X]Y]ˆ\›‹˜Ü™X]Y]ÒTÓÔİš[™Ê
-HKY\ÜØYÙNˆ\œÙY™]Kœ\ÙHOOHš[™\[™[Ü™]HˆÈ’[™\[™[™]HØ]™YˆÛÛ\]HH˜XİXÙHÈ™XÛÜ™[İ\ˆ]šY[˜ÙKˆˆˆ”š[X\H™\ÜÛœÙHØ]™Yˆ›İÈHH[™\[™[™]KˆˆJNÂˆJNÂˆ\œÜİ
-‹İŒKÛYKØÛÛ™\œØ][ÛœËÎšYØÛÛ\]H‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆYˆ
-ZY
-H›İÈ™]È\Q\œ›ÜŠHÛÛ™\œØ][ÛˆY\È™\]Z\™YˆŠNÂˆÛÛœİÛÛ™\œØ][ÛˆH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\‹šYY
-NÂˆYˆ
-XÛÛ™\œØ][ÛŠH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›ÜˆÛÛ™\œØ][Ûˆ›İ›İ[™ˆˆJNÂˆYˆ
-VÈÔ‘PUQ‹’S•T”•TQ—Kš[˜ÛY\ÊÛÛ™\œØ][Û‹œİ]JJH›İÈ™]È\Q\œ›ÜŠK•\È˜XİXÙHÙ\ÜÚ[Ûˆ\È[™XYHÛÜÙYˆŠNÂˆÛÛœİ\›œÈH]ØZ]İÜ™K˜ÛÛ™\œØ][Û•\›œÊ\Ù\‹šYY
-NÂˆYˆ
-]\›œËœÛÛYJ\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHœš[X\HŠJH›İÈ™]È\Q\œ›ÜŠK”Ø]™H[İ\ˆš[X\H™\ÜÛœÙH™Y›Ü™Hš[š\Ú[™È˜XİXÙKˆŠNÂˆYˆ
-]\›œËœÛÛYJ\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHš[™\[™[Ü™]HŠJH›İÈ™]È\Q\œ›ÜŠKÛÛ\]HH[™\[™[™]H™Y›Ü™Hš[š\Ú[™È˜XİXÙKˆŠNÂˆÛÛœİš[X\HH\›œË™š[™
-\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHœš[X\HŠNÂˆÛÛœİ™]HHË‹‹\›œ×Kœ™]™\œÙJ
-K™š[™
-\›ˆOˆ\›‹œ›ÛHOOH\Ù\ˆˆ	‰ˆ\›‹œ\ÙHOOHš[™\[™[Ü™]HŠNÂˆÛÛœİ]šY[˜ÙHHš[X\H	‰ˆ™]HÈ\ÜÙ\ÜĞÛÛ[][šXØ][Û‘]šY[˜ÙJÈš[X\Nˆš[X\K^™]Nˆ™]K^JHˆ[ÂˆÛÛœİÛÛ\]YH]ØZ]İÜ™K\]PÛÛ™\œØ][Û”İ]J\Ù\‹šYYÓÓTUQŠNÂˆ™]\›ˆÈÛÛ™\œØ][ÛˆÈYˆÛÛ\]YšYİ]NˆÛÛ\]Yœİ]KÛÛ\]Y]ˆÛÛ\]Y\]Y]ÒTÓÔİš[™Ê
-HK]šY[˜ÙNˆ]šY[˜ÙHÈÈØÛÜ™Nˆ]šY[˜ÙKœØÛÜ™K\ÜÙYˆ]šY[˜ÙKœ\ÜÙYHˆ[Y\ÜØYÙNˆ]šY[˜ÙOËœ\ÜÙYÈ”˜XİXÙHÛÛ\]Yˆ[İ\ˆ[™\[™[™]HY]HØØ[]šY[˜ÙHÚXÚÜËˆˆˆ”˜XİXÙHÛÛ\]Yˆ[Ü™H]šY[˜ÙH\È™YYY™Y›Ü™H\È™]HÛİ[È\ÈİXØÙ\ÜÙ[ˆˆNÂˆJNÂˆ\™Ù]
-‹İŒKİ›ÚXÙKÜ™XY[™\ÜÈ‹\Ş[˜È™\]Y\İOˆÂˆ]ØZ]]][XØ]J™\]Y\İ
-NÂˆ™]\›ˆ™X[[YPÛÛ™šYİ\™YˆÈÈ]˜Z[X›NˆYKÛÙNˆ”ÑT•‘T—Ô“Õ’QT—Ô‘PQH‹Y\ÜØYÙNˆ•HÛØXÚ›ÚXÙH›İšY\ˆ\ÈÛÛ™šYİ\™Yˆ\ÙH[ˆ[™›ÚYÜˆSÔÈ]™[ÜY[Z[›ÜˆH]™HÛÛ™\œØ][Û‹ˆˆBˆˆÈ]˜Z[X›Nˆ˜[ÙKÛÙNˆ”“Õ’QT—Ó“ÕĞÓÓ‘’QÕT‘Q‹Y\ÜØYÙNˆ“]™HRH›ÚXÙH\È›İÛÛ™šYİ\™YÛˆHÙ\™\‹ˆ[İHØ[ˆİ[\İ[İ\ˆZXÜ›ÜÛ™HØØ[NÈ›È]Y[È\ÈÙ[È[ˆRH›İšY\‹ˆˆNÂˆJNÂˆ\™Ù]
-‹İŒKİ›ÚXÙKØØ\Xš[]Y\È‹\Ş[˜È™\]Y\İOˆÂˆ]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİ™\]Y\İY]›Ü›HH™\]Y\İœ]Y\H	‰ˆ\[Ùˆ™\]Y\İœ]Y\HOOH›Øš™XİˆÈ
-™\]Y\İœ]Y\H\ÈÈ]›Ü›OÎˆİš[™ÈJKœ]›Ü›Hˆ[™Yš[™YÂˆÛÛœİ™\]Y\İYØ\Xš[]Y\ÈH™\]Y\İœ]Y\H	‰ˆ\[Ùˆ™\]Y\İœ]Y\HOOH›Øš™XİˆÈ™\]Y\İœ]Y\H\ÈÈ˜]]™S[Ù[P]˜Z[X›OÎˆİš[™ÎÈ]™[ÜY[Z[Îˆİš[™ÈHˆßNÂˆÛÛœİ]›Ü›HH™\]Y\İY]›Ü›HOOH˜[™›ÚYˆ™\]Y\İY]›Ü›HOOHš[ÜÈˆÈ™\]Y\İY]›Ü›HˆÙXˆÂˆ™]\›ˆ›ÚXÙU˜[œÜÜİ]\ÊÈ]›Ü›K˜]]™S[Ù[P]˜Z[X›Nˆ™\]Y\İYØ\Xš[]Y\Ë›˜]]™S[Ù[P]˜Z[X›HOOHYH‹]™[ÜY[Z[ˆ™\]Y\İYØ\Xš[]Y\Ë™]™[ÜY[Z[OOHYH‹›İšY\ÛÛ™šYİ\™Yˆ™X[[YPÛÛ™šYİ\™YJNÂˆJNÂˆ\œÜİ
-‹İŒKİ›ÚXÙKÜÙ\ÜÚ[ÛœÈ‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆYˆ
-™\]Y\İšXY\œË›ÜšYÚ[ŠH›İÈ™]È\Q\œ›ÜŠË“]™H›ÚXÙH™\]Z\™\È[ˆ[™›ÚYÜˆSÔÈ]™[ÜY[Z[ˆŠNÂˆYˆ
-\™X[[YT›İšY\ŠH™]\›ˆ™\K˜ÛÙJLÊKœÙ[™
-È\œ›Üˆ“]™H›ÚXÙH\È\ØX›Y[™[™È›İšY\ˆÛÛ™šYİ\˜][Ûˆ[™˜]]™H˜[œÜÜ™\šYšXØ][Û‹ˆˆJNÂˆÛÛœİ\œÙYH›ÚXÙTÙ\ÜÚ[Û”ØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠÚÛÜÙHH˜[YÛÛ™\œØ][Ûˆ[™ØÙ[˜\š[ËˆŠNÂˆÛÛœİ›Ùš[HH]ØZ]İÜ™Kœ›Ùš[J\Ù\‹šY
-NÂˆYˆ
-\›Ùš[JH›İÈ™]È\Q\œ›ÜŠKÛÛ\]H[İ\ˆ›Ùš[Hš\œİˆŠNÂˆÛÛœİÛÛ™\œØ][ÛˆH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\‹šY\œÙY™]K˜ÛÛ™\œØ][Û’Y
-NÂˆÛÛœİØÙ[˜\š[ÈH
-]ØZ]]˜Z[X›TØÙ[˜\š[ÜÊ
-JK™š[\Š\ÔX›\ÚYØÙ[˜\š[ÊK™š[™
-][HOˆ][KšYOOH\œÙY™]KœØÙ[˜\š[ÒY
-NÂˆYˆ
-XÛÛ™\œØ][ÛˆÛÛ™\œØ][Û‹œØÙ[˜\š[ÒYOOH\œÙY™]KœØÙ[˜\š[ÒY\ØÙ[˜\š[ÊH›İÈ™]È\Q\œ›ÜŠ”˜XİXÙHÛÛ™\œØ][Ûˆ›İ›İ[™ˆŠNÂˆÛÛœİ[İØ[˜ÙTÙXÛÛ™ÈH]ØZ]Z[P[İØ[˜ÙJ\Ù\‹šY
-NÂˆYˆ
-[İØ[˜ÙTÙXÛÛ™ÈH
-H›İÈ™]È\Q\œ›ÜŠ‹š[[™Ñ[˜X›YÈ[ˆXİ]™H˜XİXÙH[ˆ\È™\]Z\™Y™Y›Ü™Hİ\[™È]™H›ÚXÙKˆˆˆ“]™H›ÚXÙH[İØ[˜ÙH\È›İÛÛ™šYİ\™YˆŠNÂˆÛÛœİ\ØYÙHH]ØZ]İÜ™K\ØYÙJ\Ù\‹šY^RÙ^J›İÊ
-K›Ùš[K[Y^›Û™JJNÂˆÛÛœİ™[XZ[š[™ÔÙXÛÛ™ÈH[İØ[˜ÙTÙXÛÛ™ÈH\ØYÙKœ™\Ù\™YÙXÛÛ™ÎÂˆÛÛœİX^[][TÙXÛÛ™ÈHX]›Z[Š›Ùš[Kœ˜XİXÙSZ[]\È
-ˆŒ™[XZ[š[™ÔÙXÛÛ™ÊNÂˆYˆ
-X^[][TÙXÛÛ™ÈH
-H›İÈ™]È\Q\œ›ÜŠK–[İ\ˆZ[H›ÚXÙH[İØ[˜ÙH\È^]\İYˆHYØZ[ˆY\ˆH[İØ[˜ÙH™\Ù]ËˆŠNÂˆHÂˆÛÛœİ™\İ[H]ØZ]İ\]™PÛÛ™\œØ][ÛŠÈİÜ™K›İšY\ˆ™X[[YT›İšY\‹\Ù\’Yˆ\Ù\‹šYÛÛ™\œØ][Û’YˆÛÛ™\œØ][Û‹šYØÙ[˜\š[ÒYˆØÙ[˜\š[ËšY[œİXİ[ÛœÎˆ[İH\™HHÛÛ[][šXØ][ÛˆÛØXÚˆİZYHHX\›™\ˆ›İYÚ\È˜XİXÙHØÙ[˜\š[Îˆ	ÜØÙ[˜\š[Ëœ]Y\İ[ÛŸH[ˆ\ÚÈHX\›™\ˆÈH[™\[™[Nˆ	ÜØÙ[˜\š[Ëš[™\[™[]Y\İ[ÛŸKˆÈ›İØÛÜ™HÜˆXYÛ›ÜÙHHX\›™\ˆ\š[™ÈH]™H^Ú[™ÙK˜^RÙ^Nˆ^RÙ^J›İÊ
-K›Ùš[K[Y^›Û™JK[İØ[˜ÙTÙXÛÛ™ËX^[][TÙXÛÛ™Ë›İÎˆ
-
-HOˆ›İÊ
-HJNÂˆÛÛœİ[Y\İ[\H›İÊ
-NÂˆÛÛœİÙ\ÜÚ[Ûˆ›ÚXÙTÙ\ÜÚ[ÛˆHÈYˆ˜[™ÛUURQ
-
-K\Ù\’Yˆ\Ù\‹šYÛÛ™\œØ][Û’YˆÛÛ™\œØ][Û‹šY™\Ù\˜][Û’Yˆ™\İ[œ™\Ù\˜][Û’Y›İšY\”Ù\ÜÚ[Û’Yˆ™\İ[˜ÛÛ›™Xİ[Û‹œ›İšY\”Ù\ÜÚ[Û’Y›İšY\Ø[Yˆ[›İšY\•\›Z[˜]Y]ˆ[İ]\Îˆ˜Xİ]™H‹İ\Y]ˆ[Y\İ[\^\™\Ğ]ˆ™\İ[˜ÛÛ›™Xİ[Û‹™^\™\Ğ][™Y]ˆ[NÂˆ]ØZ]İÜ™K˜Ü™X]U›ÚXÙTÙ\ÜÚ[ÛŠÙ\ÜÚ[ÛŠNÂˆ™]\›ˆ™\K˜ÛÙJŒJKœÙ[™
-ÈÙ\ÜÚ[Û’YˆÙ\ÜÚ[Û‹šYÛÛ™\œØ][ÛˆÈYˆÛÛ™\œØ][Û‹šYİ]Nˆ™\İ[œİ]HK™\Ù\˜][Û’Yˆ™\İ[œ™\Ù\˜][Û’YÛY[ÙXÜ™]ˆ™\İ[˜ÛÛ›™Xİ[Û‹˜ÛY[ÙXÜ™]^\™\Ğ]ˆ™\İ[˜ÛÛ›™Xİ[Û‹™^\™\Ğ]ÒTÓÔİš[™Ê
-K›İšY\”Ù\ÜÚ[ÛÜ™X]YˆYK]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙKY\ÜØYÙNˆ”›İšY\ˆÙ\ÜÚ[ÛˆÜ™X]Yˆ˜]]™HÙX”•È˜[œÜÜ™[XZ[œÈØ]Y[[]šXÙH™\šYšXØ][Û‹ˆˆJNÂˆHØ]Ú
-\œ›ÜŠHÂˆYˆ
-\œ›Üˆ[œİ[˜Ù[Ùˆ›İšY\•[˜]˜Z[X›Q\œ›ÜŠH›İÈ™]È\Q\œ›ÜŠLË•H]™H›ÚXÙH›İšY\ˆ\È[\Ü˜\š[H[˜]˜Z[X›KˆŠNÂˆ›İÈ\œ›ÜÂˆBˆJNÂˆ\œÜİ
-‹İŒKİ›ÚXÙKÜÙ\ÜÚ[ÛœËÎšYØš[™‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆÛÛœİ\œÙYH›ÚXÙT›İšY\Ø[ØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-ZY\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠ”›İšYHH˜[Y›İšY\ˆØ[Y[YšY\‹ˆŠNÂˆÛÛœİÙ\ÜÚ[ÛˆH]ØZ]İÜ™K˜š[™›ÚXÙT›İšY\Ø[
-\Ù\‹šYY\œÙY™]Kœ›İšY\Ø[Y
-NÂˆ™]\›ˆ™\KœÙ[™
-ÈÙ\ÜÚ[Û’YˆÙ\ÜÚ[Û‹šY›İšY\Ø[YˆÙ\ÜÚ[Û‹œ›İšY\Ø[YY\ÜØYÙNˆ”›İšY\ˆØ[›İ[™›ÜˆÙ\™\‹\ÚYH\›Z[˜][Û‹ˆˆJNÂˆJNÂˆ\œÜİ
-‹İŒKİ›ÚXÙKÜÙ\ÜÚ[ÛœËÎšYİ˜[œØÜš\‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆÛÛœİ\œÙYH›ÚXÙU˜[œØÜš\ØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-ZY\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠ”›İšYHH˜[Y›ÚXÙH˜[œØÜš\ˆŠNÂˆÛÛœİÙ\ÜÚ[ÛˆH]ØZ]İÜ™K›ÚXÙTÙ\ÜÚ[ÛŠ\Ù\‹šYY
-NÂˆYˆ
-\Ù\ÜÚ[ÛŠH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›Üˆ•›ÚXÙHÙ\ÜÚ[Ûˆ›İ›İ[™ˆˆJNÂˆYˆ
-Ù\ÜÚ[Û‹œİ]\ÈOOH˜Xİ]™HŠH›İÈ™]È\Q\œ›ÜŠK•H›ÚXÙHÙ\ÜÚ[Ûˆ\È[™XYHÛÜÙYˆŠNÂˆÛÛœİ\›ˆHÈYˆ˜[™ÛUURQ
-
-KÙ\ÜÚ[Û’YˆÙ\ÜÚ[Û‹˜ÛÛ™\œØ][Û’Y›ÛNˆ\œÙY™]Kœ›ÛK\ÙNˆ\œÙY™]Kœ\ÙK^ˆ\œÙY™]K^Ü™X]Y]ˆ›İÊ
-HNÂˆ]ØZ]İÜ™K˜YÛÛ™\œØ][Û•\›Š\›ŠNÂˆ™]\›ˆ™\K˜ÛÙJŒJKœÙ[™
-È\›ˆÈ‹‹\›‹Ü™X]Y]ˆ\›‹˜Ü™X]Y]ÒTÓÔİš[™Ê
-HKY\ÜØYÙNˆ•›ÚXÙH˜[œØÜš\Ø]™YˆˆJNÂˆJNÂˆ\œÜİ
-‹İŒKİ›ÚXÙKÜÙ\ÜÚ[ÛœËÎšYÜİÜ‹\Ş[˜È
-™\]Y\İ™\JHOˆÂˆÛÛœİÈ\Ù\ˆHH]ØZ]]][XØ]J™\]Y\İ
-NÂˆÛÛœİYH
-™\]Y\İœ\˜[\È\ÈÈYÎˆİš[™ÈJKšYÂˆYˆ
-ZY
-H›İÈ™]È\Q\œ›ÜŠH›ÚXÙHÙ\ÜÚ[ÛˆY\È™\]Z\™YˆŠNÂˆÛÛœİ\œÙYH›ÚXÙTİÜØÚ[XKœØY™T\œÙJ™\]Y\İ˜›ÙJNÂˆYˆ
-\\œÙYœİXØÙ\ÜÊH›İÈ™]È\Q\œ›ÜŠ”›İšYHH˜[YÛÛœİ[YY\˜][Û‹ˆŠNÂˆÛÛœİÙ\ÜÚ[ÛˆH]ØZ]İÜ™K›ÚXÙTÙ\ÜÚ[ÛŠ\Ù\‹šYY
-NÂˆYˆ
-\Ù\ÜÚ[ÛŠH™]\›ˆ™\K˜ÛÙJ
-KœÙ[™
-È\œ›Üˆ•›ÚXÙHÙ\ÜÚ[Ûˆ›İ›İ[™ˆˆJNÂˆYˆ
-Ù\ÜÚ[Û‹œİ]\ÈOOH˜Xİ]™HŠH›İÈ™]È\Q\œ›ÜŠK•›ÚXÙHÙ\ÜÚ[Ûˆ\È[™XYHÛÜÙYˆŠNÂˆ]›İšY\•\›Z[˜][Ûˆ˜ÛÛ\]Yˆ››İØ›İ[™ˆ™˜Z[YˆH››İØ›İ[™ÂˆYˆ
-™X[[YT›İšY\ˆ	‰ˆÙ\ÜÚ[Û‹œ›İšY\Ø[Y
-HÂˆHÈ]ØZ]™X[[YT›İšY\‹\›Z[˜]JÙ\ÜÚ[Û‹œ›İšY\Ø[Y
-NÈ]ØZ]İÜ™K›X\šÕ›ÚXÙT›İšY\•\›Z[˜]Y
-Ù\ÜÚ[Û‹šY›İÊ
-JNÈ›İšY\•\›Z[˜][ÛˆH˜ÛÛ\]YÈBˆØ]ÚÈ›İšY\•\›Z[˜][ÛˆH™˜Z[YÈBˆBˆ]ØZ]İÜ™K™[™›ÚXÙTÙ\ÜÚ[ÛŠ\Ù\‹šYY›İÊ
-K™[™YŠNÂˆ]ØZ]İÜ™KœÙ]U\ØYÙJÙ\ÜÚ[Û‹œ™\Ù\˜][Û’Y\œÙY™]K˜ÛÛœİ[YYÙXÛÛ™ÊNÂˆÛÛœİÛÛ™\œØ][ÛˆH]ØZ]İÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\‹šYÙ\ÜÚ[Û‹˜ÛÛ™\œØ][Û’Y
-NÂˆYˆ
-ÛÛ™\œØ][ÛËœİ]HOOHPÕU‘HŠH]ØZ]İÜ™K\]PÛÛ™\œØ][Û”İ]J\Ù\‹šYÙ\ÜÚ[Û‹˜ÛÛ™\œØ][Û’Y’S•T”•TQŠNÂˆ™]\›ˆÈÙ\ÜÚ[Û’YˆYİ]\Îˆ™[™Y‹ÛÛœİ[YYÙXÛÛ™Îˆ\œÙY™]K˜ÛÛœİ[YYÙXÛÛ™ËÛÛ™\œØ][Û”İ]Nˆ’S•T”•TQ‹›İšY\•\›Z[˜][ÛˆNÂˆJNÂˆ™]\›ˆ\ÂŸB
+  async function authenticate(request: FastifyRequest) {
+    const token = request.headers.authorization?.match(/^Bearer ([a-f0-9]{64})$/)?.[1];
+    if (!token) throw new ApiError(401, "Sign in to continue.");
+    const tokenHash = digest(token);
+    const session = await store.sessionByHash(tokenHash);
+    if (!session || session.expiresAt <= now()) throw new ApiError(401, "Your session has expired. Please sign in.");
+    const user = await store.accountById(session.userId);
+    if (!user) throw new ApiError(401, "Sign in to continue.");
+    return { user, tokenHash };
+  }
+  async function issueSession(user: { id: string; email: string }) {
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date(now().getTime() + 7 * 86400000);
+    await store.createSession({ tokenHash: digest(token), userId: user.id, expiresAt });
+    return { token, expiresAt: expiresAt.toISOString(), user: { id: user.id, email: user.email } };
+  }
+  async function verifiedOAuthIdentity(provider: "google" | "microsoft", accessToken: string) {
+    type ProviderIdentityResponse = { email?: string; mail?: string; userPrincipalName?: string; sub?: string; id?: string; aud?: string | string[]; email_verified?: boolean | string };
+    const response = provider === "google"
+      ? await (options.oauth?.fetchImpl ?? fetch)(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`)
+      : await (options.oauth?.fetchImpl ?? fetch)("https://graph.microsoft.com/v1.0/me", { headers: { authorization: `Bearer ${accessToken}` } });
+    if (!response.ok) throw new ApiError(401, "The provider sign-in token is invalid or expired.");
+    const data = await response.json() as ProviderIdentityResponse;
+    const email = (data.email ?? data.mail ?? data.userPrincipalName ?? "").trim().toLowerCase();
+    if (!email || !email.includes("@")) throw new ApiError(401, "The provider did not return an email address.");
+    const subject = (provider === "google" ? data.sub : data.id)?.trim() ?? "";
+    if (!subject) throw new ApiError(401, "The provider did not return a stable account identifier.");
+    if (provider === "google" && data.email_verified !== true && data.email_verified !== "true") throw new ApiError(401, "The Google email is not verified.");
+    if (provider === "google") {
+      const allowedClientIds = options.oauth?.googleClientIds ?? [];
+      const audiences = data.aud ? (Array.isArray(data.aud) ? data.aud : [data.aud]) : [];
+      if (allowedClientIds.length > 0 && !audiences.some(audience => allowedClientIds.includes(audience))) throw new ApiError(401, "The Google sign-in token was issued for an unrecognized application.");
+    }
+    return { email, subject };
+  }
+  app.setErrorHandler((error, request, reply) => {
+    if (error instanceof ConflictError) return reply.code(409).send({ error: error.message || "Unable to create account. Try signing in." });
+    const failure = error instanceof Error ? error as Error & { statusCode?: number } : new Error("Unknown error");
+    const status = "statusCode" in failure && typeof failure.statusCode === "number" && failure.statusCode >= 400 && failure.statusCode < 500 ? failure.statusCode : 500;
+    if (status === 500) request.log.error({ errorType: failure.name }, "Request failed");
+    return reply.code(status).send({ error: status === 500 ? "Service unavailable. Please try again." : failure.message });
+  });
+  app.addHook("onSend", async (_request, reply, payload) => { reply.header("Cache-Control", "no-store"); return payload; });
+  app.get("/health", async () => ({ status: "ok", version: "0.1.0" }));
+  app.get("/ready", async (_request, reply) => {
+    try { await store.ready(); return { status: "ready" }; }
+    catch { return reply.code(503).send({ status: "database_unavailable" }); }
+  });
+  app.get("/v1/catalog", async () => ({ modules, plans, priceNotice: "Proposed monthly INR prices. Store pricing and purchases are not configured.", liveVoiceAvailable: false }));
+  app.get("/v1/me/entitlement", async request => {
+    const { user } = await authenticate(request);
+    return { entitlement: await store.entitlement(user.id) };
+  });
+  app.post("/v1/billing/intents", async (request, reply) => {
+    const { user } = await authenticate(request);
+    if (!billingEnabled || !billingWebhookSecret) throw new ApiError(503, "Billing provider is not configured.");
+    const parsed = purchaseIntentSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Choose a valid Apple or Google product.");
+    const timestamp = now();
+    const intent: PurchaseIntent = { id: randomUUID(), userId: user.id, provider: parsed.data.provider, productId: parsed.data.productId, nonce: randomBytes(24).toString("base64url"), status: "pending", createdAt: timestamp, expiresAt: new Date(timestamp.getTime() + 15 * 60_000) };
+    await store.createPurchaseIntent(intent);
+    return reply.code(201).send({ intent: { id: intent.id, provider: intent.provider, productId: intent.productId, nonce: intent.nonce, status: intent.status, expiresAt: intent.expiresAt.toISOString() }, message: "Purchase intent created. Include the nonce in the store purchase and send only verified store events to the webhook." });
+  });
+  app.post("/v1/billing/webhooks/:provider", async (request, reply) => {
+    if (!billingEnabled || !billingWebhookSecret) throw new ApiError(503, "Billing provider is not configured.");
+    const provider = (request.params as { provider?: string }).provider;
+    if (provider !== "apple" && provider !== "google") throw new ApiError(400, "Choose Apple or Google as the billing provider.");
+    if (request.headers["x-billing-webhook-secret"] !== billingWebhookSecret) throw new ApiError(401, "Billing webhook authentication failed.");
+    const parsed = billingWebhookSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Provide a valid entitlement event.");
+    const intent = await store.purchaseIntent(parsed.data.purchaseIntentId);
+    if (!intent || intent.status === "cancelled" || (intent.status === "pending" && intent.expiresAt <= now())) throw new ApiError(409, "The purchase intent is missing or expired.");
+    if (intent.provider !== provider || intent.productId !== parsed.data.productId) throw new ApiError(409, "The store event does not match the purchase intent.");
+    const user = await store.accountById(intent.userId);
+    if (!user) throw new ApiError(404, "The entitlement account was not found.");
+    const existing = await store.entitlementByTransactionId(parsed.data.transactionId);
+    if (existing && (existing.userId !== intent.userId || existing.provider !== provider || existing.productId !== parsed.data.productId)) throw new ApiError(409, "The transaction is already linked to another entitlement.");
+    const timestamp = now();
+    const entitlement: Entitlement = {
+      id: existing?.id ?? randomUUID(),
+      userId: intent.userId,
+      provider,
+      productId: parsed.data.productId,
+      transactionId: parsed.data.transactionId,
+      originalTransactionId: parsed.data.originalTransactionId ?? null,
+      purchaseToken: parsed.data.purchaseToken ?? null,
+      status: parsed.data.status,
+      environment: parsed.data.environment,
+      expiresAt: parsed.data.expiresAt ? new Date(parsed.data.expiresAt) : null,
+      providerEventDate: null,
+      createdAt: existing?.createdAt ?? timestamp,
+      updatedAt: timestamp,
+    };
+    const idempotent = Boolean(existing && existing.status === entitlement.status && existing.environment === entitlement.environment && existing.expiresAt?.getTime() === entitlement.expiresAt?.getTime());
+    await store.saveEntitlement(entitlement);
+    await store.completePurchaseIntent(intent.id);
+    return reply.code(existing ? 200 : 201).send({ entitlement, received: true, idempotent });
+  });
+  app.post("/v1/billing/purchases/verify", async (request, reply) => {
+    const { user } = await authenticate(request);
+    if (!billingEnabled || !billingWebhookSecret || !options.billing?.verifyPurchase) throw new ApiError(503, "Store purchase verification is not configured.");
+    const parsed = billingPurchaseSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Provide the store purchase details for verification.");
+    const intent = await store.purchaseIntent(parsed.data.purchaseIntentId);
+    if (!intent || intent.userId !== user.id || intent.status === "cancelled" || (intent.status === "pending" && intent.expiresAt <= now())) throw new ApiError(409, "The purchase intent is missing or expired.");
+    if (intent.provider !== parsed.data.provider || intent.productId !== parsed.data.productId) throw new ApiError(409, "The purchase does not match the selected package.");
+    let verified: VerifiedStorePurchase | null;
+    try { verified = await options.billing.verifyPurchase({ provider: parsed.data.provider, productId: parsed.data.productId, transactionId: parsed.data.transactionId, purchaseToken: parsed.data.purchaseToken }); }
+    catch { throw new ApiError(503, "The store verification service is temporarily unavailable."); }
+    if (!verified || verified.productId !== intent.productId || verified.transactionId !== parsed.data.transactionId) throw new ApiError(402, "The store purchase could not be verified.");
+    const existing = await store.entitlementByTransactionId(verified.transactionId);
+    if (existing && existing.userId !== user.id) throw new ApiError(409, "The transaction is already linked to another account.");
+    const timestamp = now();
+    const entitlement: Entitlement = { id: existing?.id ?? randomUUID(), userId: user.id, provider: parsed.data.provider, productId: verified.productId, transactionId: verified.transactionId, originalTransactionId: verified.originalTransactionId, purchaseToken: verified.purchaseToken, status: verified.status, environment: verified.environment, expiresAt: verified.expiresAt, providerEventDate: verified.providerEventDate, createdAt: existing?.createdAt ?? timestamp, updatedAt: timestamp };
+    await store.saveEntitlement(entitlement);
+    await store.completePurchaseIntent(intent.id);
+    return reply.code(existing ? 200 : 201).send({ entitlement, verified: true });
+  });
+  app.post("/v1/billing/notifications/apple", async (request, reply) => {
+    if (!billingEnabled || !options.billing?.verifyAppleNotification) throw new ApiError(503, "Apple notification verification is not configured.");
+    const parsed = appleNotificationSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Provide the signed Apple notification payload.");
+    let notification: VerifiedAppleNotification | null;
+    try { notification = await options.billing.verifyAppleNotification(parsed.data.signedPayload); }
+    catch { throw new ApiError(400, "The Apple notification signature could not be verified."); }
+    if (!notification || !planForProduct(notification.productId)) throw new ApiError(400, "The Apple notification is invalid or references an unknown product.");
+    const byOriginal = await store.entitlementByOriginalTransactionId("apple", notification.originalTransactionId);
+    const byTransaction = await store.entitlementByTransactionId(notification.transactionId);
+    if (byTransaction && byTransaction.userId !== byOriginal?.userId) throw new ApiError(409, "The Apple transaction is linked to another account.");
+    const existing = byOriginal ?? byTransaction;
+    if (!existing) return reply.code(202).send({ received: true, matched: false });
+    if (existing.providerEventDate && notification.providerEventDate && notification.providerEventDate <= existing.providerEventDate) return reply.send({ received: true, matched: true, idempotent: true });
+    const timestamp = now();
+    const entitlement: Entitlement = { id: existing.transactionId === notification.transactionId ? existing.id : randomUUID(), userId: existing.userId, provider: "apple", productId: notification.productId, transactionId: notification.transactionId, originalTransactionId: notification.originalTransactionId, purchaseToken: existing.purchaseToken, status: notification.status, environment: notification.environment, expiresAt: notification.expiresAt, providerEventDate: notification.providerEventDate, createdAt: existing.createdAt, updatedAt: timestamp };
+    await store.saveEntitlement(entitlement);
+    return reply.send({ received: true, matched: true, idempotent: false, entitlement });
+  });
+  app.post("/v1/billing/notifications/google", async (request, reply) => {
+    if (!billingEnabled || !options.billing?.verifyPurchase) throw new ApiError(503, "Google notification verification is not configured.");
+    const oidcAuthenticated = options.billing.verifyGoogleNotificationRequest ? await options.billing.verifyGoogleNotificationRequest(request.headers.authorization) : false;
+    const sharedSecretAuthenticated = Boolean(googleNotificationSecret && request.headers["x-google-pubsub-secret"] === googleNotificationSecret);
+    if (!oidcAuthenticated && !sharedSecretAuthenticated) throw new ApiError(401, "Google notification authentication failed.");
+    const envelope = googlePubSubSchema.safeParse(request.body);
+    if (!envelope.success) throw new ApiError(400, "Provide a valid Google Pub/Sub notification envelope.");
+    let decoded: unknown;
+    try { decoded = JSON.parse(Buffer.from(envelope.data.message.data, "base64url").toString("utf8")); }
+    catch { throw new ApiError(400, "The Google notification payload is not valid JSON."); }
+    const notification = googleSubscriptionNotificationSchema.safeParse(decoded);
+    if (!notification.success || !notification.data.subscriptionNotification) return reply.code(202).send({ received: true, matched: false });
+    const event = notification.data.subscriptionNotification;
+    let verified: VerifiedStorePurchase | null;
+    try { verified = await options.billing.verifyPurchase({ provider: "google", productId: event.subscriptionId, transactionId: event.purchaseToken, purchaseToken: event.purchaseToken }); }
+    catch { throw new ApiError(503, "The Google verification service is temporarily unavailable."); }
+    if (!verified || verified.productId !== event.subscriptionId) return reply.code(202).send({ received: true, matched: false });
+    const existing = await store.entitlementByPurchaseToken("google", event.purchaseToken);
+    if (!existing) return reply.code(202).send({ received: true, matched: false });
+    const providerEventDate = new Date(Number(notification.data.eventTimeMillis));
+    if (!Number.isFinite(providerEventDate.getTime())) throw new ApiError(400, "The Google notification timestamp is invalid.");
+    if (existing.providerEventDate && providerEventDate <= existing.providerEventDate) return reply.send({ received: true, matched: true, idempotent: true });
+    const timestamp = now();
+    const entitlement: Entitlement = { ...existing, productId: verified.productId, status: verified.status, environment: verified.environment, expiresAt: verified.expiresAt, providerEventDate, updatedAt: timestamp };
+    await store.saveEntitlement(entitlement);
+    return reply.send({ received: true, matched: true, idempotent: false, entitlement });
+  });
+  app.get("/v1/scenarios/library", async () => { const catalog = await availableScenarios(); return { scenarios: catalog, count: catalog.length }; });
+  app.post("/v1/manager/scenarios", async (request, reply) => {
+    const manager = await requireManager(request);
+    const parsed = scenarioSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Provide a complete scenario with a valid module, goal, level and prompts.");
+    const catalog = await availableScenarios();
+    if (catalog.some(scenario => scenario.id === parsed.data.id)) throw new ApiError(409, "A scenario with this id already exists.");
+    const scenario = { ...parsed.data, reviewStatus: "draft" as const, ownerId: manager.userId, reviewedBy: null, reviewedAt: null };
+    await store.createCustomScenario(scenario);
+    return reply.code(201).send({ scenario, message: "Scenario added to the library as a draft for review." });
+  });
+  app.post("/v1/manager/scenarios/:id/review", async (request, reply) => {
+    const manager = await requireManager(request);
+    const id = (request.params as { id?: string }).id;
+    const parsed = reviewScenarioSchema.safeParse(request.body);
+    if (!id || !parsed.success) throw new ApiError(400, "Choose a scenario and a valid review status.");
+    const scenario = await store.reviewCustomScenario(id, parsed.data.status, manager.userId, now());
+    if (!scenario) throw new ApiError(404, "Scenario not found.");
+    return reply.send({ scenario, message: parsed.data.status === "published" ? "Scenario published for learner practice." : `Scenario marked ${parsed.data.status}.` });
+  });
+  app.get("/v1/manager/scenarios/:id/revisions", async (request, reply) => {
+    await requireManager(request);
+    const id = (request.params as { id?: string }).id;
+    if (!id) throw new ApiError(400, "Choose a scenario.");
+    const revisions = await store.scenarioRevisions(id);
+    if (revisions.length === 0) throw new ApiError(404, "Scenario not found.");
+    return reply.send({ revisions });
+  });
+  app.post("/v1/manager/scenarios/:id/rollback", async (request, reply) => {
+    const manager = await requireManager(request);
+    const id = (request.params as { id?: string }).id;
+    const parsed = rollbackScenarioSchema.safeParse(request.body);
+    if (!id || !parsed.success) throw new ApiError(400, "Choose a valid scenario revision.");
+    const scenario = await store.rollbackCustomScenario(id, parsed.data.revisionId, manager.userId, now());
+    if (!scenario) throw new ApiError(404, "Scenario or revision not found.");
+    return reply.send({ scenario, message: "Scenario rolled back as a draft. Review and publish it before learner practice." });
+  });
+  app.post("/v1/auth/register", { config: { rateLimit: { max: 5, timeWindow: "1 minute" } } }, async (request, reply) => {
+    const parsed = credentialsSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Enter a valid email and a password of 12â€“128 characters.");
+    const user = await store.createAccount(parsed.data.email, await hashPassword(parsed.data.password));
+    return reply.code(201).send(await issueSession(user));
+  });
+  app.post("/v1/auth/login", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, async request => {
+    const parsed = credentialsSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Enter a valid email and password.");
+    const user = await store.accountByEmail(parsed.data.email);
+    const valid = await verifyPassword(parsed.data.password, user?.passwordHash ?? dummyHash);
+    if (!user || !valid) throw new ApiError(401, "Email or password is incorrect.");
+    return issueSession(user);
+  });
+  app.post("/v1/auth/oauth", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, async request => {
+    const parsed = oauthSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Choose Google or Microsoft and try again.");
+    const identity = await verifiedOAuthIdentity(parsed.data.provider, parsed.data.accessToken);
+    const linked = await store.oauthIdentity(parsed.data.provider, identity.subject);
+    const linkedUser = linked ? await store.accountById(linked.userId) : null;
+    if (linked && !linkedUser) throw new ApiError(401, "The provider identity is no longer linked to an account.");
+    const existing = linkedUser ?? await store.accountByEmail(identity.email);
+    const user = existing ?? await store.createAccount(identity.email, await hashPassword(randomBytes(32).toString("hex")));
+    if (!linked) {
+      const timestamp = now();
+      const oauthIdentity: OAuthIdentity = { id: randomUUID(), provider: parsed.data.provider, subject: identity.subject, userId: user.id, createdAt: timestamp, updatedAt: timestamp };
+      await store.saveOAuthIdentity(oauthIdentity);
+    }
+    return issueSession(user);
+  });
+  app.post("/v1/auth/logout", async (request, reply) => {
+    const { tokenHash } = await authenticate(request);
+    await store.deleteSession(tokenHash);
+    return reply.code(204).send();
+  });
+  app.post("/v1/auth/logout-all", async (request, reply) => {
+    const { user } = await authenticate(request);
+    await store.deleteSessions(user.id);
+    return reply.code(204).send();
+  });
+  app.delete("/v1/me", async (request, reply) => {
+    const { user } = await authenticate(request);
+    await store.deleteAccount(user.id);
+    return reply.code(204).send();
+  });
+  app.get("/v1/me", async request => {
+    const { user } = await authenticate(request);
+    return { user: { id: user.id, email: user.email }, profile: await store.profile(user.id) };
+  });
+  app.put("/v1/me/profile", async request => {
+    const { user } = await authenticate(request);
+    const parsed = profileSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, parsed.error.issues.map(issue => issue.path.join(".") + ": " + issue.message).join("; "));
+    await store.saveProfile(user.id, parsed.data);
+    return { profile: parsed.data };
+  });
+  app.get("/v1/me/scenarios", async request => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const progress = await learnerScenarioProgress(user.id, profile);
+    return { scenarios: recommendScenarios(profile, (await availableScenarios()).filter(isPublishedScenario), progress.mastery.level, progress.completedScenarioIds), mastery: progress.mastery, previewOnly: true };
+  });
+  app.get("/v1/me/conversations", async request => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const catalog = await availableScenarios();
+    const items = (await store.conversations(user.id, 10)).map(conversation => ({ conversation: { id: conversation.id, scenarioId: conversation.scenarioId, state: conversation.state, createdAt: conversation.createdAt.toISOString(), updatedAt: conversation.updatedAt.toISOString() }, scenario: conversation.scenarioSnapshot ?? catalog.find(item => item.id === conversation.scenarioId) })).filter(item => item.scenario);
+    return { conversations: items };
+  });
+  app.get("/v1/me/progress", async request => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const conversations = await store.conversations(user.id);
+    const completed = conversations.filter(conversation => completedStates.has(conversation.state));
+    const evidenceRows = await Promise.all(completed.map(async conversation => {
+      const turns = await store.conversationTurns(user.id, conversation.id);
+      const primary = turns.find(turn => turn.role === "user" && turn.phase === "primary");
+      const retry = [...turns].reverse().find(turn => turn.role === "user" && turn.phase === "independent_retry");
+      return primary && retry ? assessCommunicationEvidence({ primary: primary.text, retry: retry.text }) : null;
+    }));
+    const assessments = evidenceRows.filter((assessment): assessment is NonNullable<typeof assessment> => assessment !== null);
+    const weekStart = now().getTime() - 7 * 86400000;
+    const weekly = conversations.filter(conversation => conversation.createdAt.getTime() >= weekStart);
+    const activeDays = new Set(conversations.map(conversation => dayKey(conversation.createdAt, profile.timezone)));
+    let currentStreakDays = 0;
+    for (let offset = 0; offset < 365; offset += 1) {
+      const day = new Date(now().getTime() - offset * 86400000);
+      if (!activeDays.has(dayKey(day, profile.timezone))) break;
+      currentStreakDays += 1;
+    }
+    const practiceMinutes = completed.length * profile.practiceMinutes;
+    const engagement = getEngagementLevel({ completedSessions: completed.length, practiceMinutes, currentStreakDays });
+    const practiceDays = new Set(completed.map(conversation => dayKey(conversation.createdAt, profile.timezone))).size;
+    const completedScenarios = new Set(completed.map(conversation => conversation.scenarioId)).size;
+    const successfulRetries = assessments.filter(assessment => assessment.passed).length;
+    const mastery = getMasteryLevel({ practiceDays, completedScenarios, successfulRetries, evidenceAssessments: assessments.length });
+    const dailyPractice = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(now().getTime() - (6 - index) * 86400000);
+      const key = dayKey(date, profile.timezone);
+      const daySessions = conversations.filter(conversation => dayKey(conversation.createdAt, profile.timezone) === key);
+      const dayCompleted = daySessions.filter(conversation => completedStates.has(conversation.state));
+      return { day: key.slice(5), minutes: dayCompleted.length * profile.practiceMinutes, sessions: daySessions.length };
+    });
+    const levelTrack = masteryLevels.map(item => ({ level: item.level, title: item.title, reached: mastery.level >= item.level }));
+    const skillSignal = assessments.length ? Math.round(assessments.reduce((total, assessment) => total + assessment.score, 0) / assessments.length) : null;
+    return { totalSessions: conversations.length, completedSessions: completed.length, weeklySessions: weekly.length, practiceMinutes, weeklyPracticeMinutes: weekly.length * profile.practiceMinutes, currentStreakDays, engagement, mastery, practiceDays, completedScenarios, successfulRetries, evidenceAssessments: assessments.length, dailyPractice, levelTrack, skillSignal, skillSignalStatus: skillSignal === null ? "awaiting_assessment" as const : "available" as const };
+  });
+  app.get("/v1/me/export", async request => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const conversations = await store.conversations(user.id);
+    const records = await Promise.all(conversations.map(async conversation => ({ conversation: { id: conversation.id, scenarioId: conversation.scenarioId, scenarioSnapshot: conversation.scenarioSnapshot, state: conversation.state, createdAt: conversation.createdAt.toISOString(), updatedAt: conversation.updatedAt.toISOString() }, turns: await store.conversationTurns(user.id, conversation.id) })));
+    return { exportedAt: now().toISOString(), user: { id: user.id, email: user.email }, profile, conversations: records };
+  });
+  app.get("/v1/me/voice-usage", async request => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    const timezone = profile?.timezone ?? "Asia/Kolkata";
+    const today = dayKey(now(), timezone);
+    const usage = await store.usage(user.id, today);
+    const allowanceSeconds = await dailyAllowance(user.id);
+    return { timezone, dayKey: today, allowanceSeconds, reservedSeconds: usage.reservedSeconds, consumedSeconds: usage.consumedSeconds, remainingSeconds: Math.max(0, allowanceSeconds - usage.reservedSeconds), resetsAt: nextReset(now(), timezone), enforcement: "server_reservations" as const, liveVoiceAvailable: false };
+  });
+  app.post("/v1/me/conversations", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const parsed = conversationCreateSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Choose a valid practice scenario.");
+    const progress = await learnerScenarioProgress(user.id, profile);
+    const scenario = recommendScenarios(profile, (await availableScenarios()).filter(isPublishedScenario), progress.mastery.level, progress.completedScenarioIds).find(item => item.id === parsed.data.scenarioId);
+    if (!scenario) throw new ApiError(403, "That scenario is not available for this profile.");
+    const timestamp = now();
+    const conversation = { id: randomUUID(), userId: user.id, scenarioId: scenario.id, scenarioSnapshot: scenario, state: "CREATED" as const, createdAt: timestamp, updatedAt: timestamp };
+    await store.createConversation(conversation);
+    return reply.code(201).send({ conversation: { id: conversation.id, scenarioId: scenario.id, state: conversation.state, createdAt: timestamp.toISOString() }, scenario, liveVoiceAvailable: false, message: "Practice session created. Live AI voice is not connected yet." });
+  });
+  app.get("/v1/me/conversations/:id", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    if (!id) throw new ApiError(400, "A conversation id is required.");
+    const conversation = await store.conversation(user.id, id);
+    if (!conversation) return reply.code(404).send({ error: "Conversation not found." });
+    const profile = await store.profile(user.id);
+    const scenario = conversation.scenarioSnapshot ?? (profile ? (await availableScenarios()).find(item => item.id === conversation.scenarioId) : undefined);
+    if (!scenario) return reply.code(404).send({ error: "Conversation scenario is no longer available." });
+    return { conversation: { ...conversation, createdAt: conversation.createdAt.toISOString(), updatedAt: conversation.updatedAt.toISOString() }, scenario, turns: await store.conversationTurns(user.id, id), liveVoiceAvailable: false };
+  });
+  app.post("/v1/me/conversations/:id/turns", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    if (!id) throw new ApiError(400, "A conversation id is required.");
+    const conversation = await store.conversation(user.id, id);
+    if (!conversation) return reply.code(404).send({ error: "Conversation not found." });
+    if (!["CREATED", "ACTIVE", "INTERRUPTED"].includes(conversation.state)) throw new ApiError(409, "This practice session cannot accept another response.");
+    const parsed = userConversationTurnSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Enter a response between 1 and 10,000 characters.");
+    const turn = { id: randomUUID(), sessionId: id, role: "user" as const, phase: parsed.data.phase, text: parsed.data.text, createdAt: now() };
+    await store.addConversationTurn(turn);
+    return reply.code(201).send({ turn: { ...turn, createdAt: turn.createdAt.toISOString() }, message: parsed.data.phase === "independent_retry" ? "Independent retry saved. Complete the practice to record your evidence." : "Primary response saved. Now try the independent retry." });
+  });
+  app.post("/v1/me/conversations/:id/complete", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    if (!id) throw new ApiError(400, "A conversation id is required.");
+    const conversation = await store.conversation(user.id, id);
+    if (!conversation) return reply.code(404).send({ error: "Conversation not found." });
+    if (!["CREATED", "INTERRUPTED"].includes(conversation.state)) throw new ApiError(409, "This practice session is already closed.");
+    const turns = await store.conversationTurns(user.id, id);
+    if (!turns.some(turn => turn.role === "user" && turn.phase === "primary")) throw new ApiError(409, "Save your primary response before finishing practice.");
+    if (!turns.some(turn => turn.role === "user" && turn.phase === "independent_retry")) throw new ApiError(409, "Complete the independent retry before finishing practice.");
+    const primary = turns.find(turn => turn.role === "user" && turn.phase === "primary");
+    const retry = [...turns].reverse().find(turn => turn.role === "user" && turn.phase === "independent_retry");
+    const evidence = primary && retry ? assessCommunicationEvidence({ primary: primary.text, retry: retry.text }) : null;
+    const completed = await store.updateConversationState(user.id, id, "COMPLETED");
+    return { conversation: { id: completed.id, state: completed.state, completedAt: completed.updatedAt.toISOString() }, evidence: evidence ? { score: evidence.score, passed: evidence.passed } : null, message: evidence?.passed ? "Practice completed. Your independent retry met the local evidence checks." : "Practice completed. More evidence is needed before this retry counts as successful." };
+  });
+  app.get("/v1/voice/readiness", async request => {
+    await authenticate(request);
+    return realtimeConfigured
+      ? { available: true, code: "SERVER_PROVIDER_READY", message: "The coach voice provider is configured. Use an Android or iOS development build for the live conversation." }
+      : { available: false, code: "PROVIDER_NOT_CONFIGURED", message: "Live AI voice is not configured on the server. You can still test your microphone locally; no audio is sent to an AI provider." };
+  });
+  app.get("/v1/voice/capabilities", async request => {
+    await authenticate(request);
+    const requestedPlatform = request.query && typeof request.query === "object" ? (request.query as { platform?: string }).platform : undefined;
+    const requestedCapabilities = request.query && typeof request.query === "object" ? request.query as { nativeModuleAvailable?: string; developmentBuild?: string } : {};
+    const platform = requestedPlatform === "android" || requestedPlatform === "ios" ? requestedPlatform : "web";
+    return voiceTransportStatus({ platform, nativeModuleAvailable: requestedCapabilities.nativeModuleAvailable === "true", developmentBuild: requestedCapabilities.developmentBuild === "true", providerConfigured: realtimeConfigured });
+  });
+  app.post("/v1/voice/sessions", async (request, reply) => {
+    const { user } = await authenticate(request);
+    if (request.headers.origin) throw new ApiError(403, "Live voice requires an Android or iOS development build.");
+    if (!realtimeProvider) return reply.code(503).send({ error: "Live voice is disabled pending provider configuration and native transport verification." });
+    const parsed = voiceSessionSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Choose a valid conversation and scenario.");
+    const profile = await store.profile(user.id);
+    if (!profile) throw new ApiError(409, "Complete your profile first.");
+    const conversation = await store.conversation(user.id, parsed.data.conversationId);
+    const scenario = (await availableScenarios()).filter(isPublishedScenario).find(item => item.id === parsed.data.scenarioId);
+    if (!conversation || conversation.scenarioId !== parsed.data.scenarioId || !scenario) throw new ApiError(404, "Practice conversation not found.");
+    const allowanceSeconds = await dailyAllowance(user.id);
+    if (allowanceSeconds <= 0) throw new ApiError(402, billingEnabled ? "An active practice plan is required before starting live voice." : "Live voice allowance is not configured.");
+    const usage = await store.usage(user.id, dayKey(now(), profile.timezone));
+    const remainingSeconds = allowanceSeconds - usage.reservedSeconds;
+    const maximumSeconds = Math.min(profile.practiceMinutes * 60, remainingSeconds);
+    if (maximumSeconds <= 0) throw new ApiError(409, "Your daily voice allowance is exhausted. Try again after the allowance resets.");
+    try {
+      const result = await startLiveConversation({ store, provider: realtimeProvider, userId: user.id, conversationId: conversation.id, scenarioId: scenario.id, instructions: `You are a communication coach. Guide the learner through this practice scenario: ${scenario.question} Then ask the learner to try independently: ${scenario.independentQuestion}. Do not score or diagnose the learner during the live exchange.`, dayKey: dayKey(now(), profile.timezone), allowanceSeconds, maximumSeconds, now: () => now() });
+      const timestamp = now();
+      const session: VoiceSession = { id: randomUUID(), userId: user.id, conversationId: conversation.id, reservationId: result.reservationId, providerSessionId: result.connection.providerSessionId, providerCallId: null, providerTerminatedAt: null, status: "active", startedAt: timestamp, expiresAt: result.connection.expiresAt, endedAt: null };
+      await store.createVoiceSession(session);
+      return reply.code(201).send({ sessionId: session.id, conversation: { id: conversation.id, state: result.state }, reservationId: result.reservationId, clientSecret: result.connection.clientSecret, expiresAt: result.connection.expiresAt.toISOString(), providerSessionCreated: true, liveVoiceAvailable: false, message: "Provider session created. Native WebRTC transport remains gated until device verification." });
+    } catch (error) {
+      if (error instanceof ProviderUnavailableError) throw new ApiError(503, "The live voice provider is temporarily unavailable.");
+      throw error;
+    }
+  });
+  app.post("/v1/voice/sessions/:id/bind", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    const parsed = voiceProviderCallSchema.safeParse(request.body);
+    if (!id || !parsed.success) throw new ApiError(400, "Provide a valid provider call identifier.");
+    const session = await store.bindVoiceProviderCall(user.id, id, parsed.data.providerCallId);
+    return reply.send({ sessionId: session.id, providerCallId: session.providerCallId, message: "Provider call bound for server-side termination." });
+  });
+  app.post("/v1/voice/sessions/:id/transcript", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    const parsed = voiceTranscriptSchema.safeParse(request.body);
+    if (!id || !parsed.success) throw new ApiError(400, "Provide a valid voice transcript.");
+    const session = await store.voiceSession(user.id, id);
+    if (!session) return reply.code(404).send({ error: "Voice session not found." });
+    if (session.status !== "active") throw new ApiError(409, "The voice session is already closed.");
+    const turn = { id: randomUUID(), sessionId: session.conversationId, role: parsed.data.role, phase: parsed.data.phase, text: parsed.data.text, createdAt: now() };
+    await store.addConversationTurn(turn);
+    return reply.code(201).send({ turn: { ...turn, createdAt: turn.createdAt.toISOString() }, message: "Voice transcript saved." });
+  });
+  app.post("/v1/voice/sessions/:id/stop", async (request, reply) => {
+    const { user } = await authenticate(request);
+    const id = (request.params as { id?: string }).id;
+    if (!id) throw new ApiError(400, "A voice session id is required.");
+    const parsed = voiceStopSchema.safeParse(request.body);
+    if (!parsed.success) throw new ApiError(400, "Provide a valid consumed duration.");
+    const session = await store.voiceSession(user.id, id);
+    if (!session) return reply.code(404).send({ error: "Voice session not found." });
+    if (session.status !== "active") throw new ApiError(409, "Voice session is already closed.");
+    let providerTermination: "completed" | "not_bound" | "failed" = "not_bound";
+    if (realtimeProvider && session.providerCallId) {
+      try { await realtimeProvider.terminate(session.providerCallId); await store.markVoiceProviderTerminated(session.id, now()); providerTermination = "completed"; }
+      catch { providerTermination = "failed"; }
+    }
+    await store.endVoiceSession(user.id, id, now(), "ended");
+    await store.settleUsage(session.reservationId, parsed.data.consumedSeconds);
+    const conversation = await store.conversation(user.id, session.conversationId);
+    if (conversation?.state === "ACTIVE") await store.updateConversationState(user.id, session.conversationId, "INTERRUPTED");
+    return { sessionId: id, status: "ended", consumedSeconds: parsed.data.consumedSeconds, conversationState: "INTERRUPTED", providerTermination };
+  });
+  return app;
+}
