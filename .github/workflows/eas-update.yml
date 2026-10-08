@@ -22,11 +22,9 @@ jobs:
       EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
       EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
     steps:
-      - name: Skip publishing until Expo token is configured
+      - name: Check Expo publishing token
         id: expo-token
         shell: bash
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         working-directory: .
         run: |
           if [[ -z "$EXPO_TOKEN" ]]; then
@@ -46,7 +44,6 @@ jobs:
         working-directory: .
       - run: npm run typecheck -w @coach/mobile
         if: steps.expo-token.outputs.skip != 'true'
-      - run: npx --yes eas-cli@24.11.0 update --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
+      - run: npx --yes eas-cli@24.11.0 update --channel preview --environment preview --message "GitHub ${{ github.sha }}" --non-interactive
         if: steps.expo-token.outputs.skip != 'true'
-        working-directory: apps/mobile
 

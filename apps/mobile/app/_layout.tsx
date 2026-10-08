@@ -11,6 +11,7 @@ function AppStack() {
     <Stack.Screen name="index" options={{ headerShown: false }} />
     <Stack.Screen name="onboarding" options={{ title: "Your practice profile" }} />
     <Stack.Screen name="home" options={{ title: "Today", headerBackVisible: false }} />
+    <Stack.Screen name="workshop/[module]" options={{ title: "Practice workshop" }} />
     <Stack.Screen name="voice" options={{ title: "Audio readiness" }} />
     <Stack.Screen name="plans" options={{ title: "Practice plans" }} />
     <Stack.Screen name="progress" options={{ title: "Progress" }} />
@@ -18,3 +19,4 @@ function AppStack() {
     <Stack.Screen name="payment" options={{ title: "Confirm your plan" }} />
   </Stack></>;
 }
+

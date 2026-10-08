@@ -99,6 +99,7 @@ export default function PracticeDetail() {
       const result = await request<{ conversation: { state: string }; message: string }>(`/v1/me/conversations/${id}/complete`, auth.token, "POST");
       setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
       setSavedMessage(result.message);
+      router.replace(`/workshop/${practice.scenario.module}?completedScenarioId=${encodeURIComponent(practice.scenario.id)}`);
     } catch (failure) { setError((failure as Error).message); } finally { setFinishing(false); }
   }
 
@@ -173,3 +174,4 @@ export default function PracticeDetail() {
 }
 
 function accentLanguage(accent: CoachAccent) { return ({ "Indian English": "en-IN", "British English": "en-GB", "American English": "en-US", "Australian English": "en-AU" } as const)[accent]; }
+
