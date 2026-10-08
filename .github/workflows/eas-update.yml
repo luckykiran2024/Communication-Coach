@@ -13,7 +13,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
     env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       APP_VARIANT: preview
       EXPO_PUBLIC_API_URL: http://192.168.0.29:4000
       EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
@@ -39,8 +43,7 @@ jobs:
       - run: npm ci --workspace @coach/mobile
         if: steps.expo-token.outputs.skip != 'true'
         working-directory: .
-      - run: npm run typecheck -w @coach/mobile
+      - run: npm run typecheck
         if: steps.expo-token.outputs.skip != 'true'
       - run: npx --yes eas-cli@24.11.0 update --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
         if: steps.expo-token.outputs.skip != 'true'
-        working-directory: apps/mobile
