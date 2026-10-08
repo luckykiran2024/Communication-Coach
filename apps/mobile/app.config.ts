@@ -22,7 +22,7 @@ const config: ExpoConfig = {
   name: (process.env.APP_NAME ?? "Communication Coach") + (production ? "" : " " + variant),
   slug: "communication-platform", scheme: "communicationcoach", version: "0.1.0",
   extra: { eas: { projectId: "e874ae5c-f1cb-4d6b-bcf5-19b25231c0fd" } },
-  runtimeVersion: { policy: "fingerprint" },
+  runtimeVersion: { policy: "appVersion" },
   updates: { url: "https://u.expo.dev/e874ae5c-f1cb-4d6b-bcf5-19b25231c0fd", checkAutomatically: "ON_LOAD", fallbackToCacheTimeout: 0 },
   orientation: "portrait", userInterfaceStyle: "automatic",
   ios: { bundleIdentifier: production ? baseId : baseId + "." + variant, supportsTablet: true },
