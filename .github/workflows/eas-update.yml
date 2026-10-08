@@ -1,0 +1,31 @@
+name: Publish mobile preview update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - "packages/core/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/eas-update.yml"
+
+jobs:
+  publish:
+    if: ${{ secrets.EXPO_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      APP_VARIANT: preview
+      EXPO_PUBLIC_API_URL: http://192.168.0.29:4000
+      EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --workspace @coach/mobile
+      - run: npm run typecheck -w @coach/mobile
+      - run: npx --yes eas-cli@24.11.0 update --working-directory apps/mobile --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
