@@ -23,7 +23,7 @@ export function productionConfigurationErrors(config: ProductionConfiguration) {
   if (config.corsOrigins.length === 0 || config.corsOrigins.some(origin => !origin.startsWith("https://") || origin.includes("localhost") || origin.includes("127.0.0.1"))) errors.push("CORS_ORIGINS must contain only HTTPS production origins.");
   if (config.managerEmails.length === 0) errors.push("MANAGER_EMAILS must contain at least one manager account.");
   if (config.managerEmails.some(email => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /(^|\.)example\.(com|org|net)$/i.test(email.split("@")[1] ?? ""))) errors.push("MANAGER_EMAILS must contain valid manager email addresses.");
-  if (!config.googleClientIds || config.googleClientIds.length === 0 || config.googleClientIds.some(id => !id.trim() || id.startsWith("replace-with-") || ["android-client-id", "ios-client-id", "web-client-id"].includes(id))) errors.push("GOOGLE_OAUTH_CLIENT_IDS must contain the production Google client IDs.");
+  if (config.googleClientIds?.some(id => !id.trim() || id.startsWith("replace-with-") || ["android-client-id", "ios-client-id", "web-client-id"].includes(id))) errors.push("GOOGLE_OAUTH_CLIENT_IDS must contain valid production Google client IDs when Google sign-in is enabled.");
   if (config.realtimeEnabled && !config.realtimeApiKey) errors.push("OPENAI_API_KEY is required when OPENAI_REALTIME_ENABLED=true.");
   if (config.billingEnabled) {
     if (!config.billingWebhookSecret || config.billingWebhookSecret.startsWith("replace-with-")) errors.push("BILLING_WEBHOOK_SECRET must be configured when BILLING_ENABLED=true.");
