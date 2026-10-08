@@ -21,11 +21,14 @@
     "content:hash": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs scripts/content-release-hash.ts",
     "db:generate": "npm run db:generate -w @coach/api",
     "db:migrate": "npm run db:migrate -w @coach/api",
-    "build:portal": "npm run build -w @coach/portal"
+    "build:portal": "npm run build -w @coach/portal",
+    "postinstall": "npm run build -w @coach/core",
+    "pretest": "npm run build -w @coach/core"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "tsx": "4.23.15",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "esbuild": "0.28.2"
   }
 }
