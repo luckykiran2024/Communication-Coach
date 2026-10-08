@@ -27,6 +27,7 @@ jobs:
         shell: bash
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        working-directory: .
         run: |
           if [[ -z "$EXPO_TOKEN" ]]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
