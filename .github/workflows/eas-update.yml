@@ -1,6 +1,7 @@
 name: Publish mobile preview update
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -46,4 +47,3 @@ jobs:
         if: steps.expo-token.outputs.skip != 'true'
       - run: npx --yes eas-cli@24.11.0 update --channel preview --environment preview --message "GitHub ${{ github.sha }}" --non-interactive
         if: steps.expo-token.outputs.skip != 'true'
-
