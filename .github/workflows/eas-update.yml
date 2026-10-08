@@ -19,7 +19,7 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       APP_VARIANT: preview
-      EXPO_PUBLIC_API_URL: http://192.168.0.29:4000
+      EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
       EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
     steps:
       - name: Skip publishing until Expo token is configured
@@ -49,3 +49,4 @@ jobs:
       - run: npx --yes eas-cli@24.11.0 update --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
         if: steps.expo-token.outputs.skip != 'true'
         working-directory: apps/mobile
+
