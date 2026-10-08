@@ -1,0 +1,12 @@
+node_modules/
+.npm-cache/
+.env
+.env.*
+!.env.example
+.expo/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+apps/mobile/android/
+apps/mobile/ios/
