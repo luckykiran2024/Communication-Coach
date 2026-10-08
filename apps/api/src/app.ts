@@ -4,7 +4,7 @@ import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { z } from "zod";
-import { assessCommunicationEvidence, conversationCreateSchema, credentialsSchema, getEngagementLevel, getMasteryLevel, isPublishedScenario, masteryLevels, oauthSchema, profileSchema, recommendScenarios, modules, plansSchema, scenarioSchema, scenarios, userConversationTurnSchema, voiceTransportStatus } from "@coach/core";
+import { assessCommunicationEvidence, conversationCreateSchema, credentialsSchema, getEngagementLevel, getMasteryLevel, isPublishedScenario, masteryLevels, oauthSchema, profileSchema, recommendScenarios, modules, plansSchema, scenarioSchema, scenarios, userConversationTurnSchema, voiceTransportStatus } from "../../../packages/core/src/index.ts";
 import planData from "../config/plans.json" with { type: "json" };
 import { ConflictError, type Entitlement, type OAuthIdentity, type PurchaseIntent, type Store, type VoiceSession } from "./store";
 import { hashPassword, verifyPassword } from "./password";
