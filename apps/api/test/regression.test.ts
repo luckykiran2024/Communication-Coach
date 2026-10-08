@@ -1,359 +1,521 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×ŽwÙ:-jZ.¶›­–)Þ³V–×÷'B²FW7BÒg&öÒ&æöFS§FW7B#°¦–×÷'B76W'Bg&öÒ&æöFS¦76W'B÷7G&–7B#°¦–×÷'B²'V–ÆDÒg&öÒ"ââ÷7&2ö#°¦–×÷'B²ÖVÖ÷'•7F÷&RÒg&öÒ"âöÖVÖ÷'’×7F÷&R#°¦–×÷'B²7F'DÆ—fT6öçfW'6F–öâÂ&÷f–FW%Væf–Æ&ÆTW'&÷"Òg&öÒ"ââ÷7&2ö6öçfW'6F–öâ×6W'f–6R#°¦–×÷'BG—R²fö–6U&÷f–FW"Òg&öÒ"ââ÷7&2÷fö–6R×&÷f–FW"#°¦–×÷'B²&æFöÕUT”BÒg&öÒ&æöFS¦7'—Fò#° ¦6öç7BfÆ–D7&VFVçF–Ç2Ò²VÖ–Ã¢'&Vw&W76–öäW†×ÆRæ6öÒ"Â77v÷&C¢'&Vw&W76–öâ×77v÷&BÓ#2"Ó°¦6öç7BfÆ–E&öf–ÆRÒ°¢F—7Æ”æÖS¢%&Vw&W76–öâÆV&æW""À¢gVæ7F–öã¢$Væv–æVW&–ær"À¢¦ö%F—FÆS¢$Væv–æVW&–ærÖævW""À¢6&VW$ÆWfVÃ¢$f—'7B×F–ÖRÖævW""À¢VF–Væ6S¢%&öGV7BæBVæv–æVW&–ærÆVFW'6†—"À¢vöÃ¢%&W6VçB&V6öÖÖVæFF–öç2"À§Ó° ¦7–æ2gVæ7F–öâ&Vv—7FW&VD‚’°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²÷&–v–ç3¢²&‡GG¢òöÆÆ÷vVBæW†×ÆR%ÒÒ“°¢6öç7B&W7öç6RÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢fÆ–D7&VFVçF–Ç2Ò“°¢76W'BæWVÂ‡&W7öç6Rç7FGW46öFRÂ#“°¢&WGW&â²Â7F÷&RÂFö¶Vã¢&W7öç6Ræ§6öâ‚’çFö¶Vâ27G&–ærÓ°§Ð §FW7B‚'&Vw&W76–öã¢WF†VçF–6F–öâ&V¦V7G2ÖÆf÷&ÖVBÂÖ—76–æræBW‡—&VB7&VFVçF–Ç2"Â7–æ26öçFW‡BÓâ°¢ÆWBæ÷rÒæWrFFR‚###bÓ’Ó#EC££ã¢"“°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²æ÷s¢‚’Óâæ÷rÒ“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR"Ò’’ç7FGW46öFRÂC“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR"Â†VFW'3¢²WF†÷&—¦F–öã¢$&V&W"–çfÆ–B"ÒÒ’’ç7FGW46öFRÂC“°¢6öç7B&Vv—7G&F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢fÆ–D7&VFVçF–Ç2Ò“°¢6öç7BFö¶VâÒ&Vv—7G&F–öâæ§6öâ‚’çFö¶Vâ27G&–æs°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ’’ç7FGW46öFRÂ#“°¢æ÷rÒæWrFFR‚###bÓÓC££ã¢"“°¢6öç7BW‡—&VBÒv—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ“°¢76W'BæWVÂ†W‡—&VBç7FGW46öFRÂC“°¢76W'BæÖF6‚†W‡—&VBæ§6öâ‚’æW'&÷"ÂöW‡—&VGÇ6–vâ–âö’“°§Ò“° §FW7B‚'&Vw&W76–öã¢6ö6–ÂWF‚&V¦V7G2ÖÆf÷&ÖVB&÷f–FW"–ÆöG2"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&R“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B&W7öç6RÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢²&÷f–FW#¢&vöövÆR"Â66W75Fö¶Vã¢'6†÷'B"ÒÒ“°¢76W'BæWVÂ‡&W7öç6Rç7FGW46öFRÂC“°¢76W'BæWVÂ‡7F÷&Ræ66÷VçG2ç6—¦RÂ“°§Ò“° §FW7B‚'&Vw&W76–öã¢ôWF‚–FVçF—F–W2Æ–æ²'’7F&ÆR&÷f–FW"7V&¦V7BæBFòæ÷BG'W7B6†ævVBVÖ–Â6Æ–×2"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢ÆWBvöövÆTVÖ–ÂÒ&öWF‚Ö÷væW$W†×ÆRæ6öÒ#°¢ÆWBvöövÆUfW&–f–VBÒG'VS°¢ÆWBvöövÆTVF–Væ6RÒ&vöövÆRÖ6Æ–VçBÖ–B#°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ°¢öWFƒ¢°¢vöövÆT6Æ–VçD–G3¢²&vöövÆRÖ6Æ–VçBÖ–B%ÒÀ¢fWF6„–×Ã¢7–æ2–çWBÓâ°¢–b…7G&–ær†–çWB’æ–æ6ÇVFW2‚&vöövÆV—2"’’&WGW&âæWr&W7öç6R„¥4ôâç7G&–æv–g’‡²VÖ–Ã¢vöövÆTVÖ–ÂÂ7V#¢&vöövÆR×7V&¦V7BÓ"ÂVC¢vöövÆTVF–Væ6RÂVÖ–Å÷fW&–f–VC¢vöövÆUfW&–f–VBÒ’Â²7FGW3¢#Ò“°¢&WGW&âæWr&W7öç6R„¥4ôâç7G&–æv–g’‡²Ö–Ã¢&öWF‚Ö÷væW$W†×ÆRæ6öÒ"Â–C¢&Ö–7&÷6ögB×7V&¦V7BÓ"Ò’Â²7FGW3¢#Ò“°¢ÒÀ¢ÒÀ¢Ò“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7BvöövÆU–ÆöBÒ²&÷f–FW#¢&vöövÆR"Â66W75Fö¶Vã¢&vöövÆRÖ66W72×Fö¶VâÓ#3CSb"Ó°¢vöövÆTVF–Væ6RÒ'Vç&V6övæ—¦VBÖ6Æ–VçBÖ–B#°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢vöövÆU–ÆöBÒ’’ç7FGW46öFRÂC“°¢vöövÆTVF–Væ6RÒ&vöövÆRÖ6Æ–VçBÖ–B#°¢6öç7Bf—'7BÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢vöövÆU–ÆöBÒ“°¢76W'BæWVÂ†f—'7Bç7FGW46öFRÂ#“°¢6öç7Bf—'7EW6W$–BÒf—'7Bæ§6öâ‚’çW6W"æ–C°¢76W'BæWVÂ‡7F÷&RæöWF„–FVçF—F–W2ç6—¦RÂ“°¢vöövÆTVÖ–ÂÒ&6†ævVBÖ6Æ–ÔW†×ÆRæ6öÒ#°¢6öç7B&WGW&æ–ærÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢vöövÆU–ÆöBÒ“°¢76W'BæWVÂ‡&WGW&æ–ærç7FGW46öFRÂ#“°¢76W'BæWVÂ‡&WGW&æ–æræ§6öâ‚’çW6W"æ–BÂf—'7EW6W$–B“°¢76W'BæWVÂ‡&WGW&æ–æræ§6öâ‚’çW6W"æVÖ–ÂÂ&öWF‚Ö÷væW$W†×ÆRæ6öÒ"“°¢76W'BæWVÂ‡7F÷&Ræ66÷VçG2ç6—¦RÂ“°¢6öç7BÖ–7&÷6ögBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢²&÷f–FW#¢&Ö–7&÷6ögB"Â66W75Fö¶Vã¢&Ö–7&÷6ögBÖ66W72×Fö¶VâÓ#2"ÒÒ“°¢76W'BæWVÂ†Ö–7&÷6ögBç7FGW46öFRÂ#“°¢76W'BæWVÂ†Ö–7&÷6ögBæ§6öâ‚’çW6W"æ–BÂf—'7EW6W$–B“°¢76W'BæWVÂ‡7F÷&RæöWF„–FVçF—F–W2ç6—¦RÂ"“°¢vöövÆUfW&–f–VBÒfÇ6S°¢vöövÆTVÖ–ÂÒ'VçfW&–f–VDW†×ÆRæ6öÒ#°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚ööWF‚"Â–ÆöC¢vöövÆU–ÆöBÒ’’ç7FGW46öFRÂC“°§Ò“° §FW7B‚'&Vw&W76–öã¢ÖævW"66Væ&–÷2&WV—&R¶W’æB&V6öÖRÆ–'&'’6öçFVçB"Â7–æ26öçFW‡BÓâ°¢6öç7B²Â7F÷&RÂFö¶VâÒÒv—B&Vv—7FW&VD‚“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B66Væ&–òÒ°¢–C¢&ÖævW"×&Vw&W76–öâ×66Væ&–ò"À¢fW'6–öã¢À¢ÖöGVÆS¢&ÖævVÖVçB"À¢gVæ7F–öç3¢²$Væv–æVW&–ær%ÒÀ¢vöÃ¢%&W6VçB&V6öÖÖVæFF–öç2"À¢F—FÆS¢$W‡Æ–â6†ævVBFVÆ—fW'’Æâ"À¢6öçFW‡C¢$FWVæFVæ7’6†ævVBæB–÷W"FVÆ—fW'’ÆâæVVG2Fò&RWFFVBâ"À¢VW7F–öã¢$W‡Æ–âv†B6†ævVBÂF†R–×7BÂæB–÷W"&V6öÖÖVæFF–öââ"À¢–æFWVæFVçEVW7F–öã¢$v—fRF†R6ÖR&V6öÖÖVæFF–öâFòF–ffW&VçB7F¶V†öÆFW"v—F†÷WB&WVF–ær–÷W"f—'7Bç7vW"â"À¢'V'&–5fW'6–öã¢&ÖævVÖVçBÖÖævW"Ó"À¢fö7W3¢$Wf–FVæ6RÂ–×Æ–6F–öç2æB7F–öâ"À¢ÆWfVÃ¢À¢Ó°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â–ÆöC¢66Væ&–òÒ’’ç7FGW46öFRÂC“°¢6öç7B7&VFVBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÂ–ÆöC¢66Væ&–òÒ“°¢76W'BæWVÂ†7&VFVBç7FGW46öFRÂ#“°¢76W'BæWVÂ†7&VFVBæ§6öâ‚’æÖW76vRÂ%66Væ&–òFFVBFòF†RÆ–'&'’2G&gBf÷"&Wf–Wrâ"“°¢76W'BæWVÂ†7&VFVBæ§6öâ‚’ç66Væ&–òç&Wf–Wu7FGW2Â&G&gB"“°¢6öç7B–æ—F–Å&Wf—6–öç2Òv—Bæ–æ¦V7B‡²ÖWF†öC¢$tUB"ÂW&Ã¢÷cöÖævW"÷66Væ&–÷2òG·66Væ&–òæ–GÒ÷&Wf—6–öç6Â†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÒ“°¢76W'BæWVÂ†–æ—F–Å&Wf—6–öç2ç7FGW46öFRÂ#“°¢76W'BæWVÂ†–æ—F–Å&Wf—6–öç2æ§6öâ‚’ç&Wf—6–öç2æÆVæwF‚Â“°¢6öç7B–æ—F–Å&Wf—6–öä–BÒ–æ—F–Å&Wf—6–öç2æ§6öâ‚’ç&Wf—6–öç5³Òæ–B27G&–æs°¢6öç7BÆ–'&'’Òv—Bæ–æ¦V7B‡²W&Ã¢"÷c÷66Væ&–÷2öÆ–'&'’"Ò“°¢76W'BæWVÂ†Æ–'&'’ç7FGW46öFRÂ#“°¢76W'Bæö²†Æ–'&'’æ§6öâ‚’æ6÷VçBãÒ#r“°¢76W'BæWVÂ†Æ–'&'’æ§6öâ‚’ç66Væ&–÷2ç6öÖR‚†—FVÓ¢²–C¢7G&–ærÒ’Óâ—FVÒæ–BÓÓÒ66Væ&–òæ–B’ÂG'VR“°¢v—Bæ–æ¦V7B‡²ÖWF†öC¢%UB"ÂW&Ã¢"÷cöÖR÷&öf–ÆR"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÂ–ÆöC¢fÆ–E&öf–ÆRÒ“°¢6öç7B&V6öÖÖVæFF–öç2Òv—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷66Væ&–÷2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ“°¢76W'BæWVÂ‡&V6öÖÖVæFF–öç2ç7FGW46öFRÂ#“°¢76W'BæWVÂ‡&V6öÖÖVæFF–öç2æ§6öâ‚’ç66Væ&–÷2ç6öÖR‚†—FVÓ¢²–C¢7G&–ærÒ’Óâ—FVÒæ–BÓÓÒ66Væ&–òæ–B’ÂfÇ6R“°¢6öç7BV&Æ—6†VBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢÷cöÖævW"÷66Væ&–÷2òG·66Væ&–òæ–GÒ÷&Wf–WvÂ†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÂ–ÆöC¢²7FGW3¢'V&Æ—6†VB"ÒÒ“°¢76W'BæWVÂ‡V&Æ—6†VBç7FGW46öFRÂ#“°¢76W'BæWVÂ‡V&Æ—6†VBæ§6öâ‚’ç66Væ&–òç&Wf–Wu7FGW2Â'V&Æ—6†VB"“°¢6öç7BV&Æ—6†VE&Wf—6–öç2Òv—Bæ–æ¦V7B‡²ÖWF†öC¢$tUB"ÂW&Ã¢÷cöÖævW"÷66Væ&–÷2òG·66Væ&–òæ–GÒ÷&Wf—6–öç6Â†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÒ“°¢76W'BæWVÂ‡V&Æ—6†VE&Wf—6–öç2æ§6öâ‚’ç&Wf—6–öç2æÆVæwF‚Â"“°¢6öç7BV&Æ—6†VE&V6öÖÖVæFF–öç2Òv—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷66Væ&–÷2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ“°¢76W'BæWVÂ‡V&Æ—6†VE&V6öÖÖVæFF–öç2æ§6öâ‚’ç66Væ&–÷2ç6öÖR‚†—FVÓ¢²–C¢7G&–ærÒ’Óâ—FVÒæ–BÓÓÒ66Væ&–òæ–B’ÂG'VR“°¢6öç7B7&VFVD6öçfW'6F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖRö6öçfW'6F–öç2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÂ–ÆöC¢²66Væ&–ô–C¢66Væ&–òæ–BÒÒ“°¢76W'BæWVÂ†7&VFVD6öçfW'6F–öâç7FGW46öFRÂ#“°¢6öç7B7F÷&VBÒ7F÷&Rç66Væ&–õ&÷w2ævWB‡66Væ&–òæ–B“°¢76W'Bæö²‡7F÷&VB“°¢7F÷&Rç66Væ&–õ&÷w2ç6WB‡66Væ&–òæ–BÂ²ââç7F÷&VBÂF—FÆS¢$6†ævVBgFW"F†RÆV&æW"7F'FVB"Ò“°¢6öç7B6æ6†÷BÒv—Bæ–æ¦V7B‡²W&Ã¢÷cöÖRö6öçfW'6F–öç2òG¶7&VFVD6öçfW'6F–öâæ§6öâ‚’æ6öçfW'6F–öâæ–GÖÂ†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ“°¢76W'BæWVÂ‡6æ6†÷Bæ§6öâ‚’ç66Væ&–òçF—FÆRÂ66Væ&–òçF—FÆR“°¢6öç7B&öÆÆVD&6²Òv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢÷cöÖævW"÷66Væ&–÷2òG·66Væ&–òæ–GÒ÷&öÆÆ&6¶Â†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÂ–ÆöC¢²&Wf—6–öä–C¢–æ—F–Å&Wf—6–öä–BÒÒ“°¢76W'BæWVÂ‡&öÆÆVD&6²ç7FGW46öFRÂ#“°¢76W'BæWVÂ‡&öÆÆVD&6²æ§6öâ‚’ç66Væ&–òç&Wf–Wu7FGW2Â&G&gB"“°¢6öç7BgFW%&öÆÆ&6µ&V6öÖÖVæFF–öç2Òv—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷66Væ&–÷2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·Fö¶VçÖÒÒ“°¢76W'BæWVÂ†gFW%&öÆÆ&6µ&V6öÖÖVæFF–öç2æ§6öâ‚’ç66Væ&–÷2ç6öÖR‚†—FVÓ¢²–C¢7G&–ærÒ’Óâ—FVÒæ–BÓÓÒ66Væ&–òæ–B’ÂfÇ6R“°§Ò“° §FW7B‚'&Vw&W76–öã¢ÖævW"66Væ&–òG&gG2&V¦V7B&Ææ²÷"÷fW'6—¦VB6öçFVçB&Vf÷&RVçFW&–ærF†RÆ–'&'’"Â7–æ26öçFW‡BÓâ°¢6öç7B²ÒÒv—B&Vv—7FW&VD‚“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B–çfÆ–BÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â†VFW'3¢²'‚ÖÖævW"Ö¶W’#¢&FWfVÆ÷ÖVçBÖÖævW"Ö¶W’"ÒÂ–ÆöC¢²–C¢""ÂfW'6–öã¢ÂÖöGVÆS¢&F–Ç’"ÂgVæ7F–öç3¢µÒÂvöÃ¢%7F'B6öçfW'6F–öç2"ÂF—FÆS¢""Â6öçFW‡C¢$6öçFW‡B"ÂVW7F–öã¢%VW7F–öâ"Â–æFWVæFVçEVW7F–öã¢%G&ç6fW""Â'V'&–5fW'6–öã¢'#"Âfö7W3¢$fö7W2"ÂÆWfVÃ¢ÒÒ“°¢76W'BæWVÂ†–çfÆ–Bç7FGW46öFRÂC“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷c÷66Væ&–÷2öÆ–'&'’"Ò’’æ§6öâ‚’ç66Væ&–÷2ç6öÖR‚‡66Væ&–ó¢²–C¢7G&–ærÒ’Óâ66Væ&–òæ–BçG&–Ò‚’ÓÓÒ""’ÂfÇ6R“°§Ò“° §FW7B‚'&Vw&W76–öã¢WF†VçF–6FVBÖævW"ÆÆ÷vÆ—7B6âV&Æ—6‚v—F†÷WBF†RFWfVÆ÷ÖVçB¶W’"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²ÖævW$VÖ–Ç3¢²&ÖævW$W†×ÆRæ6öÒ%ÒÒ“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B&Vv—7G&F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢&ÖævW$W†×ÆRæ6öÒ"Â77v÷&C¢&ÖævW"×77v÷&BÓ#2"ÒÒ“°¢6öç7B†VFW'2Ò²WF†÷&—¦F–öã¢&V&W"G·&Vv—7G&F–öâæ§6öâ‚’çFö¶VçÖÓ°¢6öç7B&W7öç6RÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â†VFW'2Â–ÆöC¢²–C¢&ÖævW"ÖWF†VçF–6FVB×66Væ&–ò"ÂfW'6–öã¢ÂÖöGVÆS¢&F–Ç’"ÂgVæ7F–öç3¢µÒÂvöÃ¢%7F'B6öçfW'6F–öç2"ÂF—FÆS¢$÷VâW6VgVÂ6öçfW'6F–öâ"Â6öçFW‡C¢%–÷RÖVWB6öÆÆVwVR&Vf÷&RÖVWF–ærâ"ÂVW7F–öã¢%7F'BF†R6öçfW'6F–öâæBW‡Æ–âv†B–÷R&Rv÷&¶–æröââ"Â–æFWVæFVçEVW7F–öã¢$÷Vâ6–Ö–Æ"6öçfW'6F–öâv—F‚6öÖVöæRg&öÒæ÷F†W"FVÒâ"Â'V'&–5fW'6–öã¢&F–Ç’ÖÖævW"Ó"Âfö7W3¢$6öçfW'6F–öâ–æ—F–F–öâ"ÂÆWfVÃ¢ÒÒ“°¢76W'BæWVÂ‡&W7öç6Rç7FGW46öFRÂ#“°¢6öç7BæöäÖævW"Òv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢&ÆV&æW$W†×ÆRæ6öÒ"Â77v÷&C¢&ÆV&æW"×77v÷&BÓ#2"ÒÒ“°¢6öç7Bf÷&&–FFVâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G¶æöäÖævW"æ§6öâ‚’çFö¶VçÖÒÂ–ÆöC¢²–C¢&ÖævW"Öf÷&&–FFVâ×66Væ&–ò"ÂfW'6–öã¢ÂÖöGVÆS¢&F–Ç’"ÂgVæ7F–öç3¢µÒÂvöÃ¢%7F'B6öçfW'6F–öç2"ÂF—FÆS¢%6†÷VÆBæ÷BV&Æ—6‚"Â6öçFW‡C¢$6öçFW‡Bâ"ÂVW7F–öã¢$&ö×Bâ"Â–æFWVæFVçEVW7F–öã¢$&WG'’â"Â'V'&–5fW'6–öã¢&F–Ç’ÖÖævW"Ó"Âfö7W3¢$fö7W2"ÂÆWfVÃ¢ÒÒ“°¢76W'BæWVÂ†f÷&&–FFVâç7FGW46öFRÂC2“°§Ò“° §FW7B‚'&Vw&W76–öã¢W'6—7FVBÖævW"&öÆRw&çG266W72v—F†÷WBâVÖ–ÂÆÆ÷vÆ—7B"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²ÖævW$VÖ–Ç3¢µÒÒ“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B&Vv—7G&F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢'&öÆRÖÖævW$W†×ÆRæ6öÒ"Â77v÷&C¢&ÖævW"×77v÷&BÓ#2"ÒÒ“°¢6öç7B66÷VçBÒ7F÷&Ræ66÷VçG2ævWB‡&Vv—7G&F–öâæ§6öâ‚’çW6W"æ–B“°¢76W'Bæö²†66÷VçB“°¢66÷VçBç&öÆRÒ&ÖævW"#°¢6öç7B&W7öç6RÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöÖævW"÷66Væ&–÷2"Â†VFW'3¢²WF†÷&—¦F–öã¢&V&W"G·&Vv—7G&F–öâæ§6öâ‚’çFö¶VçÖÒÂ–ÆöC¢²–C¢'&öÆRÖÖævW"×66Væ&–ò"ÂfW'6–öã¢ÂÖöGVÆS¢&F–Ç’"ÂgVæ7F–öç3¢µÒÂvöÃ¢%7F'B6öçfW'6F–öç2"ÂF—FÆS¢$÷VâW6VgVÂ6öçfW'6F–öâ"Â6öçFW‡C¢%–÷RÖVWB6öÆÆVwVR&Vf÷&RÖVWF–ærâ"ÂVW7F–öã¢%7F'BF†R6öçfW'6F–öâæBW‡Æ–âv†B–÷R&Rv÷&¶–æröââ"Â–æFWVæFVçEVW7F–öã¢$÷Vâ6–Ö–Æ"6öçfW'6F–öâv—F‚6öÖVöæRg&öÒæ÷F†W"FVÒâ"Â'V'&–5fW'6–öã¢&F–Ç’ÖÖævW"Ó"Âfö7W3¢$6öçfW'6F–öâ–æ—F–F–öâ"ÂÆWfVÃ¢ÒÒ“°¢76W'BæWVÂ‡&W7öç6Rç7FGW46öFRÂ#“°§Ò“° §FW7B‚'&Vw&W76–öã¢&–ÆÆ–ærVçF—FÆVÖVçBvV&†öö·2&RWF†VçF–6FVBÂ–FV×÷FVçBæB÷væW"×66÷VB"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²&–ÆÆ–æs¢²Væ&ÆVC¢G'VRÂvV&†ööµ6V7&WC¢&&–ÆÆ–ær×6V7&WB"ÒÒ“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B&Vv—7G&F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢&&–ÆÆ–ærÖ÷væW$W†×ÆRæ6öÒ"Â77v÷&C¢&&–ÆÆ–ær×77v÷&BÓ#2"ÒÒ“°¢6öç7B†VFW'2Ò²WF†÷&—¦F–öã¢&V&W"G·&Vv—7G&F–öâæ§6öâ‚’çFö¶VçÖÓ°¢76W'BæFVWWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖRöVçF—FÆVÖVçB"Â†VFW'2Ò’’æ§6öâ‚’Â²VçF—FÆVÖVçC¢çVÆÂÒ“°¢v—Bæ–æ¦V7B‡²ÖWF†öC¢%UB"ÂW&Ã¢"÷cöÖR÷&öf–ÆR"Â†VFW'2Â–ÆöC¢fÆ–E&öf–ÆRÒ“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷fö–6R×W6vR"Â†VFW'2Ò’’æ§6öâ‚’æÆÆ÷væ6U6V6öæG2Â“°¢6öç7B–çFVçE&W7öç6RÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ærö–çFVçG2"Â†VFW'2Â–ÆöC¢²&÷f–FW#¢&vöövÆR"Â&öGV7D–C¢&6öÒæ6ö6‚æW†V7WF—fRæÖöçF†Ç’"ÒÒ“°¢76W'BæWVÂ†–çFVçE&W7öç6Rç7FGW46öFRÂ#“°¢6öç7BW&6†6T–çFVçD–BÒ–çFVçE&W7öç6Ræ§6öâ‚’æ–çFVçBæ–B27G&–æs°¢76W'Bæö²†–çFVçE&W7öç6Ræ§6öâ‚’æ–çFVçBææöæ6R“°¢6öç7BWfVçBÒ²W&6†6T–çFVçD–BÂ&öGV7D–C¢&6öÒæ6ö6‚æW†V7WF—fRæÖöçF†Ç’"ÂG&ç67F–öä–C¢&vöövÆR×G&ç67F–öâÓ"Â7FGW3¢&7F—fR"ÂVçf—&öæÖVçC¢'6æF&÷‚"ÂW‡—&W4C¢###bÓÓC££ã¢"Ó°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷vV&†öö·2övöövÆR"Â–ÆöC¢WfVçBÒ’’ç7FGW46öFRÂC“°¢6öç7B7&VFVBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷vV&†öö·2övöövÆR"Â†VFW'3¢²'‚Ö&–ÆÆ–ær×vV&†öö²×6V7&WB#¢&&–ÆÆ–ær×6V7&WB"ÒÂ–ÆöC¢WfVçBÒ“°¢76W'BæWVÂ†7&VFVBç7FGW46öFRÂ#“°¢76W'BæWVÂ†7&VFVBæ§6öâ‚’ç&V6V—fVBÂG'VR“°¢76W'BæWVÂ†7&VFVBæ§6öâ‚’æ–FV×÷FVçBÂfÇ6R“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷fö–6R×W6vR"Â†VFW'2Ò’’æ§6öâ‚’æÆÆ÷væ6U6V6öæG2Â#“°¢6öç7B&WVFVBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷vV&†öö·2övöövÆR"Â†VFW'3¢²'‚Ö&–ÆÆ–ær×vV&†öö²×6V7&WB#¢&&–ÆÆ–ær×6V7&WB"ÒÂ–ÆöC¢WfVçBÒ“°¢76W'BæWVÂ‡&WVFVBç7FGW46öFRÂ#“°¢76W'BæWVÂ‡&WVFVBæ§6öâ‚’æ–FV×÷FVçBÂG'VR“°¢6öç7BWFFVBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷vV&†öö·2övöövÆR"Â†VFW'3¢²'‚Ö&–ÆÆ–ær×vV&†öö²×6V7&WB#¢&&–ÆÆ–ær×6V7&WB"ÒÂ–ÆöC¢²ââæWfVçBÂ7FGW3¢&W‡—&VB"ÂW‡—&W4C¢çVÆÂÒÒ“°¢76W'BæWVÂ‡WFFVBç7FGW46öFRÂ#“°¢76W'BæWVÂ‡WFFVBæ§6öâ‚’æVçF—FÆVÖVçBç7FGW2Â&W‡—&VB"“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖRöVçF—FÆVÖVçB"Â†VFW'2Ò’’æ§6öâ‚’æVçF—FÆVÖVçBç7FGW2Â&W‡—&VB"“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷fö–6R×W6vR"Â†VFW'2Ò’’æ§6öâ‚’æÆÆ÷væ6U6V6öæG2Â“°¢6öç7B÷F†W"Òv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢&&–ÆÆ–ærÖ÷F†W$W†×ÆRæ6öÒ"Â77v÷&C¢&&–ÆÆ–ær×77v÷&BÓ#2"ÒÒ“°¢6öç7B÷F†W$†VFW'2Ò²WF†÷&—¦F–öã¢&V&W"G¶÷F†W"æ§6öâ‚’çFö¶VçÖÓ°¢6öç7B÷F†W$–çFVçBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ærö–çFVçG2"Â†VFW'3¢÷F†W$†VFW'2Â–ÆöC¢²&÷f–FW#¢&vöövÆR"Â&öGV7D–C¢&6öÒæ6ö6‚æW†V7WF—fRæÖöçF†Ç’"ÒÒ“°¢6öç7B6öæfÆ–7BÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷vV&†öö·2övöövÆR"Â†VFW'3¢²'‚Ö&–ÆÆ–ær×vV&†öö²×6V7&WB#¢&&–ÆÆ–ær×6V7&WB"ÒÂ–ÆöC¢²ââæWfVçBÂW&6†6T–çFVçD–C¢÷F†W$–çFVçBæ§6öâ‚’æ–çFVçBæ–BÂG&ç67F–öä–C¢&vöövÆR×G&ç67F–öâÓ"ÒÒ“°¢76W'BæWVÂ†6öæfÆ–7Bç7FGW46öFRÂC’“°§Ò“° §FW7B‚'&Vw&W76–öã¢fW&–f–VBÖö&–ÆR7F÷&RW&6†6W2w&çBöæÇ’ÖF6†VBVçF—FÆVÖVçG2"Â7–æ26öçFW‡BÓâ°¢6öç7B7F÷&RÒæWrÖVÖ÷'•7F÷&R‚“°¢6öç7BÒv—B'V–ÆD‡7F÷&RÂ²&–ÆÆ–æs¢²Væ&ÆVC¢G'VRÂvV&†ööµ6V7&WC¢&&–ÆÆ–ær×6V7&WB"ÂfW&–g•W&6†6S¢7–æ2–çWBÓâ‡²&öGV7D–C¢–çWBç&öGV7D–BÂG&ç67F–öä–C¢–çWBçG&ç67F–öä–BÂ÷&–v–æÅG&ç67F–öä–C¢–çWBçG&ç67F–öä–BÂW&6†6UFö¶Vã¢–çWBçW&6†6UFö¶VâÂ7FGW3¢&7F—fR"ÂVçf—&öæÖVçC¢'6æF&÷‚"ÂW‡—&W4C¢æWrFFR‚###bÓÓC££ã¢"’Â&÷f–FW$WfVçDFFS¢æWrFFR‚###bÓÓC££ã¢"’Ò’ÒÒ“°¢6öçFW‡BægFW"‚‚’Óâæ6Æ÷6R‚’“°¢6öç7B&Vv—7G&F–öâÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cöWF‚÷&Vv—7FW""Â–ÆöC¢²VÖ–Ã¢'7F÷&R×W&6†6TW†×ÆRæ6öÒ"Â77v÷&C¢'7F÷&R×77v÷&BÓ#2"ÒÒ“°¢6öç7B†VFW'2Ò²WF†÷&—¦F–öã¢&V&W"G·&Vv—7G&F–öâæ§6öâ‚’çFö¶VçÖÓ°¢6öç7B–çFVçBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ærö–çFVçG2"Â†VFW'2Â–ÆöC¢²&÷f–FW#¢&ÆR"Â&öGV7D–C¢&6öÒæ6öÖ×Væ–6F–öæ6ö6‚ç&öfW76–öæÂæÖöçF†Ç’"ÒÒ“°¢76W'BæWVÂ†–çFVçBç7FGW46öFRÂ#“°¢6öç7B–ÆöBÒ²W&6†6T–çFVçD–C¢–çFVçBæ§6öâ‚’æ–çFVçBæ–BÂ&÷f–FW#¢&ÆR"Â&öGV7D–C¢&6öÒæ6öÖ×Væ–6F–öæ6ö6‚ç&öfW76–öæÂæÖöçF†Ç’"ÂG&ç67F–öä–C¢&ÆR×G&ç67F–öâÓ"ÂW&6†6UFö¶Vã¢'6–væVB×7F÷&R×–ÆöB"Ó°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷W&6†6W2÷fW&–g’"Â–ÆöBÒ’’ç7FGW46öFRÂC“°¢6öç7BfW&–f–VBÒv—Bæ–æ¦V7B‡²ÖWF†öC¢%õ5B"ÂW&Ã¢"÷cö&–ÆÆ–ær÷W&6†6W2÷fW&–g’"Â†VFW'2Â–ÆöBÒ“°¢76W'BæWVÂ‡fW&–f–VBç7FGW46öFRÂ#“°¢76W'BæWVÂ‡fW&–f–VBæ§6öâ‚’çfW&–f–VBÂG'VR“°¢76W'BæWVÂ‡fW&–f–VBæ§6öâ‚’æVçF—FÆVÖVçBç&öGV7D–BÂ–ÆöBç&öGV7D–B“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖRöVçF—FÆVÖVçB"Â†VFW'2Ò’’æ§6öâ‚’æVçF—FÆVÖVçBçG&ç67F–öä–BÂ–ÆöBçG&ç67F–öä–B“°¢76W'BæWVÂ‚†v—Bæ–æ¦V7B‡²W&Ã¢"÷cöÖR÷fö–=¹ßkh‘éì¶»§q«^wÛŠ
-K\Ù\‹™[XZ[˜[YÜ™Y[X[Ë™[XZ[
-NÂˆÛÛœÝ\XØ]HH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆ˜[YÜ™Y[X[ÈJNÂˆ\ÜÙ\™\]X[
-\XØ]KœÝ]\ÐÛÙKJNÂˆ\ÜÙ\™\]X[
-ÝÜ™K˜XØÛÝ[ËœÚ^™KJNÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ[˜[Y›Ùš[H[œ]Ø[››ÝÜ™X]H\X[X\›™\ˆÝ]H‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÈ\ÚÙ[ˆHH]ØZ]™YÚ\Ý\™Y\
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { buildApp } from "../src/app";
+import { MemoryStore } from "./memory-store";
+import { startLiveConversation, ProviderUnavailableError } from "../src/conversation-service";
+import type { VoiceProvider } from "../src/voice-provider";
+import { randomUUID } from "node:crypto";
 
-NÂˆÛÛ^˜Y\Š
+const validCredentials = { email: "regression@example.com", password: "regression-password-123" };
+const validProfile = {
+  displayName: "Regression Learner",
+  function: "Engineering",
+  jobTitle: "Engineering Manager",
+  careerLevel: "First-time manager",
+  audience: "Product and engineering leadership",
+  goal: "Present recommendations",
+};
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝXY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÝÚÙ[ŸXNÂˆÛÛœÝ[˜[YH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œË^[ØYˆÈ‹‹˜[Y›Ùš[KÛØ[ˆ’[™™\ˆÛÛ™šY[˜ÙHœ›ÛH›ÚXÙHˆHJNÂˆ\ÜÙ\™\]X[
-[˜[YœÝ]\ÐÛÙK
-NÂˆÛÛœÝYHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYH‹XY\œÈJNÂˆ\ÜÙ\™\]X[
-YKœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-YKšœÛÛŠ
-Kœ›Ùš[K[
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆš]˜]H›Ý]\È™]™\ˆ^ÜÙH[›Ý\ˆXØÛÝ[›Ùš[H‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝ\H]ØZ]Z[\
-ÝÜ™JNÂˆÛÛ^˜Y\Š
+async function registeredApp() {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { origins: ["http://allowed.example"] });
+  const response = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  assert.equal(response.statusCode, 201);
+  return { app, store, token: response.json().token as string };
+}
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝš\œÝH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆ˜[YÜ™Y[X[ÈJNÂˆÛÛœÝÙXÛÛ™H]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆÈ‹‹˜[YÜ™Y[X[Ë[XZ[ˆ›Ý\‹\™YÜ™\ÜÚ[Û^[\K˜ÛÛHˆHJNÂˆÛÛœÝš\œÝXY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	Ùš\œÝšœÛÛŠ
-KÚÙ[ŸXNÂˆÛÛœÝÙXÛÛ™XY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÜÙXÛÛ™šœÛÛŠ
-KÚÙ[ŸXNÂˆ]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œÎˆš\œÝXY\œË^[ØYˆ˜[Y›Ùš[HJNÂˆÛÛœÝÙXÛÛ™YHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYH‹XY\œÎˆÙXÛÛ™XY\œÈJNÂˆ\ÜÙ\™\]X[
-ÙXÛÛ™YKšœÛÛŠ
-Kœ›Ùš[K[
-NÂˆÛÛœÝ][\YÝ™\Üš]HH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œÎˆÙXÛÛ™XY\œË^[ØYˆÈ‹‹˜[Y›Ùš[K\Ù\’Yˆš\œÝšœÛÛŠ
-K\Ù\‹šYHJNÂˆ\ÜÙ\™\]X[
-][\YÝ™\Üš]KœÝ]\ÐÛÙK
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ\ØYÙH[™Ú[\Èš]˜]K[Y^›Û™KX›Ý[™[™™]™\ˆ[›ØÚÜÈ]™H›ÚXÙH‹\Þ[˜ÈÛÛ^OˆÂˆ]›ÝÈH™]È]JŒŒ‹LKLNŒŒŒˆŠNÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝ\H]ØZ]Z[\
-ÝÜ™KÈ›ÝÎˆ
+test("regression: authentication rejects malformed, missing and expired credentials", async context => {
+  let now = new Date("2026-09-24T00:00:00.000Z");
+  const store = new MemoryStore();
+  const app = await buildApp(store, { now: () => now });
+  context.after(() => app.close());
+  assert.equal((await app.inject({ url: "/v1/me" })).statusCode, 401);
+  assert.equal((await app.inject({ url: "/v1/me", headers: { authorization: "Bearer invalid" } })).statusCode, 401);
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const token = registration.json().token as string;
+  assert.equal((await app.inject({ url: "/v1/me", headers: { authorization: `Bearer ${token}` } })).statusCode, 200);
+  now = new Date("2026-10-01T00:00:00.000Z");
+  const expired = await app.inject({ url: "/v1/me", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(expired.statusCode, 401);
+  assert.match(expired.json().error, /expired|sign in/i);
+});
 
-HOˆ›ÝÈJNÂˆÛÛ^˜Y\Š
+test("regression: social auth rejects malformed provider payloads", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store);
+  context.after(() => app.close());
+  const response = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "google", accessToken: "short" } });
+  assert.equal(response.statusCode, 400);
+  assert.equal(store.accounts.size, 0);
+});
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝ™YÚ\Ý˜][ÛˆH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆ˜[YÜ™Y[X[ÈJNÂˆÛÛœÝXY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	Ü™YÚ\Ý˜][Û‹šœÛÛŠ
-KÚÙ[ŸXNÂˆ\ÜÙ\™\]X[
+test("regression: OAuth identities link by stable provider subject and do not trust changed email claims", async context => {
+  const store = new MemoryStore();
+  let googleEmail = "oauth-owner@example.com";
+  let googleVerified = true;
+  let googleAudience = "google-client-id";
+  const app = await buildApp(store, {
+    oauth: {
+      googleClientIds: ["google-client-id"],
+      fetchImpl: async input => {
+        if (String(input).includes("googleapis")) return new Response(JSON.stringify({ email: googleEmail, sub: "google-subject-1", aud: googleAudience, email_verified: googleVerified }), { status: 200 });
+        return new Response(JSON.stringify({ mail: "oauth-owner@example.com", id: "microsoft-subject-1" }), { status: 200 });
+      },
+    },
+  });
+  context.after(() => app.close());
+  const googlePayload = { provider: "google", accessToken: "google-access-token-123456" };
+  googleAudience = "unrecognized-client-id";
+  assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload })).statusCode, 401);
+  googleAudience = "google-client-id";
+  const first = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload });
+  assert.equal(first.statusCode, 200);
+  const firstUserId = first.json().user.id;
+  assert.equal(store.oauthIdentities.size, 1);
+  googleEmail = "changed-claim@example.com";
+  const returning = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload });
+  assert.equal(returning.statusCode, 200);
+  assert.equal(returning.json().user.id, firstUserId);
+  assert.equal(returning.json().user.email, "oauth-owner@example.com");
+  assert.equal(store.accounts.size, 1);
+  const microsoft = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "microsoft", accessToken: "microsoft-access-token-123" } });
+  assert.equal(microsoft.statusCode, 200);
+  assert.equal(microsoft.json().user.id, firstUserId);
+  assert.equal(store.oauthIdentities.size, 2);
+  googleVerified = false;
+  googleEmail = "unverified@example.com";
+  assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload })).statusCode, 401);
+});
 
-]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYKÝ›ÚXÙK]\ØYÙHˆJJKœÝ]\ÐÛÙKJNÂˆ]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œË^[ØYˆÈ‹‹˜[Y›Ùš[K[Y^›Û™Nˆ\ÚXKÒÛÛØ]HˆHJNÂˆÛÛœÝ\ØYÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYKÝ›ÚXÙK]\ØYÙH‹XY\œÈJNÂˆ\ÜÙ\™\]X[
-\ØYÙKœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™Y\\]X[
-\ØYÙKšœÛÛŠ
-KÈ[Y^›Û™Nˆ\ÚXKÒÛÛØ]H‹^RÙ^NˆŒŒ‹LKL‹[ÝØ[˜ÙTÙXÛÛ™ÎˆLŒ™\Ù\™YÙXÛÛ™ÎˆÛÛœÝ[YYÙXÛÛ™Îˆ™[XZ[š[™ÔÙXÛÛ™ÎˆLŒ™\Ù]Ð]ˆŒŒ‹LKLNŒÌŒŒˆ‹[™›Ü˜Ù[Y[ˆœÙ\™\—Ü™\Ù\˜][ÛœÈ‹]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙHJNÂˆ›ÝÈH™]È]JŒŒ‹LKLNŒÌNŒŒˆŠNÂˆ\ÜÙ\™\]X[
+test("regression: manager scenarios require a key and become library content", async context => {
+  const { app, store, token } = await registeredApp();
+  context.after(() => app.close());
+  const scenario = {
+    id: "manager-regression-scenario",
+    version: 1,
+    module: "management",
+    functions: ["Engineering"],
+    goal: "Present recommendations",
+    title: "Explain a changed delivery plan",
+    context: "A dependency changed and your delivery plan needs to be updated.",
+    question: "Explain what changed, the impact, and your recommendation.",
+    independentQuestion: "Give the same recommendation to a different stakeholder without repeating your first answer.",
+    rubricVersion: "management-manager-1",
+    focus: "Evidence, implications and action",
+    level: 1,
+  };
+  assert.equal((await app.inject({ method: "POST", url: "/v1/manager/scenarios", payload: scenario })).statusCode, 401);
+  const created = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers: { "x-manager-key": "development-manager-key" }, payload: scenario });
+  assert.equal(created.statusCode, 201);
+  assert.equal(created.json().message, "Scenario added to the library as a draft for review.");
+  assert.equal(created.json().scenario.reviewStatus, "draft");
+  const initialRevisions = await app.inject({ method: "GET", url: `/v1/manager/scenarios/${scenario.id}/revisions`, headers: { "x-manager-key": "development-manager-key" } });
+  assert.equal(initialRevisions.statusCode, 200);
+  assert.equal(initialRevisions.json().revisions.length, 1);
+  const initialRevisionId = initialRevisions.json().revisions[0].id as string;
+  const library = await app.inject({ url: "/v1/scenarios/library" });
+  assert.equal(library.statusCode, 200);
+  assert.ok(library.json().count >= 127);
+  assert.equal(library.json().scenarios.some((item: { id: string }) => item.id === scenario.id), true);
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers: { authorization: `Bearer ${token}` }, payload: validProfile });
+  const recommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(recommendations.statusCode, 200);
+  assert.equal(recommendations.json().scenarios.some((item: { id: string }) => item.id === scenario.id), false);
+  const published = await app.inject({ method: "POST", url: `/v1/manager/scenarios/${scenario.id}/review`, headers: { "x-manager-key": "development-manager-key" }, payload: { status: "published" } });
+  assert.equal(published.statusCode, 200);
+  assert.equal(published.json().scenario.reviewStatus, "published");
+  const publishedRevisions = await app.inject({ method: "GET", url: `/v1/manager/scenarios/${scenario.id}/revisions`, headers: { "x-manager-key": "development-manager-key" } });
+  assert.equal(publishedRevisions.json().revisions.length, 2);
+  const publishedRecommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(publishedRecommendations.json().scenarios.some((item: { id: string }) => item.id === scenario.id), true);
+  const createdConversation = await app.inject({ method: "POST", url: "/v1/me/conversations", headers: { authorization: `Bearer ${token}` }, payload: { scenarioId: scenario.id } });
+  assert.equal(createdConversation.statusCode, 201);
+  const stored = store.scenarioRows.get(scenario.id);
+  assert.ok(stored);
+  store.scenarioRows.set(scenario.id, { ...stored, title: "Changed after the learner started" });
+  const snapshot = await app.inject({ url: `/v1/me/conversations/${createdConversation.json().conversation.id}`, headers: { authorization: `Bearer ${token}` } });
+  assert.equal(snapshot.json().scenario.title, scenario.title);
+  const rolledBack = await app.inject({ method: "POST", url: `/v1/manager/scenarios/${scenario.id}/rollback`, headers: { "x-manager-key": "development-manager-key" }, payload: { revisionId: initialRevisionId } });
+  assert.equal(rolledBack.statusCode, 200);
+  assert.equal(rolledBack.json().scenario.reviewStatus, "draft");
+  const afterRollbackRecommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(afterRollbackRecommendations.json().scenarios.some((item: { id: string }) => item.id === scenario.id), false);
+});
 
-]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYKÝ›ÚXÙK]\ØYÙH‹XY\œÈJJKšœÛÛŠ
-K™^RÙ^KŒŒ‹LKLHŠNÂˆÛÛœÝ›ÚXÙHH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœÈ‹XY\œÈJNÂˆ\ÜÙ\™\]X[
-›ÚXÙKœÝ]\ÐÛÙKLÊNÂˆ\ÜÙ\™\]X[
-ÝÜ™Kœ™\Ù\˜][ÛœËœÚ^™K
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆÛÛ™\œØ][ÛˆÜ™X][Ûˆ]]Üš^™\ÈØÙ[˜\š[ÜÈ[™™\Ù\™\ÈÝÛ™\œÚ\‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝ\H]ØZ]Z[\
-ÝÜ™JNÂˆÛÛ^˜Y\Š
+test("regression: manager scenario drafts reject blank or oversized content before entering the library", async context => {
+  const { app } = await registeredApp();
+  context.after(() => app.close());
+  const invalid = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers: { "x-manager-key": "development-manager-key" }, payload: { id: " ", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "", context: "Context", question: "Question", independentQuestion: "Transfer", rubricVersion: "r1", focus: "Focus", level: 1 } });
+  assert.equal(invalid.statusCode, 400);
+  assert.equal((await app.inject({ url: "/v1/scenarios/library" })).json().scenarios.some((scenario: { id: string }) => scenario.id.trim() === ""), false);
+});
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝš\œÝH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆ˜[YÜ™Y[X[ÈJNÂˆÛÛœÝÙXÛÛ™H]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆÈ‹‹˜[YÜ™Y[X[Ë[XZ[ˆ˜ÛÛ™\œØ][Û‹[ÝÛ™\^[\K˜ÛÛHˆHJNÂˆÛÛœÝš\œÝXY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	Ùš\œÝšœÛÛŠ
-KÚÙ[ŸXNÂˆÛÛœÝÙXÛÛ™XY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÜÙXÛÛ™šœÛÛŠ
-KÚÙ[ŸXNÂˆ]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œÎˆš\œÝXY\œË^[ØYˆ˜[Y›Ùš[HJNÂˆ]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œÎˆÙXÛÛ™XY\œË^[ØYˆÈ‹‹˜[Y›Ùš[K[˜Ý[ÛŽˆ‘š[˜[˜ÙHˆHJNÂˆÛÛœÝÜ™X]YH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÛYKØÛÛ™\œØ][ÛœÈ‹XY\œÎˆš\œÝXY\œË^[ØYˆÈØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^HˆHJNÂˆ\ÜÙ\™\]X[
-Ü™X]YœÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-Ü™X]YšœÛÛŠ
-K˜ÛÛ™\œØ][Û‹œÝ]KÔ‘PUQŠNÂˆ\ÜÙ\™\]X[
-Ü™X]YšœÛÛŠ
-K›]™U›ÚXÙP]˜Z[X›K˜[ÙJNÂˆÛÛœÝ™XÙ[H]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYKØÛÛ™\œØ][ÛœÈ‹XY\œÎˆš\œÝXY\œÈJNÂˆ\ÜÙ\™\]X[
-™XÙ[œÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-™XÙ[šœÛÛŠ
-K˜ÛÛ™\œØ][ÛœÖÌKœØÙ[˜\š[ËšY™[™Ú[™Y\š[™ËY[^HŠNÂˆÛÛœÝYHÜ™X]YšœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šY\ÈÝš[™ÎÂˆÛÛœÝÝÛˆH]ØZ]\š[š™XÝ
-È\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYXXY\œÎˆš\œÝXY\œÈJNÂˆ\ÜÙ\™\]X[
-ÝÛ‹œÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-ÝÛ‹šœÛÛŠ
-KœØÙ[˜\š[ËšY™[™Ú[™Y\š[™ËY[^HŠNÂˆ\ÜÙ\™\]X[
-ÝÛ‹šœÛÛŠ
-K\›œË›[™Ý
-NÂˆÛÛœÝ\›ˆH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKÝ\›œØXY\œÎˆš\œÝXY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹^ˆ’HÚ[^Z[ˆH[^K]È[\XÝ[™H™^XÚ\Ú[Û‹ˆˆHJNÂˆ\ÜÙ\™\]X[
-\›‹œÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-\›‹šœÛÛŠ
-K\›‹œ›ÛK\Ù\ˆŠNÂˆ\ÜÙ\™\]X[
-\›‹šœÛÛŠ
-K\›‹œ\ÙKœš[X\žHŠNÂˆÛÛœÝ[˜ÛÛ\]HH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKØÛÛ\]XXY\œÎˆš\œÝXY\œÈJNÂˆ\ÜÙ\™\]X[
-[˜ÛÛ\]KœÝ]\ÐÛÙKJNÂˆÛÛœÝ™]žHH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKÝ\›œØXY\œÎˆš\œÝXY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹\ÙNˆš[™\[™[Ü™]žH‹^ˆ’H™XÛÛ[Y[™HÝYÙY[ˆ™XØ]\ÙHH]šY[˜ÙHÚÝÜÈš\ÚËˆ™^HÚ[ÛÛ™š\›HHÝÛ™\ˆ[™[Y[[™KˆˆHJNÂˆ\ÜÙ\™\]X[
-™]žKœÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-™]žKšœÛÛŠ
-K\›‹œ\ÙKš[™\[™[Ü™]žHŠNÂˆ\ÜÙ\™\]X[
+test("regression: authenticated manager allowlist can publish without the development key", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { managerEmails: ["manager@example.com"] });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "manager@example.com", password: "manager-password-123" } });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  const response = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers, payload: { id: "manager-authenticated-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Open a useful conversation", context: "You meet a colleague before a meeting.", question: "Start the conversation and explain what you are working on.", independentQuestion: "Open a similar conversation with someone from another team.", rubricVersion: "daily-manager-1", focus: "Conversation initiation", level: 1 } });
+  assert.equal(response.statusCode, 201);
+  const nonManager = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "learner@example.com", password: "learner-password-123" } });
+  const forbidden = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers: { authorization: `Bearer ${nonManager.json().token}` }, payload: { id: "manager-forbidden-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Should not publish", context: "A context.", question: "A prompt.", independentQuestion: "A retry.", rubricVersion: "daily-manager-1", focus: "Focus", level: 1 } });
+  assert.equal(forbidden.statusCode, 403);
+});
 
-]ØZ]\š[š™XÝ
-È\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYXXY\œÎˆš\œÝXY\œÈJJKšœÛÛŠ
-K\›œË›[™ÝŠNÂˆÛÛœÝÛÛ\]YH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKØÛÛ\]XXY\œÎˆš\œÝXY\œÈJNÂˆ\ÜÙ\™\]X[
-ÛÛ\]YœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-ÛÛ\]YšœÛÛŠ
-K˜ÛÛ™\œØ][Û‹œÝ]KÓÓTUQŠNÂˆ\ÜÙ\™\]X[
+test("regression: persisted manager role grants access without an email allowlist", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { managerEmails: [] });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "role-manager@example.com", password: "manager-password-123" } });
+  const account = store.accounts.get(registration.json().user.id);
+  assert.ok(account);
+  account.role = "manager";
+  const response = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers: { authorization: `Bearer ${registration.json().token}` }, payload: { id: "role-manager-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Open a useful conversation", context: "You meet a colleague before a meeting.", question: "Start the conversation and explain what you are working on.", independentQuestion: "Open a similar conversation with someone from another team.", rubricVersion: "daily-manager-1", focus: "Conversation initiation", level: 1 } });
+  assert.equal(response.statusCode, 201);
+});
 
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKØÛÛ\]XXY\œÎˆš\œÝXY\œÈJJKœÝ]\ÐÛÙKJNÂˆÛÛœÝ^ÜYH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÛYKÙ^Ü‹XY\œÎˆš\œÝXY\œÈJNÂˆ\ÜÙ\™\]X[
-^ÜYœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-^ÜYšœÛÛŠ
-K\Ù\‹™[XZ[˜[YÜ™Y[X[Ë™[XZ[
-NÂˆ\ÜÙ\™\]X[
-^ÜYšœÛÛŠ
-K˜ÛÛ™\œØ][ÛœÖÌK\›œÖÌK^’HÚ[^Z[ˆH[^K]È[\XÝ[™H™^XÚ\Ú[Û‹ˆŠNÂˆ\ÜÙ\™\]X[
-œ\ÜÝÛÜ™\Úˆ[ˆ^ÜYšœÛÛŠ
-K\Ù\‹˜[ÙJNÂˆ\ÜÙ\™\]X[
+test("regression: billing entitlement webhooks are authenticated, idempotent and owner-scoped", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { billing: { enabled: true, webhookSecret: "billing-secret" } });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "billing-owner@example.com", password: "billing-password-123" } });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  assert.deepEqual((await app.inject({ url: "/v1/me/entitlement", headers })).json(), { entitlement: null });
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 0);
+  const intentResponse = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
+  assert.equal(intentResponse.statusCode, 201);
+  const purchaseIntentId = intentResponse.json().intent.id as string;
+  assert.ok(intentResponse.json().intent.nonce);
+  const event = { purchaseIntentId, productId: "com.coach.executive.monthly", transactionId: "google-transaction-1", status: "active", environment: "sandbox", expiresAt: "2026-11-01T00:00:00.000Z" };
+  assert.equal((await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", payload: event })).statusCode, 401);
+  const created = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: event });
+  assert.equal(created.statusCode, 201);
+  assert.equal(created.json().received, true);
+  assert.equal(created.json().idempotent, false);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 1200);
+  const repeated = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: event });
+  assert.equal(repeated.statusCode, 200);
+  assert.equal(repeated.json().idempotent, true);
+  const updated = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: { ...event, status: "expired", expiresAt: null } });
+  assert.equal(updated.statusCode, 200);
+  assert.equal(updated.json().entitlement.status, "expired");
+  assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.status, "expired");
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 0);
+  const other = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "billing-other@example.com", password: "billing-password-123" } });
+  const otherHeaders = { authorization: `Bearer ${other.json().token}` };
+  const otherIntent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers: otherHeaders, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
+  const conflict = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: { ...event, purchaseIntentId: otherIntent.json().intent.id, transactionId: "google-transaction-1" } });
+  assert.equal(conflict.statusCode, 409);
+});
 
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYKÝ\›œØXY\œÎˆÙXÛÛ™XY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹^ˆœš]˜]HˆHJJKœÝ]\ÐÛÙK
-NÂˆ\ÜÙ\™\]X[
+test("regression: verified mobile store purchases grant only matched entitlements", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { billing: { enabled: true, webhookSecret: "billing-secret", verifyPurchase: async input => ({ productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.transactionId, purchaseToken: input.purchaseToken, status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z") }) } });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "store-purchase@example.com", password: "store-password-123" } });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  const intent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "apple", productId: "com.communicationcoach.professional.monthly" } });
+  assert.equal(intent.statusCode, 201);
+  const payload = { purchaseIntentId: intent.json().intent.id, provider: "apple", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-transaction-1", purchaseToken: "signed-store-payload" };
+  assert.equal((await app.inject({ method: "POST", url: "/v1/billing/purchases/verify", payload })).statusCode, 401);
+  const verified = await app.inject({ method: "POST", url: "/v1/billing/purchases/verify", headers, payload });
+  assert.equal(verified.statusCode, 201);
+  assert.equal(verified.json().verified, true);
+  assert.equal(verified.json().entitlement.productId, payload.productId);
+  assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.transactionId, payload.transactionId);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 1200);
+});
 
-]ØZ]\š[š™XÝ
-È\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉÚYXXY\œÎˆÙXÛÛ™XY\œÈJJKœÝ]\ÐÛÙK
-NÂˆ\ÜÙ\™\]X[
+test("regression: verified Apple lifecycle notifications update matching entitlements and ignore stale events", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { now: () => new Date("2026-10-06T00:00:00.000Z"), billing: { enabled: true, verifyAppleNotification: async signedPayload => signedPayload === "renewal" ? { notificationId: "notification-renewal", notificationType: "DID_RENEW", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-2", originalTransactionId: "apple-original-1", status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-05T00:00:00.000Z") } : signedPayload === "stale" ? { notificationId: "notification-stale", notificationType: "EXPIRED", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", status: "expired", environment: "sandbox", expiresAt: new Date("2026-10-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-04T00:00:00.000Z") } : null } });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "apple-lifecycle@example.com", password: "apple-lifecycle-password" } });
+  const userId = registration.json().user.id as string;
+  await store.saveEntitlement({ id: randomUUID(), userId, provider: "apple", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", purchaseToken: "apple-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
+  const renewal = await app.inject({ method: "POST", url: "/v1/billing/notifications/apple", payload: { signedPayload: "renewal" } });
+  assert.equal(renewal.statusCode, 200);
+  assert.equal(renewal.json().entitlement.transactionId, "apple-renewal-2");
+  assert.equal(renewal.json().entitlement.purchaseToken, "apple-purchase-token");
+  const stale = await app.inject({ method: "POST", url: "/v1/billing/notifications/apple", payload: { signedPayload: "stale" } });
+  assert.equal(stale.statusCode, 200);
+  assert.equal(stale.json().idempotent, true);
+  assert.equal((await app.inject({ method: "GET", url: "/v1/me/entitlement", headers: { authorization: `Bearer ${registration.json().token}` } })).json().entitlement.transactionId, "apple-renewal-2");
+});
 
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÛYKØÛÛ™\œØ][ÛœÈ‹XY\œÎˆÙXÛÛ™XY\œË^[ØYˆÈØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^HˆHJJKœÝ]\ÐÛÙKÊNÂˆ\ÜÙ\™\]X[
+test("regression: Google Pub/Sub lifecycle notifications reverify tokens before updating entitlements", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store, { billing: { enabled: true, googleNotificationSecret: "google-secret", verifyPurchase: async input => ({ productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.purchaseToken, purchaseToken: input.purchaseToken, status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: null }) } });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "google-lifecycle@example.com", password: "google-lifecycle-password" } });
+  const userId = registration.json().user.id as string;
+  await store.saveEntitlement({ id: randomUUID(), userId, provider: "google", productId: "com.communicationcoach.professional.monthly", transactionId: "google-transaction-1", originalTransactionId: "google-purchase-token", purchaseToken: "google-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
+  const data = Buffer.from(JSON.stringify({ packageName: "com.communicationcoach", eventTimeMillis: "1791244800000", subscriptionNotification: { purchaseToken: "google-purchase-token", subscriptionId: "com.communicationcoach.professional.monthly", notificationType: 2 } })).toString("base64");
+  const payload = { message: { data, messageId: "google-message-1" } };
+  assert.equal((await app.inject({ method: "POST", url: "/v1/billing/notifications/google", payload })).statusCode, 401);
+  const response = await app.inject({ method: "POST", url: "/v1/billing/notifications/google", headers: { "x-google-pubsub-secret": "google-secret" }, payload });
+  assert.equal(response.statusCode, 200);
+  assert.equal(response.json().entitlement.purchaseToken, "google-purchase-token");
+  assert.equal((await app.inject({ method: "GET", url: "/v1/me/entitlement", headers: { authorization: `Bearer ${registration.json().token}` } })).json().entitlement.providerEventDate, "2026-10-06T00:00:00.000Z");
+});
 
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÛYKØÛÛ™\œØ][ÛœÈ‹XY\œÎˆš\œÝXY\œË^[ØYˆÈØÙ[˜\š[ÒYˆ[šÛ›ÝÛˆˆHJJKœÝ]\ÐÛÙKÊNÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆÙXÝ\š]HXY\œËØXÚHÛXÞH[™ÓÔ”ÈÝ^H[˜X›Y‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÈ\HH]ØZ]™YÚ\Ý\™Y\
+test("regression: progress is private and starts without invented skill scores", async context => {
+  const { app, token } = await registeredApp();
+  context.after(() => app.close());
+  const profile = await app.inject({ method: "PUT", url: "/v1/me/profile", headers: { authorization: `Bearer ${token}` }, payload: validProfile });
+  assert.equal(profile.statusCode, 200);
+  const planChange = await app.inject({ method: "PUT", url: "/v1/me/profile", headers: { authorization: `Bearer ${token}` }, payload: { ...validProfile, planId: "executive" } });
+  assert.equal(planChange.statusCode, 200);
+  assert.equal((await app.inject({ url: "/v1/me", headers: { authorization: `Bearer ${token}` } })).json().profile.planId, "executive");
+  const response = await app.inject({ url: "/v1/me/progress", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(response.statusCode, 200);
+  const progress = response.json();
+  assert.deepEqual({ totalSessions: progress.totalSessions, completedSessions: progress.completedSessions, weeklySessions: progress.weeklySessions, practiceMinutes: progress.practiceMinutes, weeklyPracticeMinutes: progress.weeklyPracticeMinutes, currentStreakDays: progress.currentStreakDays, skillSignal: progress.skillSignal, skillSignalStatus: progress.skillSignalStatus }, { totalSessions: 0, completedSessions: 0, weeklySessions: 0, practiceMinutes: 0, weeklyPracticeMinutes: 0, currentStreakDays: 0, skillSignal: null, skillSignalStatus: "awaiting_assessment" });
+  assert.deepEqual(progress.mastery, { level: 1, title: "Getting started", practiceDays: 0, completedScenarios: 0, successfulRetries: 0, evidenceAssessments: 0, nextLevel: 2, progressPercent: 0, nextRequirements: { level: 2, title: "Finding your voice", minimumPracticeDays: 2, completedScenarios: 1, successfulRetries: 1, evidenceAssessments: 1 } });
+  assert.equal(progress.practiceDays, 0);
+  assert.equal(progress.completedScenarios, 0);
+  assert.equal(progress.successfulRetries, 0);
+  assert.equal(progress.evidenceAssessments, 0);
+  assert.equal(progress.dailyPractice.length, 7);
+  assert.equal(progress.levelTrack.length, 5);
+});
 
-NÂˆÛÛ^˜Y\Š
+test("regression: registration normalizes email and rejects duplicate accounts", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store);
+  context.after(() => app.close());
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "  REGRESSION@EXAMPLE.COM " } });
+  assert.equal(first.statusCode, 201);
+  assert.equal(first.json().user.email, validCredentials.email);
+  const duplicate = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  assert.equal(duplicate.statusCode, 409);
+  assert.equal(store.accounts.size, 1);
+});
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÚX[‹XY\œÎˆÈÜšYÚ[Žˆš‹ËØ[ÝÙY™^[\HˆHJNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKšXY\œÖÈ˜ØXÚKXÛÛ›Û—K››Ë\ÝÜ™HŠNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKšXY\œÖÈ˜XØÙ\ÜËXÛÛ›ÛX[ÝË[ÜšYÚ[ˆ—Kš‹ËØ[ÝÙY™^[\HŠNÂˆ\ÜÙ\›ÚÊ™\ÜÛœÙKšXY\œÖÈžXÛÛ[]\K[Ü[ÛœÈ—JNÂˆ\ÜÙ\›ÚÊ™\ÜÛœÙKšXY\œÖÈžYœ˜[YK[Ü[ÛœÈ—JNÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ]X˜\ÙH™XY[™\ÜÈ™\ÜÈ\[™[˜ÞH˜Z[\™HÚ]Ý]^ÜÚ[™È]Z[È‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÝÜ™Kœ™XYHH\Þ[˜È
+test("regression: invalid profile input cannot create partial learner state", async context => {
+  const { app, token } = await registeredApp();
+  context.after(() => app.close());
+  const headers = { authorization: `Bearer ${token}` };
+  const invalid = await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, goal: "Infer confidence from voice" } });
+  assert.equal(invalid.statusCode, 400);
+  const me = await app.inject({ url: "/v1/me", headers });
+  assert.equal(me.statusCode, 200);
+  assert.equal(me.json().profile, null);
+});
 
-HOˆÈ›ÝÈ™]È\œ›ÜŠ™]X˜\ÙH\ÜÝÛÜ™ÚÝ[›Ý\ØØ\HŠNÈNÂˆÛÛœÝ\H]ØZ]Z[\
-ÝÜ™JNÂˆÛÛ^˜Y\Š
+test("regression: private routes never expose another account profile", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store);
+  context.after(() => app.close());
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "other-regression@example.com" } });
+  const firstHeaders = { authorization: `Bearer ${first.json().token}` };
+  const secondHeaders = { authorization: `Bearer ${second.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers: firstHeaders, payload: validProfile });
+  const secondMe = await app.inject({ url: "/v1/me", headers: secondHeaders });
+  assert.equal(secondMe.json().profile, null);
+  const attemptedOverwrite = await app.inject({ method: "PUT", url: "/v1/me/profile", headers: secondHeaders, payload: { ...validProfile, userId: first.json().user.id } });
+  assert.equal(attemptedOverwrite.statusCode, 400);
+});
 
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹Ü™XYHˆJNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ÐÛÙKLÊNÂˆ\ÜÙ\™Y\\]X[
-™\ÜÛœÙKšœÛÛŠ
-KÈÝ]\Îˆ™]X˜\ÙWÝ[˜]˜Z[X›HˆJNÂˆ\ÜÙ\™Ù\Ó›ÝX]Ú
-™\ÜÛœÙK˜›ÙKÙ]X˜\ÙH\ÜÝÛÜ™ÊNÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ]™HY™XÞXÛH™\Ù\™\È\ØYÙH[™™XXÚ\ÈPÕU‘HÛ›HY\ˆ›ÝšY\ˆÛÛ›™XÝ[Ûˆ‹\Þ[˜È
+test("regression: usage endpoint is private, timezone-bound and never unlocks live voice", async context => {
+  let now = new Date("2026-09-24T18:00:00.000Z");
+  const store = new MemoryStore();
+  const app = await buildApp(store, { now: () => now });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage" })).statusCode, 401);
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
+  const usage = await app.inject({ url: "/v1/me/voice-usage", headers });
+  assert.equal(usage.statusCode, 200);
+  assert.deepEqual(usage.json(), { timezone: "Asia/Kolkata", dayKey: "2026-09-24", allowanceSeconds: 1200, reservedSeconds: 0, consumedSeconds: 0, remainingSeconds: 1200, resetsAt: "2026-09-24T18:30:00.000Z", enforcement: "server_reservations", liveVoiceAvailable: false });
+  now = new Date("2026-09-24T18:31:00.000Z");
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().dayKey, "2026-09-25");
+  const voice = await app.inject({ method: "POST", url: "/v1/voice/sessions", headers });
+  assert.equal(voice.statusCode, 503);
+  assert.equal(store.reservations.size, 0);
+});
 
-HOˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝÛÛ™\œØ][Û’YH˜[™ÛUURQ
+test("regression: conversation creation authorizes scenarios and preserves ownership", async context => {
+  const store = new MemoryStore();
+  const app = await buildApp(store);
+  context.after(() => app.close());
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "conversation-owner@example.com" } });
+  const firstHeaders = { authorization: `Bearer ${first.json().token}` };
+  const secondHeaders = { authorization: `Bearer ${second.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers: firstHeaders, payload: validProfile });
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers: secondHeaders, payload: { ...validProfile, function: "Finance" } });
+  const created = await app.inject({ method: "POST", url: "/v1/me/conversations", headers: firstHeaders, payload: { scenarioId: "engineering-delay" } });
+  assert.equal(created.statusCode, 201);
+  assert.equal(created.json().conversation.state, "CREATED");
+  assert.equal(created.json().liveVoiceAvailable, false);
+  const recent = await app.inject({ url: "/v1/me/conversations", headers: firstHeaders });
+  assert.equal(recent.statusCode, 200);
+  assert.equal(recent.json().conversations[0].scenario.id, "engineering-delay");
+  const id = created.json().conversation.id as string;
+  const own = await app.inject({ url: `/v1/me/conversations/${id}`, headers: firstHeaders });
+  assert.equal(own.statusCode, 200);
+  assert.equal(own.json().scenario.id, "engineering-delay");
+  assert.equal(own.json().turns.length, 0);
+  const turn = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/turns`, headers: firstHeaders, payload: { role: "user", text: "I will explain the delay, its impact, and the next decision." } });
+  assert.equal(turn.statusCode, 201);
+  assert.equal(turn.json().turn.role, "user");
+  assert.equal(turn.json().turn.phase, "primary");
+  const incomplete = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders });
+  assert.equal(incomplete.statusCode, 409);
+  const retry = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/turns`, headers: firstHeaders, payload: { role: "user", phase: "independent_retry", text: "I recommend a staged plan because the evidence shows risk. Next, I will confirm the owner and timeline." } });
+  assert.equal(retry.statusCode, 201);
+  assert.equal(retry.json().turn.phase, "independent_retry");
+  assert.equal((await app.inject({ url: `/v1/me/conversations/${id}`, headers: firstHeaders })).json().turns.length, 2);
+  const completed = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders });
+  assert.equal(completed.statusCode, 200);
+  assert.equal(completed.json().conversation.state, "COMPLETED");
+  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders })).statusCode, 409);
+  const exported = await app.inject({ url: "/v1/me/export", headers: firstHeaders });
+  assert.equal(exported.statusCode, 200);
+  assert.equal(exported.json().user.email, validCredentials.email);
+  assert.equal(exported.json().conversations[0].turns[0].text, "I will explain the delay, its impact, and the next decision.");
+  assert.equal("passwordHash" in exported.json().user, false);
+  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/turns`, headers: secondHeaders, payload: { role: "user", text: "private" } })).statusCode, 404);
+  assert.equal((await app.inject({ url: `/v1/me/conversations/${id}`, headers: secondHeaders })).statusCode, 404);
+  assert.equal((await app.inject({ method: "POST", url: "/v1/me/conversations", headers: secondHeaders, payload: { scenarioId: "engineering-delay" } })).statusCode, 403);
+  assert.equal((await app.inject({ method: "POST", url: "/v1/me/conversations", headers: firstHeaders, payload: { scenarioId: "unknown" } })).statusCode, 403);
+});
 
-NÂˆÛÛœÝ\Ù\’YH˜[™ÛUURQ
+test("regression: security headers, cache policy and CORS stay enabled", async context => {
+  const { app } = await registeredApp();
+  context.after(() => app.close());
+  const response = await app.inject({ url: "/health", headers: { origin: "http://allowed.example" } });
+  assert.equal(response.statusCode, 200);
+  assert.equal(response.headers["cache-control"], "no-store");
+  assert.equal(response.headers["access-control-allow-origin"], "http://allowed.example");
+  assert.ok(response.headers["x-content-type-options"]);
+  assert.ok(response.headers["x-frame-options"]);
+});
 
-NÂˆÛÛœÝ›ÝÈH™]È]JŒŒ‹LKLŒŒŒˆŠNÂˆ]ØZ]ÝÜ™K˜Ü™X]PÛÛ™\œØ][ÛŠÈYˆÛÛ™\œØ][Û’Y\Ù\’YØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^H‹Ý]NˆÔ‘PUQ‹Ü™X]Y]ˆ›ÝË\]Y]ˆ›ÝÈJNÂˆÛÛœÝ›ÝšY\Žˆ›ÚXÙT›ÝšY\ˆHÈ˜[YNˆ\Ý\›ÝšY\ˆ‹\Þ[˜ÈÛÛ›™XÝ
+test("regression: database readiness reports dependency failure without exposing details", async context => {
+  const store = new MemoryStore();
+  store.ready = async () => { throw new Error("database password should not escape"); };
+  const app = await buildApp(store);
+  context.after(() => app.close());
+  const response = await app.inject({ url: "/ready" });
+  assert.equal(response.statusCode, 503);
+  assert.deepEqual(response.json(), { status: "database_unavailable" });
+  assert.doesNotMatch(response.body, /database password/);
+});
 
-HÈ™]\›ˆÈ›ÝšY\”Ù\ÜÚ[Û’Yˆœ›ÝšY\‹\Ù\ÜÚ[Ûˆ‹^\™\Ð]ˆ™]È]J›ÝË™Ù][YJ
-H
-ÈŒÌ
-HNÈK\Þ[˜È\›Z[˜]J
-HßHNÂˆÛÛœÝ™\Ý[H]ØZ]Ý\]™PÛÛ™\œØ][ÛŠÈÝÜ™K›ÝšY\‹\Ù\’YÛÛ™\œØ][Û’YØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^H‹^RÙ^NˆŒŒ‹LKL‹[ÝØ[˜ÙTÙXÛÛ™ÎˆLŒX^[][TÙXÛÛ™ÎˆŒ›ÝÎˆ
+test("regression: live lifecycle reserves usage and reaches ACTIVE only after provider connection", async () => {
+  const store = new MemoryStore();
+  const conversationId = randomUUID();
+  const userId = randomUUID();
+  const now = new Date("2026-09-24T00:00:00.000Z");
+  await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "CREATED", createdAt: now, updatedAt: now });
+  const provider: VoiceProvider = { name: "test-provider", async connect() { return { providerSessionId: "provider-session", expiresAt: new Date(now.getTime() + 600_000) }; }, async terminate() {} };
+  const result = await startLiveConversation({ store, provider, userId, conversationId, scenarioId: "engineering-delay", dayKey: "2026-09-24", allowanceSeconds: 1200, maximumSeconds: 600, now: () => now });
+  assert.equal(result.state, "ACTIVE");
+  assert.equal((await store.conversation(userId, conversationId))?.state, "ACTIVE");
+  assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 600);
+});
 
-HOˆ›ÝÈJNÂˆ\ÜÙ\™\]X[
-™\Ý[œÝ]KPÕU‘HŠNÂˆ\ÜÙ\™\]X[
+test("regression: provider failure releases the reservation and never leaves a connecting session", async () => {
+  const store = new MemoryStore();
+  const conversationId = randomUUID();
+  const userId = randomUUID();
+  const now = new Date("2026-09-24T00:00:00.000Z");
+  await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "CREATED", createdAt: now, updatedAt: now });
+  const provider: VoiceProvider = { name: "disabled-provider", async connect() { throw new Error("provider disabled"); }, async terminate() {} };
+  await assert.rejects(() => startLiveConversation({ store, provider, userId, conversationId, scenarioId: "engineering-delay", dayKey: "2026-09-24", allowanceSeconds: 1200, maximumSeconds: 600, now: () => now }), ProviderUnavailableError);
+  assert.equal((await store.conversation(userId, conversationId))?.state, "FAILED");
+  assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 0);
+});
 
-]ØZ]ÝÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\’YÛÛ™\œØ][Û’Y
-JOËœÝ]KPÕU‘HŠNÂˆ\ÜÙ\™\]X[
+test("regression: expired voice sessions release unused reservations and expire the conversation", async () => {
+  const store = new MemoryStore();
+  const userId = randomUUID();
+  const conversationId = randomUUID();
+  const reservationId = randomUUID();
+  const sessionId = randomUUID();
+  const startedAt = new Date("2026-09-24T00:00:00.000Z");
+  await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "ACTIVE", createdAt: startedAt, updatedAt: startedAt });
+  await store.reserveUsage({ id: reservationId, userId, dayKey: "2026-09-24", seconds: 1200, expiresAt: new Date("2026-09-24T00:20:00.000Z") }, 1200);
+  await store.createVoiceSession({ id: sessionId, userId, conversationId, reservationId, providerSessionId: "provider-session", providerCallId: "call_expired", providerTerminatedAt: null, status: "active", startedAt, expiresAt: new Date("2026-09-24T00:20:00.000Z"), endedAt: null });
+  assert.equal(await store.expireVoiceSessions(new Date("2026-09-24T00:21:00.000Z")), 1);
+  assert.equal((await store.voiceSession(userId, sessionId))?.status, "expired");
+  assert.equal((await store.conversation(userId, conversationId))?.state, "EXPIRED");
+  assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 0);
+  assert.deepEqual((await store.pendingVoiceProviderCalls()).map(session => session.providerCallId), ["call_expired"]);
+  await store.markVoiceProviderTerminated(sessionId, new Date("2026-09-24T00:22:00.000Z"));
+  assert.equal((await store.pendingVoiceProviderCalls()).length, 0);
+});
 
-]ØZ]ÝÜ™K\ØYÙJ\Ù\’YŒŒ‹LKLŠJKœ™\Ù\™YÙXÛÛ™ËŒ
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ›ÝšY\ˆ˜Z[\™H™[X\Ù\ÈH™\Ù\˜][Ûˆ[™™]™\ˆX]™\ÈHÛÛ›™XÝ[™ÈÙ\ÜÚ[Ûˆ‹\Þ[˜È
+test("regression: voice capabilities clearly identify the web preview boundary", async context => {
+  const { app, token } = await registeredApp();
+  context.after(() => app.close());
+  const response = await app.inject({ url: "/v1/voice/capabilities", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(response.json(), { platform: "web", transport: "react-native-webrtc", nativeModuleAvailable: false, developmentBuild: false, providerConfigured: false, liveVoiceAvailable: false, code: "WEB_PREVIEW_ONLY" });
+  const nativeResponse = await app.inject({ url: "/v1/voice/capabilities?platform=android", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(nativeResponse.json().code, "DEV_CLIENT_REQUIRED");
+  assert.equal(nativeResponse.json().platform, "android");
+  const readyResponse = await app.inject({ url: "/v1/voice/capabilities?platform=android&nativeModuleAvailable=true&developmentBuild=true", headers: { authorization: `Bearer ${token}` } });
+  assert.equal(readyResponse.json().code, "PROVIDER_NOT_CONFIGURED");
+  assert.equal(readyResponse.json().liveVoiceAvailable, false);
+});
 
-HOˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝÛÛ™\œØ][Û’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝ\Ù\’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝ›ÝÈH™]È]JŒŒ‹LKLŒŒŒˆŠNÂˆ]ØZ]ÝÜ™K˜Ü™X]PÛÛ™\œØ][ÛŠÈYˆÛÛ™\œØ][Û’Y\Ù\’YØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^H‹Ý]NˆÔ‘PUQ‹Ü™X]Y]ˆ›ÝË\]Y]ˆ›ÝÈJNÂˆÛÛœÝ›ÝšY\Žˆ›ÚXÙT›ÝšY\ˆHÈ˜[YNˆ™\ØX›Y\›ÝšY\ˆ‹\Þ[˜ÈÛÛ›™XÝ
-
-HÈ›ÝÈ™]È\œ›ÜŠœ›ÝšY\ˆ\ØX›YŠNÈK\Þ[˜È\›Z[˜]J
-HßHNÂˆ]ØZ]\ÜÙ\œ™Z™XÝÊ
-
-HOˆÝ\]™PÛÛ™\œØ][ÛŠÈÝÜ™K›ÝšY\‹\Ù\’YÛÛ™\œØ][Û’YØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^H‹^RÙ^NˆŒŒ‹LKL‹[ÝØ[˜ÙTÙXÛÛ™ÎˆLŒX^[][TÙXÛÛ™ÎˆŒ›ÝÎˆ
-
-HOˆ›ÝÈJK›ÝšY\•[˜]˜Z[X›Q\œ›ÜŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\’YÛÛ™\œØ][Û’Y
-JOËœÝ]K‘RSQŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K\ØYÙJ\Ù\’YŒŒ‹LKLŠJKœ™\Ù\™YÙXÛÛ™Ë
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ^\™Y›ÚXÙHÙ\ÜÚ[ÛœÈ™[X\ÙH[\ÙY™\Ù\˜][ÛœÈ[™^\™HHÛÛ™\œØ][Ûˆ‹\Þ[˜È
-
-HOˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆÛÛœÝ\Ù\’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝÛÛ™\œØ][Û’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝ™\Ù\˜][Û’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝÙ\ÜÚ[Û’YH˜[™ÛUURQ
-
-NÂˆÛÛœÝÝ\Y]H™]È]JŒŒ‹LKLŒŒŒˆŠNÂˆ]ØZ]ÝÜ™K˜Ü™X]PÛÛ™\œØ][ÛŠÈYˆÛÛ™\œØ][Û’Y\Ù\’YØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^H‹Ý]NˆPÕU‘H‹Ü™X]Y]ˆÝ\Y]\]Y]ˆÝ\Y]JNÂˆ]ØZ]ÝÜ™Kœ™\Ù\™U\ØYÙJÈYˆ™\Ù\˜][Û’Y\Ù\’Y^RÙ^NˆŒŒ‹LKL‹ÙXÛÛ™ÎˆLŒ^\™\Ð]ˆ™]È]JŒŒ‹LKLŒŒŒŒˆŠHKLŒ
-NÂˆ]ØZ]ÝÜ™K˜Ü™X]U›ÚXÙTÙ\ÜÚ[ÛŠÈYˆÙ\ÜÚ[Û’Y\Ù\’YÛÛ™\œØ][Û’Y™\Ù\˜][Û’Y›ÝšY\”Ù\ÜÚ[Û’Yˆœ›ÝšY\‹\Ù\ÜÚ[Ûˆ‹›ÝšY\Ø[Yˆ˜Ø[Ù^\™Y‹›ÝšY\•\›Z[˜]Y]ˆ[Ý]\Îˆ˜XÝ]™H‹Ý\Y]^\™\Ð]ˆ™]È]JŒŒ‹LKLŒŒŒŒˆŠK[™Y]ˆ[JNÂˆ\ÜÙ\™\]X[
-]ØZ]ÝÜ™K™^\™U›ÚXÙTÙ\ÜÚ[ÛœÊ™]È]JŒŒ‹LKLŒŒNŒŒˆŠJKJNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K›ÚXÙTÙ\ÜÚ[ÛŠ\Ù\’YÙ\ÜÚ[Û’Y
-JOËœÝ]\Ë™^\™YŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K˜ÛÛ™\œØ][ÛŠ\Ù\’YÛÛ™\œØ][Û’Y
-JOËœÝ]K‘VT‘QŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K\ØYÙJ\Ù\’YŒŒ‹LKLŠJKœ™\Ù\™YÙXÛÛ™Ë
-NÂˆ\ÜÙ\™Y\\]X[
-
-]ØZ]ÝÜ™Kœ[™[™Õ›ÚXÙT›ÝšY\Ø[Ê
-JK›X\
-Ù\ÜÚ[ÛˆOˆÙ\ÜÚ[Û‹œ›ÝšY\Ø[Y
-KÈ˜Ø[Ù^\™Y—JNÂˆ]ØZ]ÝÜ™K›X\šÕ›ÚXÙT›ÝšY\•\›Z[˜]Y
-Ù\ÜÚ[Û’Y™]È]JŒŒ‹LKLŒŒŽŒŒˆŠJNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™Kœ[™[™Õ›ÚXÙT›ÝšY\Ø[Ê
-JK›[™Ý
-NÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆ›ÚXÙHØ\Xš[]Y\ÈÛX\›HY[YžHHÙXˆ™]šY]È›Ý[™\žH‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÈ\ÚÙ[ˆHH]ØZ]™YÚ\Ý\™Y\
-
-NÂˆÛÛ^˜Y\Š
-
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÝ›ÚXÙKØØ\Xš[]Y\È‹XY\œÎˆÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÝÚÙ[ŸXHJNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™Y\\]X[
-™\ÜÛœÙKšœÛÛŠ
-KÈ]›Ü›NˆÙXˆ‹˜[œÜÜˆœ™XXÝ[˜]]™K]ÙXœÈ‹˜]]™S[Ù[P]˜Z[X›Nˆ˜[ÙK]™[ÜY[Z[ˆ˜[ÙK›ÝšY\ÛÛ™šYÝ\™Yˆ˜[ÙK]™U›ÚXÙP]˜Z[X›Nˆ˜[ÙKÛÙNˆ•ÑP—Ô‘U’QU×ÓÓ“HˆJNÂˆÛÛœÝ˜]]™T™\ÜÛœÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÝ›ÚXÙKØØ\Xš[]Y\ÏÜ]›Ü›OX[™›ÚY‹XY\œÎˆÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÝÚÙ[ŸXHJNÂˆ\ÜÙ\™\]X[
-˜]]™T™\ÜÛœÙKšœÛÛŠ
-K˜ÛÙK‘U—ÐÓQS•Ô‘TURT‘QŠNÂˆ\ÜÙ\™\]X[
-˜]]™T™\ÜÛœÙKšœÛÛŠ
-Kœ]›Ü›K˜[™›ÚYŠNÂˆÛÛœÝ™XYT™\ÜÛœÙHH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÝ›ÚXÙKØØ\Xš[]Y\ÏÜ]›Ü›OX[™›ÚY	›˜]]™S[Ù[P]˜Z[X›O]YI™]™[ÜY[Z[]YH‹XY\œÎˆÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	ÝÚÙ[ŸXHJNÂˆ\ÜÙ\™\]X[
-™XYT™\ÜÛœÙKšœÛÛŠ
-K˜ÛÙK”“Õ’QT—Ó“ÕÐÓÓ‘’QÕT‘QŠNÂˆ\ÜÙ\™\]X[
-™XYT™\ÜÛœÙKšœÛÛŠ
-K›]™U›ÚXÙP]˜Z[X›K˜[ÙJNÂŸJNÂ‚\Ý
-œ™YÜ™\ÜÚ[ÛŽˆÛÛ™šYÝ\™Y™X[[YH›ÚXÙHÜ™X]\ÈH™\Ù\™Y›ÝšY\ˆÙ\ÜÚ[ÛˆÚ]Ý]^ÜÚ[™ÈHTHÙ^H‹\Þ[˜ÈÛÛ^OˆÂˆÛÛœÝÝÜ™HH™]ÈY[[ÜžTÝÜ™J
-NÂˆ]›ÝšY\”™\]Y\Ýˆ™\]Y\Ý[™Yš[™YÂˆÛÛœÝ›ÝÈH™]È]JŒŒ‹LLL•ŒŒŒˆŠNÂˆÛÛœÝ\H]ØZ]Z[\
-ÝÜ™KÂˆ›ÝÎˆ
-
-HOˆ›ÝËˆ›ÚXÙNˆÂˆ[˜X›YˆYKˆ\RÙ^NˆœÙ\™\‹[Û›KZÙ^H‹ˆ™]Ú[\ˆ\Þ[˜È
-[œ][š]
-HOˆÂˆ›ÝšY\”™\]Y\ÝH™]È™\]Y\Ý
-[œ][š]
-NÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÈ˜[YNˆ™\[Y\˜[XÛY[\ÙXÜ™]‹^\™\×Ø]ˆMÎLÙ\ÜÚ[ÛŽˆÈYˆœ™X[[YK\Ù\ÜÚ[Û‹LHˆHJKÈÝ]\ÎˆŒXY\œÎˆÈ˜ÛÛ[]\HŽˆ˜\XØ][Û‹ÚœÛÛˆˆHJNÂˆKˆKˆJNÂˆÛÛ^˜Y\Š
-
-HOˆ\˜ÛÜÙJ
-JNÂˆÛÛœÝ™YÚ\Ý˜][ÛˆH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKØ]]Ü™YÚ\Ý\ˆ‹^[ØYˆÈ[XZ[ˆ›ÚXÙK\›ÝšY\^[\K˜ÛÛH‹\ÜÝÛÜ™ˆ›ÚXÙK\›ÝšY\‹\\ÜÝÛÜ™LLŒÈˆHJNÂˆÛÛœÝXY\œÈHÈ]]Üš^˜][ÛŽˆ™X\™\ˆ	Ü™YÚ\Ý˜][Û‹šœÛÛŠ
-KÚÙ[ŸXNÂˆ]ØZ]\š[š™XÝ
-ÈY]Ùˆ”U‹\›ˆ‹ÝŒKÛYKÜ›Ùš[H‹XY\œË^[ØYˆ˜[Y›Ùš[HJNÂˆÛÛœÝÛÛ™\œØ][ÛˆH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÛYKØÛÛ™\œØ][ÛœÈ‹XY\œË^[ØYˆÈØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^HˆHJNÂˆ\ÜÙ\™\]X[
-ÛÛ™\œØ][Û‹œÝ]\ÐÛÙKŒJNÂˆÛÛœÝœ›ÝÜÙ\][\H]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœÈ‹XY\œÎˆÈ‹‹šXY\œËÜšYÚ[Žˆš‹ËÛØØ[ÜÝŽHˆK^[ØYˆÈÛÛ™\œØ][Û’YˆÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^HˆHJNÂˆ\ÜÙ\™\]X[
-œ›ÝÜÙ\][\œÝ]\ÐÛÙKÊNÂˆÛÛœÝÙ\ÜÚ[ÛˆH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆ‹ÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœÈ‹XY\œË^[ØYˆÈÛÛ™\œØ][Û’YˆÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYØÙ[˜\š[ÒYˆ™[™Ú[™Y\š[™ËY[^HˆHJNÂˆ\ÜÙ\™\]X[
-Ù\ÜÚ[Û‹œÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-Ù\ÜÚ[Û‹šœÛÛŠ
-K˜ÛY[ÙXÜ™]™\[Y\˜[XÛY[\ÙXÜ™]ŠNÂˆ\ÜÙ\™\]X[
-Ù\ÜÚ[Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹œÝ]KPÕU‘HŠNÂˆ\ÜÙ\™\]X[
-Ù\ÜÚ[Û‹šœÛÛŠ
-Kœ›ÝšY\”Ù\ÜÚ[ÛÜ™X]YYJNÂˆ\ÜÙ\™\]X[
-Ù\ÜÚ[Û‹šœÛÛŠ
-K›]™U›ÚXÙP]˜Z[X›K˜[ÙJNÂˆ\ÜÙ\™\]X[
-ÝÜ™Kœ™\Ù\˜][ÛœËœÚ^™KJNÂˆ\ÜÙ\™\]X[
-ÝÜ™K›ÚXÙTÙ\ÜÚ[ÛœËœÚ^™KJNÂˆ\ÜÙ\™\]X[
-›ÝšY\”™\]Y\ÝËšXY\œË™Ù]
-˜]]Üš^˜][ÛˆŠK™X\™\ˆÙ\™\‹[Û›KZÙ^HŠNÂˆÛÛœÝ›Ý[™H]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœËÉÜÙ\ÜÚ[Û‹šœÛÛŠ
-KœÙ\ÜÚ[Û’YKØš[™XY\œË^[ØYˆÈ›ÝšY\Ø[Yˆ˜Ø[ÌLŒÈˆHJNÂˆ\ÜÙ\™\]X[
-›Ý[™œÝ]\ÐÛÙKŒ
-NÂˆÛÛœÝ˜[œØÜš\H]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœËÉÜÙ\ÜÚ[Û‹šœÛÛŠ
-KœÙ\ÜÚ[Û’YKÝ˜[œØÜš\XY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹^ˆ’HÛÝ[^Z[ˆHÚ[™ÙH[™™^Ý\ˆˆHJNÂˆ\ÜÙ\™\]X[
-˜[œØÜš\œÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-
-]ØZ]\š[š™XÝ
-È\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉØÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYXXY\œÈJJKšœÛÛŠ
-K\›œÖÌK^’HÛÝ[^Z[ˆHÚ[™ÙH[™™^Ý\ˆŠNÂˆÛÛœÝØ\Xš[]Y\ÈH]ØZ]\š[š™XÝ
-È\›ˆ‹ÝŒKÝ›ÚXÙKØØ\Xš[]Y\ÏÜ]›Ü›OX[™›ÚY	›˜]]™S[Ù[P]˜Z[X›O]YI™]™[ÜY[Z[]YH‹XY\œÈJNÂˆ\ÜÙ\™\]X[
-Ø\Xš[]Y\ËšœÛÛŠ
-Kœ›ÝšY\ÛÛ™šYÝ\™YYJNÂˆ\ÜÙ\™\]X[
-Ø\Xš[]Y\ËšœÛÛŠ
-K›]™U›ÚXÙP]˜Z[X›KYJNÂˆ\ÜÙ\™\]X[
-Ø\Xš[]Y\ËšœÛÛŠ
-K˜ÛÙK”‘PQHŠNÂˆÛÛœÝÝÜYH]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœËÉÜÙ\ÜÚ[Û‹šœÛÛŠ
-KœÙ\ÜÚ[Û’YKÜÝÜXY\œË^[ØYˆÈÛÛœÝ[YYÙXÛÛ™ÎˆLHJNÂˆ\ÜÙ\™\]X[
-ÝÜYœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-ÝÜYšœÛÛŠ
-Kœ›ÝšY\•\›Z[˜][Û‹˜ÛÛ\]YŠNÂˆ\ÜÙ\›X]Ú
-Ýš[™Ê›ÝšY\”™\]Y\ÝË\›
-KÜ™X[[YWØØ[×ØØ[ÌLŒ×Ú[™Ý\ÊNÂˆ\ÜÙ\™\]X[
-ÝÜYšœÛÛŠ
-KœÝ]\Ë™[™YŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K\ØYÙJ™YÚ\Ý˜][Û‹šœÛÛŠ
-K\Ù\‹šYŒŒ‹LLLˆŠJKœ™\Ù\™YÙXÛÛ™ËL
-NÂˆ\ÜÙ\™\]X[
-
-]ØZ]ÝÜ™K˜ÛÛ™\œØ][ÛŠ™YÚ\Ý˜][Û‹šœÛÛŠ
-K\Ù\‹šYÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šY
-JOËœÝ]K’S•T”•TQŠNÂˆ\ÜÙ\™\]X[
-
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉØÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYKÝ\›œØXY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹\ÙNˆœš[X\žH‹^ˆ’HÛÝ[^Z[ˆHÚ[™ÙK[\XÝ[™™XÛÛ[Y[™][Û‹ˆˆHJJKœÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉØÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYKÝ\›œØXY\œË^[ØYˆÈ›ÛNˆ\Ù\ˆ‹\ÙNˆš[™\[™[Ü™]žH‹^ˆ’HÛÝ[Z[ÜˆHØ[YH™XÛÛ[Y[™][Ûˆ›Üˆ[›Ý\ˆÝZÙZÛ\‹ˆˆHJJKœÝ]\ÐÛÙKŒJNÂˆ\ÜÙ\™\]X[
-
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÛYKØÛÛ™\œØ][ÛœËÉØÛÛ™\œØ][Û‹šœÛÛŠ
-K˜ÛÛ™\œØ][Û‹šYKØÛÛ\]XXY\œÈJJKœÝ]\ÐÛÙKŒ
-NÂˆ\ÜÙ\™\]X[
-
-]ØZ]\š[š™XÝ
-ÈY]Ùˆ”ÔÕ‹\›ˆÝŒKÝ›ÚXÙKÜÙ\ÜÚ[ÛœËÉÜÙ\ÜÚ[Û‹šœÛÛŠ
-KœÙ\ÜÚ[Û’YKÜÝÜXY\œË^[ØYˆÈÛÛœÝ[YYÙXÛÛ™ÎˆLHJJKœÝ]\ÐÛÙKJNÂŸJNÂ
+test("regression: configured realtime voice creates a reserved provider session without exposing the API key", async context => {
+  const store = new MemoryStore();
+  let providerRequest: Request | undefined;
+  const now = new Date("2026-10-06T00:00:00.000Z");
+  const app = await buildApp(store, {
+    now: () => now,
+    voice: {
+      enabled: true,
+      apiKey: "server-only-key",
+      fetchImpl: async (input, init) => {
+        providerRequest = new Request(input, init);
+        return new Response(JSON.stringify({ value: "ephemeral-client-secret", expires_at: 1790000000, session: { id: "realtime-session-1" } }), { status: 200, headers: { "content-type": "application/json" } });
+      },
+    },
+  });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "voice-provider@example.com", password: "voice-provider-password-123" } });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
+  const conversation = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "engineering-delay" } });
+  assert.equal(conversation.statusCode, 201);
+  const browserAttempt = await app.inject({ method: "POST", url: "/v1/voice/sessions", headers: { ...headers, origin: "http://localhost:8081" }, payload: { conversationId: conversation.json().conversation.id, scenarioId: "engineering-delay" } });
+  assert.equal(browserAttempt.statusCode, 403);
+  const session = await app.inject({ method: "POST", url: "/v1/voice/sessions", headers, payload: { conversationId: conversation.json().conversation.id, scenarioId: "engineering-delay" } });
+  assert.equal(session.statusCode, 201);
+  assert.equal(session.json().clientSecret, "ephemeral-client-secret");
+  assert.equal(session.json().conversation.state, "ACTIVE");
+  assert.equal(session.json().providerSessionCreated, true);
+  assert.equal(session.json().liveVoiceAvailable, false);
+  assert.equal(store.reservations.size, 1);
+  assert.equal(store.voiceSessions.size, 1);
+  assert.equal(providerRequest?.headers.get("authorization"), "Bearer server-only-key");
+  const bound = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/bind`, headers, payload: { providerCallId: "call_123" } });
+  assert.equal(bound.statusCode, 200);
+  const transcript = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/transcript`, headers, payload: { role: "user", text: "I would explain the change and next step." } });
+  assert.equal(transcript.statusCode, 201);
+  assert.equal((await app.inject({ url: `/v1/me/conversations/${conversation.json().conversation.id}`, headers })).json().turns[0].text, "I would explain the change and next step.");
+  const capabilities = await app.inject({ url: "/v1/voice/capabilities?platform=android&nativeModuleAvailable=true&developmentBuild=true", headers });
+  assert.equal(capabilities.json().providerConfigured, true);
+  assert.equal(capabilities.json().liveVoiceAvailable, true);
+  assert.equal(capabilities.json().code, "READY");
+  const stopped = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } });
+  assert.equal(stopped.statusCode, 200);
+  assert.equal(stopped.json().providerTermination, "completed");
+  assert.match(String(providerRequest?.url), /realtime\/calls\/call_123\/hangup/);
+  assert.equal(stopped.json().status, "ended");
+  assert.equal((await store.usage(registration.json().user.id, "2026-10-06")).reservedSeconds, 90);
+  assert.equal((await store.conversation(registration.json().user.id, conversation.json().conversation.id))?.state, "INTERRUPTED");
+  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/turns`, headers, payload: { role: "user", phase: "primary", text: "I would explain the change, impact and recommendation." } })).statusCode, 201);
+  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/turns`, headers, payload: { role: "user", phase: "independent_retry", text: "I would tailor the same recommendation for another stakeholder." } })).statusCode, 201);
+  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/complete`, headers })).statusCode, 200);
+  assert.equal((await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } })).statusCode, 409);
+});
