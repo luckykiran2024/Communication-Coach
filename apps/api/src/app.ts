@@ -387,7 +387,9 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
     const profile = await store.profile(user.id);
     if (!profile) throw new ApiError(409, "Complete your profile first.");
     const progress = await learnerScenarioProgress(user.id, profile);
-    return { scenarios: recommendScenarios(profile, (await availableScenarios()).filter(isPublishedScenario), progress.mastery.level, progress.completedScenarioIds), mastery: progress.mastery, previewOnly: true };
+    const includedModules = plans.find(plan => plan.id === profile.planId)?.modules ?? ["daily"];
+    const eligibleScenarios = (await availableScenarios()).filter(scenario => isPublishedScenario(scenario) && includedModules.includes(scenario.module));
+    return { scenarios: recommendScenarios(profile, eligibleScenarios, progress.mastery.level, progress.completedScenarioIds), mastery: progress.mastery, previewOnly: true };
   });
   app.get("/v1/me/conversations", async request => {
     const { user } = await authenticate(request);
@@ -460,7 +462,9 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
     const parsed = conversationCreateSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Choose a valid practice scenario.");
     const progress = await learnerScenarioProgress(user.id, profile);
-    const scenario = recommendScenarios(profile, (await availableScenarios()).filter(isPublishedScenario), progress.mastery.level, progress.completedScenarioIds).find(item => item.id === parsed.data.scenarioId);
+    const includedModules = plans.find(plan => plan.id === profile.planId)?.modules ?? ["daily"];
+    const eligibleScenarios = (await availableScenarios()).filter(item => isPublishedScenario(item) && includedModules.includes(item.module));
+    const scenario = recommendScenarios(profile, eligibleScenarios, progress.mastery.level, progress.completedScenarioIds).find(item => item.id === parsed.data.scenarioId);
     if (!scenario) throw new ApiError(403, "That scenario is not available for this profile.");
     const timestamp = now();
     const conversation = { id: randomUUID(), userId: user.id, scenarioId: scenario.id, scenarioSnapshot: scenario, state: "CREATED" as const, createdAt: timestamp, updatedAt: timestamp };

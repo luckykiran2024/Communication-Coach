@@ -6,6 +6,15 @@ test("scenario library contains 100-plus levelled practice scenarios", () => {
   assert.equal(scenarios.filter(scenario => scenario.id.startsWith("library-")).length, 120);
   assert.deepEqual([...new Set(scenarios.map(scenario => scenario.level))], [1, 2, 3, 4, 5]);
 });
+test("generated exercises use distinct scenario-specific speaking and transfer prompts", () => {
+  const generated = scenarios.filter(scenario => scenario.id.startsWith("library-"));
+  assert.equal(new Set(generated.map(scenario => scenario.question)).size, generated.length);
+  assert.equal(generated.some(scenario => scenario.context.includes("This is a Level")), false);
+  const handoff = generated.find(scenario => scenario.id === "library-daily-handoff-work-l1");
+  assert.ok(handoff);
+  assert.match(handoff.question, /current status, the next action, the owner, and the deadline/);
+  assert.match(handoff.independentQuestion, /new dependency/);
+});
 test("role context selects different scenarios without assigning ability", () => {
   const profile = profileSchema.parse({ displayName: "Asha", function: "Human Resources", jobTitle: "HRBP", careerLevel: "Senior leader", audience: "Business leader", goal: "Explain ideas clearly" });
   assert.equal(recommendScenarios(profile)[0].id, "hr-engagement");

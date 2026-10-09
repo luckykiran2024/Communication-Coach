@@ -16,7 +16,7 @@ function AppStack() {
     <Stack.Screen name="plans" options={{ title: "Practice plans" }} />
     <Stack.Screen name="progress" options={{ title: "Progress" }} />
     <Stack.Screen name="settings" options={{ title: "Settings" }} />
+    <Stack.Screen name="legal" options={{ title: "About & legal" }} />
     <Stack.Screen name="payment" options={{ title: "Confirm your plan" }} />
   </Stack></>;
 }
-

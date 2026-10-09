@@ -49,7 +49,14 @@ test("regression: social auth rejects malformed provider payloads", async contex
   assert.equal(store.accounts.size, 0);
 });
 
-test("regression: Google OAuth stays unavailable when no client audience is configured", async context => {\n  const app = await buildApp(new MemoryStore()); context.after(() => app.close());\n  const response = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "google", accessToken: "valid-looking-google-token" } });\n  assert.equal(response.statusCode, 503);\n  assert.match(response.json().error, /not configured/);\n});\n\ntest("regression: OAuth identities link by stable provider subject and do not trust changed email claims", async context => {
+test("regression: Google OAuth stays unavailable when no client audience is configured", async context => {
+  const app = await buildApp(new MemoryStore()); context.after(() => app.close());
+  const response = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "google", accessToken: "valid-looking-google-token" } });
+  assert.equal(response.statusCode, 503);
+  assert.match(response.json().error, /not configured/);
+});
+
+test("regression: OAuth identities link by stable provider subject and do not trust changed email claims", async context => {
   const store = new MemoryStore();
   let googleEmail = "oauth-owner@example.com";
   let googleVerified = true;
@@ -85,6 +92,32 @@ test("regression: Google OAuth stays unavailable when no client audience is conf
   googleVerified = false;
   googleEmail = "unverified@example.com";
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload })).statusCode, 401);
+});
+
+test("regression: practice plan changes gate business and leadership workshops", async context => {
+  const { app, token } = await registeredApp();
+  context.after(() => app.close());
+  const headers = { authorization: `Bearer ${token}` };
+  const library = await app.inject({ url: "/v1/scenarios/library" });
+  const leadershipScenario = library.json().scenarios.find((item: { module: string; level: number }) => item.module === "leadership" && item.level === 1);
+  const businessScenario = library.json().scenarios.find((item: { module: string; level: number }) => item.module === "management" && item.level === 1);
+  assert.ok(leadershipScenario);
+  assert.ok(businessScenario);
+
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "professional" } });
+  const professional = await app.inject({ url: "/v1/me/scenarios", headers });
+  assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "management"), true);
+  assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "leadership"), false);
+
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "essential" } });
+  const essential = await app.inject({ url: "/v1/me/scenarios", headers });
+  assert.equal(essential.json().scenarios.every((item: { module: string }) => item.module === "daily"), true);
+  const blockedBusiness = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: businessScenario.id } });
+  assert.equal(blockedBusiness.statusCode, 403);
+
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "executive" } });
+  const executive = await app.inject({ url: "/v1/me/scenarios", headers });
+  assert.equal(executive.json().scenarios.some((item: { module: string }) => item.module === "leadership"), true);
 });
 
 test("regression: manager scenarios require a key and become library content", async context => {

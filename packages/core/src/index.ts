@@ -1,7 +1,7 @@
 import { z } from "zod";
 import scenarioData from "../content/scenarios.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";
-export const brand = { name: "Communication Coach", tagline: "Practice 20 minutes a day and be at brilliance." };
+export const brand = { name: "Communication Coach", tagline: "Speak with clarity. Lead with confidence." };
 export const palette = {
   light: { background: "#FFF7EF", surface: "#FFFFFF", accentSurface: "#FFE6D8", ink: "#1B1D3A", muted: "rgba(27,29,58,0.68)", accent: "#FF5C4D", positive: "#08A889", border: "#FFE6D8" },
   dark: { background: "#0D1124", surface: "#171D36", accentSurface: "#312341", ink: "#F8F5FF", muted: "rgba(248,245,255,0.72)", accent: "#FF806D", positive: "#22C6A4", border: "#312341" },
@@ -30,9 +30,16 @@ export const moduleSchema = z.enum(["daily", "management", "leadership"]);
 export type LearningModule = z.infer<typeof moduleSchema>;
 export const modules: { id: LearningModule; title: string; framework: string; description: string }[] = [
   { id: "daily", title: "Daily Communication", framework: "TASC", description: "Find your first thought. Make your meaning clear." },
-  { id: "management", title: "Management & Business", framework: "DIMA · CLEAR", description: "Turn information into decisions and useful conversations." },
+  { id: "management", title: "Professional & Business Communication", framework: "DIMA · CLEAR", description: "Make sound recommendations, handle business conversations, and turn information into decisions." },
   { id: "leadership", title: "Leadership & Public Speaking", framework: "MESSAGE", description: "Shape a message that moves your audience." },
 ];
+export const practicePrograms = [
+  { level: 1, title: "Clarity foundation", description: "State the situation, your main point, and a useful next step." },
+  { level: 2, title: "Structured message", description: "Organise context, key message, supporting detail, and action." },
+  { level: 3, title: "Evidence and trade-offs", description: "Use evidence, explain implications, and make a reasoned recommendation." },
+  { level: 4, title: "Audience adaptation", description: "Anticipate concerns and adapt your message to the audience." },
+  { level: 5, title: "Leadership transfer", description: "Lead through ambiguity and create alignment without overstating certainty." },
+] as const;
 export const profileSchema = z.object({
   displayName: z.string().trim().min(1).max(80),
   primaryLanguage: z.string().trim().min(1).max(60).default("English"),

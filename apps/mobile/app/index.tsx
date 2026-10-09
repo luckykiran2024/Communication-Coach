@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { makeRedirectUri, ResponseType, useAuthRequest, useAutoDiscovery } from "expo-auth-session";
@@ -70,6 +70,7 @@ export default function Welcome() {
       {microsoftConfigured ? <MicrosoftButton auth={auth} busy={busy} setBusy={setBusy} setMessage={setSocialMessage} /> : <Action title="Set up Microsoft sign-in" secondary icon="client" onPress={() => setSocialMessage("Add EXPO_PUBLIC_MICROSOFT_CLIENT_ID to apps/mobile/.env, then restart Expo.")} />}
       {Boolean(socialMessage) && <Copy>{socialMessage}</Copy>}
       <Action secondary title={register ? "Already have an account? Sign in" : "Create a new account"} onPress={() => setRegister(!register)} />
+      <Action secondary title="About, terms & privacy" onPress={() => router.push("/legal")} />
     </Card><Copy>Development preview. Profiles are stored on your configured server. Live AI coaching, email verification and account recovery are not available yet. Use test accounts only.</Copy>
   </Screen>;
 }

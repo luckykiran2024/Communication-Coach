@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { modules, type LearningModule, type Scenario } from "@coach/core";
+import { modules, practicePrograms, type LearningModule, type Scenario } from "@coach/core";
 import { request, type Recommendations } from "../../src/api";
 import { useAuth } from "../../src/auth";
 import { Action, Card, Copy, Heading, Screen } from "../../src/ui";
@@ -8,18 +8,24 @@ import { Action, Card, Copy, Heading, Screen } from "../../src/ui";
 const pathTitles: Record<LearningModule, string> = {
   daily: "Daily Communication",
   leadership: "Leadership",
-  management: "Professional Workshop",
+  management: "Professional & Business Communication",
 };
 
 export default function WorkshopPath() {
   const auth = useAuth();
-  const { module: moduleParam, completedScenarioId: completedParam } = useLocalSearchParams<{ module?: string; completedScenarioId?: string }>();
+  const { module: moduleParam, completedScenarioId: completedParam, programLevel: programLevelParam } = useLocalSearchParams<{ module?: string; completedScenarioId?: string; programLevel?: string }>();
   const moduleId = modules.find(item => item.id === moduleParam)?.id;
   const completedScenarioId = Array.isArray(completedParam) ? completedParam[0] : completedParam;
   const [scenarios, setScenarios] = useState<Scenario[] | null>(null);
   const [error, setError] = useState("");
   const [showExamples, setShowExamples] = useState(false);
   const [startingScenario, setStartingScenario] = useState("");
+  const [selectedProgramLevel, setSelectedProgramLevel] = useState(1);
+
+  useEffect(() => {
+    const level = Number(Array.isArray(programLevelParam) ? programLevelParam[0] : programLevelParam);
+    if (practicePrograms.some(program => program.level === level)) setSelectedProgramLevel(level);
+  }, [programLevelParam]);
 
   async function load() {
     try {
@@ -40,7 +46,8 @@ export default function WorkshopPath() {
   if (!auth.me?.profile) return <Redirect href="/onboarding" />;
   if (!moduleId) return <Screen><Heading>Workshop not found</Heading><Action title="Back to today" onPress={() => router.replace("/home")} /></Screen>;
 
-  const pathScenarios = scenarios ?? [];
+  const pathScenarios = (scenarios ?? []).filter(scenario => scenario.level === selectedProgramLevel);
+  const availableLevels = [...new Set((scenarios ?? []).map(scenario => scenario.level))].sort((a, b) => a - b);
   const completedIndex = completedScenarioId ? pathScenarios.findIndex(scenario => scenario.id === completedScenarioId) : -1;
   const activeIndex = completedIndex >= 0 ? completedIndex + 1 : 0;
   const activeScenario = pathScenarios[activeIndex];
@@ -62,11 +69,24 @@ export default function WorkshopPath() {
   return <Screen>
     <Heading eyebrow="Practice path">{pathTitles[moduleId]}</Heading>
     <Copy>{module?.description ?? "Build your communication skills one exercise at a time."}</Copy>
+    <Card>
+      <Heading eyebrow="Choose a programme">Five progressive programmes</Heading>
+      <Copy>Select the skill programme you want to work on. Later programmes unlock as you build practice evidence.</Copy>
+      {practicePrograms.map(program => {
+        const unlocked = availableLevels.includes(program.level);
+        const selected = selectedProgramLevel === program.level;
+        return <Card key={program.level} tone={selected ? "accent" : undefined}>
+          <Heading eyebrow={unlocked ? `Programme ${program.level}${selected ? " · selected" : ""}` : `Programme ${program.level} · locked`}>{program.title}</Heading>
+          <Copy>{program.description}</Copy>
+          {unlocked ? <Action title={selected ? "Selected programme" : `Choose ${program.title}`} secondary={selected} disabled={selected} onPress={() => { setSelectedProgramLevel(program.level); setShowExamples(false); }} /> : <Copy>Unlock through the next mastery milestone. Your current practice level determines which exercises are available.</Copy>}
+        </Card>;
+      })}
+    </Card>
     {completedIndex >= 0 && <Card tone="accent"><Heading eyebrow="Exercise complete">Nice work. Let’s keep going.</Heading><Copy>Your response and independent retry are saved. Continue with the next exercise, or explore more examples below.</Copy></Card>}
     {scenarios === null && !error && <Copy>Loading your exercises…</Copy>}
     {error && <><Copy error>{error}</Copy><Action title="Retry" secondary onPress={() => void load()} /></>}
     {activeScenario ? <Card>
-      <Heading eyebrow={`Exercise ${activeIndex + 1} of ${pathScenarios.length}`}>{activeScenario.title}</Heading>
+      <Heading eyebrow={`Exercise ${activeIndex + 1} of ${pathScenarios.length} · ${practicePrograms[selectedProgramLevel - 1].title}`}>{displayScenarioTitle(activeScenario.title)}</Heading>
       <Copy>{activeScenario.context}</Copy>
       <Copy>{activeScenario.question}</Copy>
       <Copy>Focus: {activeScenario.focus}</Copy>
@@ -80,7 +100,7 @@ export default function WorkshopPath() {
       <Copy>Explore other exercises in this workshop and choose the one you want to try next.</Copy>
       <Action title={showExamples ? "Hide other examples" : "Practice with more examples"} secondary onPress={() => setShowExamples(value => !value)} />
       {showExamples && pathScenarios.filter(scenario => scenario.id !== activeScenario?.id).map((scenario, index) => <Card key={scenario.id}>
-        <Heading eyebrow={`Example ${index + 1}`}>{scenario.title}</Heading>
+        <Heading eyebrow={`Example ${index + 1} · ${practicePrograms[scenario.level - 1].title}`}>{displayScenarioTitle(scenario.title)}</Heading>
         <Copy>{scenario.context}</Copy>
         <Action title="Practice this example" disabled={Boolean(startingScenario)} busy={startingScenario === scenario.id} onPress={() => void startPractice(scenario)} />
       </Card>)}
@@ -90,3 +110,6 @@ export default function WorkshopPath() {
   </Screen>;
 }
 
+function displayScenarioTitle(title: string) {
+  return title.replace(/\s*·\s*(?:Clarity foundation|Structured message|Evidence and trade-offs|Audience adaptation|Leadership transfer)$/i, "");
+}

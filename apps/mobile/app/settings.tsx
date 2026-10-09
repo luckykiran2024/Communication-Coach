@@ -65,7 +65,7 @@ export default function Settings() {
     <Card>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="settings" size={23} color={theme.accent} /><Heading eyebrow="Appearance">Theme</Heading></View>
       <Choices label="Choose your theme" options={["system", "light", "dark"]} value={themeMode} onChange={value => { setThemeMode(value as typeof themeMode); setMessage("Theme updated."); }} />
-      <Copy>{themeMode === "system" ? `System currently follows your phone’s ${systemColorScheme === "dark" ? "dark" : "light"} appearance. That can look identical to the matching fixed theme.` : `The app is using ${themeMode} appearance, regardless of your phone setting.`}</Copy>
+      <Copy>{themeMode === "system" ? `System currently follows your phone’s ${systemColorScheme === "dark" ? "dark" : "light"} appearance. It will look the same as ${systemColorScheme === "dark" ? "Dark" : "Light"} while your phone is set this way; choose the opposite fixed theme to compare.` : `The app is using ${themeMode} appearance, regardless of your phone setting.`}</Copy>
       <Choices label="Choose your colour palette" options={colorThemes.map(item => colorThemeLabels[item])} value={colorThemeLabels[colorTheme]} onChange={value => { const next = (Object.keys(colorThemeLabels) as ColorTheme[]).find(item => colorThemeLabels[item] === value) ?? "sunrise"; setColorTheme(next); setMessage(`${value} palette selected.`); }} />
       <Copy>Each palette keeps coral, teal, and neutral contrast in a different visual mood. This changes the app colours, not your practice data.</Copy>
       <Choices label="Coach voice accent" options={coachAccents} value={voiceAccent} onChange={value => { setVoiceAccent(value as CoachAccent); setMessage(`Coach voice set to ${value}.`); }} />
@@ -80,6 +80,7 @@ export default function Settings() {
       <Action title="Change practice plan" icon="clock" onPress={() => router.push("/plans")} />
       <Action title="View my progress" secondary icon="progress" onPress={() => router.push("/progress")} />
       <Action title="Edit practice profile" secondary icon="person" onPress={() => router.push("/onboarding")} />
+      <Action title="About, terms & privacy" secondary onPress={() => router.push("/legal")} />
     </Card>
 
     <Card>
@@ -99,4 +100,3 @@ export default function Settings() {
     </Card>
   </Screen>;
 }
-

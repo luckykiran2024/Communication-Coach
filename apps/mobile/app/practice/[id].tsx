@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { AccessibilityInfo, Platform, Text, TextInput, View } from "react-native";
 import * as Speech from "expo-speech";
-import { modules, type CoachAccent, type Scenario } from "@coach/core";
+import { modules, practicePrograms, type CoachAccent, type Scenario } from "@coach/core";
 import { request } from "../../src/api";
 import { useAuth } from "../../src/auth";
 import { connectRealtimeCall, type RealtimeCall } from "../../src/realtime";
@@ -48,7 +48,7 @@ export default function PracticeDetail() {
   const retryStarted = Boolean(primaryResponse);
   const retryCompleted = Boolean(retryResponse);
   const activeQuestion = retryStarted ? practice.scenario.independentQuestion : practice.scenario.question;
-  const promptText = `${practice.scenario.title}. ${practice.scenario.context}. ${activeQuestion}`;
+  const promptText = `${practice.scenario.context} ${activeQuestion}`;
 
   function speakPrompt() {
     setSpeechMessage("");
@@ -57,6 +57,9 @@ export default function PracticeDetail() {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(promptText);
       utterance.lang = accentLanguage(voiceAccent);
+      const browserVoices = window.speechSynthesis.getVoices();
+      const requestedLanguage = accentLanguage(voiceAccent).toLowerCase();
+      utterance.voice = browserVoices.find(voice => voice.lang.toLowerCase().replaceAll("_", "-") === requestedLanguage) ?? null;
       utterance.onend = () => { setPromptState("ready"); setSpeechMessage("Prompt finished. Your turn to respond."); };
       utterance.onerror = () => { setPromptState("ready"); setSpeechMessage("The prompt could not be spoken on this device."); };
       window.speechSynthesis.speak(utterance);
@@ -65,7 +68,13 @@ export default function PracticeDetail() {
     }
     if (Platform.OS !== "web") {
       void Speech.stop();
-      Speech.speak(promptText, { language: accentLanguage(voiceAccent), rate: 0.92, onDone: () => { setPromptState("ready"); setSpeechMessage("Prompt finished. Your turn to respond."); }, onStopped: () => setPromptState("idle"), onError: () => { AccessibilityInfo.announceForAccessibility(promptText); setPromptState("ready"); setSpeechMessage("Native speech could not start, so the prompt was sent to your accessibility voice."); } });
+      void Speech.getAvailableVoicesAsync().then(voices => {
+        const requestedLanguage = accentLanguage(voiceAccent).toLowerCase();
+        const matchingVoice = voices.find(voice => voice.language.toLowerCase().replaceAll("_", "-") === requestedLanguage);
+        Speech.speak(promptText, { language: accentLanguage(voiceAccent), voice: matchingVoice?.identifier, rate: 0.9, onDone: () => { setPromptState("ready"); setSpeechMessage(matchingVoice || voiceAccent !== "Indian English" ? "Prompt finished. Your turn to respond." : "Prompt finished. Your turn to respond. For an Indian English voice, install an en-IN voice in your phone’s text-to-speech settings." ); }, onStopped: () => setPromptState("idle"), onError: () => { AccessibilityInfo.announceForAccessibility(promptText); setPromptState("ready"); setSpeechMessage("Native speech could not start. Check that a text-to-speech voice is installed in your device settings."); } });
+      }).catch(() => {
+        Speech.speak(promptText, { language: accentLanguage(voiceAccent), rate: 0.9, onDone: () => { setPromptState("ready"); setSpeechMessage("Prompt finished. Your turn to respond."); }, onStopped: () => setPromptState("idle"), onError: () => { AccessibilityInfo.announceForAccessibility(promptText); setPromptState("ready"); setSpeechMessage("Native speech could not start. Check that a text-to-speech voice is installed in your device settings."); } });
+      });
       setSpeechMessage("Speaking the prompt aloud…");
       return;
     }
@@ -99,7 +108,7 @@ export default function PracticeDetail() {
       const result = await request<{ conversation: { state: string }; message: string }>(`/v1/me/conversations/${id}/complete`, auth.token, "POST");
       setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
       setSavedMessage(result.message);
-      router.replace(`/workshop/${practice.scenario.module}?completedScenarioId=${encodeURIComponent(practice.scenario.id)}`);
+      router.replace(`/workshop/${practice.scenario.module}?programLevel=${practice.scenario.level}&completedScenarioId=${encodeURIComponent(practice.scenario.id)}`);
     } catch (failure) { setError((failure as Error).message); } finally { setFinishing(false); }
   }
 
@@ -149,7 +158,7 @@ export default function PracticeDetail() {
   const isSpeaking = promptState === "speaking";
   const statusText = isSpeaking ? "Coach is speaking" : promptState === "ready" ? "Your turn to speak" : "Ready when you are";
   return <Screen>
-    <Heading eyebrow={module?.title ?? "Practice"}>{practice.scenario.title}</Heading>
+    <Heading eyebrow={`${module?.title ?? "Practice"} · ${practicePrograms[practice.scenario.level - 1]?.title ?? "Practice programme"}`}>{practice.scenario.title.replace(/\s*·\s*(?:Clarity foundation|Structured message|Evidence and trade-offs|Audience adaptation|Leadership transfer)$/i, "")}</Heading>
     <Copy>Session status: {practice.conversation.state} · Created {new Date(practice.conversation.createdAt).toLocaleString()}</Copy>
     <Card tone="accent">
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="spark" size={19} color={theme.ink} /><Text style={{ color: theme.ink, fontWeight: "700", letterSpacing: 1.5, fontSize: 12 }}>CONVERSATION MODE</Text></View>
@@ -163,7 +172,8 @@ export default function PracticeDetail() {
       <Text style={{ color: theme.ink, textAlign: "center", fontWeight: "700", fontSize: 17 }}>{statusText}</Text>
       <Copy>{speechMessage || (promptState === "ready" ? "Tap the microphone to record your answer." : "Tap the microphone and let the coach set the scene out loud.")}</Copy>
       {isSpeaking && <Action title="Stop speaking" secondary icon="mic" onPress={stopSpeaking} />}
-      <Action title={liveCall ? "Stop live coach" : "Start live coach"} icon="mic" disabled={liveBusy || practice.conversation.state === "COMPLETED"} busy={liveBusy} onPress={() => void (liveCall ? stopLiveVoice() : startLiveVoice())} />
+      <Action title={liveCall ? "Stop live coach" : practice.liveVoiceAvailable ? "Start AI live coach" : "AI live coach unavailable"} icon="mic" disabled={liveBusy || practice.conversation.state === "COMPLETED" || (!practice.liveVoiceAvailable && !liveCall)} busy={liveBusy} onPress={() => void (liveCall ? stopLiveVoice() : startLiveVoice())} />
+      {!practice.liveVoiceAvailable && <Copy>Live AI requires an enabled server voice provider and a verified Android/iOS WebRTC build. Text practice and local microphone recording remain available; this button stays disabled until those checks pass.</Copy>}
       {Boolean(liveMessage) && <Copy>{liveMessage}</Copy>}
     </Card>
     <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="client" size={22} color={theme.accent} /><Heading eyebrow="Your turn">Make it conversational</Heading></View><Copy>Answer out loud as if a real colleague were in front of you. Use the local audio check to record and play back your response while live AI voice is being connected.</Copy><Action title="Open microphone check" icon="recording" onPress={() => router.push("/voice")} /></Card>
@@ -174,4 +184,3 @@ export default function PracticeDetail() {
 }
 
 function accentLanguage(accent: CoachAccent) { return ({ "Indian English": "en-IN", "British English": "en-GB", "American English": "en-US", "Australian English": "en-AU" } as const)[accent]; }
-
