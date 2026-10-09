@@ -6,7 +6,8 @@
   "scripts": {
     "start": "expo start --dev-client",
     "web": "expo start --web",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "postinstall": "cd ../.. && npm run build -w @coach/core"
   },
   "dependencies": {
     "@coach/core": "*",
