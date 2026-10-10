@@ -4,7 +4,7 @@
 
 The customer product is Android and iOS only. There is no public web application requirement. The API and database still need public hosting because the mobile apps authenticate, store progress, enforce usage and coordinate future voice sessions.
 
-The working promise is: **Practice 20 minutes a day and be at brilliance.** This is a motivational product line, not a guarantee of a particular learning outcome.
+Voice practice is sold as focused sessions of up to seven minutes, with monthly plan limits. This is a practice format, not a guarantee of a particular learning outcome.
 
 ## Distribution
 
@@ -27,16 +27,17 @@ These are launch-budget estimates, not a final invoice:
 
 Store commissions, taxes, backend traffic, AI audio/text usage and support are separate from the subscription price.
 
-## What 20 minutes costs in the current price preview
+## Current plan preview
 
-Assuming 30 practice days per month, 20 minutes per day equals 600 practice minutes:
-
-| Plan | Monthly target | 20-minute equivalent |
+| Plan | Monthly target | Voice sessions |
 | --- | ---: | ---: |
-| Essential | ₹199 | ₹6.63 |
-| Professional | ₹299 | ₹9.97 |
-| Executive | ₹699 | ₹23.30 |
-| Extended Practice, 40 minutes/day | ₹799 | ₹13.32 |
+| Free | ₹0 | 2 lifetime |
+| Essential | ₹299 | 15/month |
+| Professional | ₹399 | 20/month |
+| Executive | ₹699 | 40/month |
+| Extended | ₹799 | 60/month |
+
+Each paid voice session lasts up to seven minutes. Storefront prices and entitlements remain subject to final product configuration and verification.
 
 These are customer subscription allocations, not the actual AI provider cost. Actual cost per 20-minute session depends on transcription, realtime model, generated speech, infrastructure and failed/interrupted sessions. Instrument those costs before enabling paid voice.
 

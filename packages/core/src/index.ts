@@ -22,7 +22,7 @@ export const colorPalettes = {
 export const functions = ["Human Resources", "Engineering", "Product Management", "Finance", "Sales", "Marketing", "Operations", "Procurement", "Customer Success", "General Management", "Entrepreneurship", "Other/custom"] as const;
 export const careerLevels = ["Early-career professional", "Experienced individual contributor", "First-time manager", "Experienced manager", "Senior leader", "Executive", "Founder/entrepreneur"] as const;
 export const goals = ["Start conversations", "Explain ideas clearly", "Give constructive feedback", "Present recommendations", "Handle challenging questions"] as const;
-export const planIds = ["essential", "professional", "executive", "extended"] as const;
+export const planIds = ["free", "essential", "professional", "executive", "extended"] as const;
 export const coachAccents = ["Indian English", "British English", "American English", "Australian English"] as const;
 export type CoachAccent = typeof coachAccents[number];
 export const practiceTimezones = ["Asia/Kolkata", "UTC", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Berlin", "Asia/Singapore", "Australia/Sydney"] as const;
@@ -94,7 +94,10 @@ export const credentialsSchema = z.object({
   email: z.string().trim().toLowerCase().email().max(254),
   password: z.string().min(12).max(128),
 }).strict();
-export const oauthSchema = z.object({ provider: z.enum(["google", "microsoft"]), accessToken: z.string().trim().min(20).max(5000) }).strict();
+export const oauthSchema = z.discriminatedUnion("provider", [
+  z.object({ provider: z.literal("google"), accessToken: z.string().trim().min(20).max(5000) }).strict(),
+  z.object({ provider: z.literal("microsoft"), idToken: z.string().trim().min(20).max(10000) }).strict(),
+]);
 export const scenarioSchema = z.object({
   id: z.string().trim().min(1).max(120), version: z.number().int().positive(), module: moduleSchema,
   functions: z.array(z.enum(functions)).max(functions.length), goal: z.enum(goals), title: z.string().trim().min(1).max(160),
@@ -114,8 +117,17 @@ export function recommendScenarios(profile: Profile, catalog: readonly Scenario[
     .sort((first, second) => second.rank - first.rank || first.scenario.id.localeCompare(second.scenario.id))
     .map(item => item.scenario);
 }
-export const planSchema = z.object({ id: z.enum(planIds), title: z.string(), targetPriceInr: z.number().positive(), dailySeconds: z.number().int().positive(), modules: z.array(moduleSchema).min(1) });
-export const plansSchema = z.array(planSchema).length(4).refine(items => new Set(items.map(item => item.id)).size === 4);
+export const planSchema = z.object({
+  id: z.enum(planIds),
+  title: z.string(),
+  targetPriceInr: z.number().nonnegative(),
+  voiceSessionsPerMonth: z.number().int().positive(),
+  maxSessionSeconds: z.number().int().positive(),
+  modules: z.array(moduleSchema).min(1),
+});
+export const plansSchema = z.array(planSchema).length(5).refine(items =>
+  new Set(items.map(item => item.id)).size === 5 && items.some(item => item.id === "free" && item.targetPriceInr === 0),
+);
 export type Plan = z.infer<typeof planSchema>;
 export const states = ["CREATED", "AUTHORIZED", "CONNECTING", "ACTIVE", "PAUSED", "COMPLETED", "ASSESSING", "FEEDBACK_READY", "FAILED", "INTERRUPTED", "CANCELLED", "EXPIRED"] as const;
 export type SessionState = typeof states[number];

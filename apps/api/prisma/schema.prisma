@@ -9,6 +9,8 @@ model User {
   id           String @id @default(uuid()) @db.Uuid
   email        String @unique
   passwordHash String
+  emailVerifiedAt DateTime?
+  emailTokens EmailVerificationToken[]
   role         String @default("learner")
   createdAt    DateTime @default(now())
   profile      UserProfile?
@@ -19,6 +21,7 @@ model User {
   oauthIdentities OAuthIdentity[]
   purchaseIntents PurchaseIntent[]
   voiceSessions VoiceSession[]
+  voiceMonthUsage VoiceMonthUsage[]
 }
 
 model UsageReservation {
@@ -32,6 +35,17 @@ model UsageReservation {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId, dayKey])
   @@index([expiresAt])
+}
+
+model VoiceMonthUsage {
+  userId         String   @db.Uuid
+  monthKey       String
+  sessionsUsed   Int      @default(0)
+  consumedSeconds Int     @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, monthKey])
 }
 
 model Conversation {
@@ -122,6 +136,7 @@ model VoiceSession {
   userId            String   @db.Uuid
   conversationId    String   @db.Uuid
   reservationId     String   @db.Uuid
+  monthKey          String
   providerSessionId String
   providerCallId    String?
   providerTerminatedAt DateTime?
@@ -148,5 +163,17 @@ model AuthSession {
   expiresAt DateTime
   createdAt DateTime @default(now())
   @@index([userId])
+  @@index([expiresAt])
+}
+
+model EmailVerificationToken {
+  tokenHash String @id
+  userId String @db.Uuid
+  purpose String
+  createdAt DateTime
+  expiresAt DateTime
+  usedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, purpose, createdAt])
   @@index([expiresAt])
 }

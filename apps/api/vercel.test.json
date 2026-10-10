@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "npm run build -w @coach/core && npm run db:generate && npm run build:test-vercel",
+  "outputDirectory": "public",
+  "regions": ["hnd1"],
+  "rewrites": [{ "source": "/api/:__route*", "destination": "/api/index" }],
+  "functions": {
+    "api/index.js": { "maxDuration": 30, "includeFiles": "prisma/supabase-ca.crt" },
+    "api/[...path].js": { "maxDuration": 30, "includeFiles": "prisma/supabase-ca.crt" }
+  }
+}

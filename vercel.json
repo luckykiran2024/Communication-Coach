@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "test-apk-ready": false
+    }
+  },
   "functions": {
     "apps/api/src/**/*.ts": {
       "includeFiles": "packages/core/**"

@@ -1,8 +1,16 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { profileSchema, scenarioSchema, type Profile, type Scenario, states, type SessionState } from "@coach/core";
-import { ConflictError, type Account, type ConversationTurn, type Entitlement, type OAuthIdentity, type PurchaseIntent, type ScenarioRevision, type Store, type VoiceSession } from "./store";
-type AccountRow = { id: string; email: string; passwordHash: string; role: string };
-const accountFromRow = (row: AccountRow): Account => ({ id: row.id, email: row.email, passwordHash: row.passwordHash, role: row.role === "manager" ? "manager" : "learner" });
+import {
+  ConflictError, type Account, type ConversationTurn, type Entitlement, type OAuthIdentity,
+  type PurchaseIntent, type ScenarioRevision, type Store, type VoiceMonthUsage, type VoiceSession,
+} from "./store";
+import { elapsedSeconds } from "./lib/time";
+import { safeEqual } from "./lib/safe-equal";
+type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null };
+const accountFromRow = (row: AccountRow): Account => ({
+  id: row.id, email: row.email, passwordHash: row.passwordHash,
+  role: row.role === "manager" ? "manager" : "learner", emailVerifiedAt: row.emailVerifiedAt,
+});
 const accountFromNullableRow = (row: AccountRow | null): Account | null => row ? accountFromRow(row) : null;
 export function prismaStore(db: PrismaClient): Store {
   return {
@@ -16,6 +24,47 @@ export function prismaStore(db: PrismaClient): Store {
     },
     async accountByEmail(email) { return accountFromNullableRow(await db.user.findUnique({ where: { email } })); },
     async accountById(id) { return accountFromNullableRow(await db.user.findUnique({ where: { id } })); },
+    async markEmailVerified(userId, now) {
+      await db.user.updateMany({ where: { id: userId, emailVerifiedAt: null }, data: { emailVerifiedAt: now } });
+      return accountFromRow(await db.user.findUniqueOrThrow({ where: { id: userId } }));
+    },
+    async issueEmailToken(token, hourlyLimit) {
+      return db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${token.userId}::uuid FOR UPDATE`;
+        const count = await transaction.emailVerificationToken.count({
+          where: {
+            userId: token.userId, purpose: token.purpose,
+            createdAt: { gt: new Date(token.createdAt.getTime() - 3600000) },
+          },
+        });
+        if (count >= hourlyLimit) return false;
+        await transaction.emailVerificationToken.create({ data: token });
+        return true;
+      });
+    },
+    async consumeEmailToken(hash, purpose, now, userId, newPasswordHash) {
+      return db.$transaction(async transaction => {
+        const candidate = await transaction.emailVerificationToken.findUnique({ where: { tokenHash: hash } });
+        if (!candidate) return null;
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${candidate.userId}::uuid FOR UPDATE`;
+        const token = await transaction.emailVerificationToken.findUnique({ where: { tokenHash: hash } });
+        if (!token || token.purpose !== purpose || token.usedAt || token.expiresAt <= now) return null;
+        if (userId && token.userId !== userId) return null;
+        if (purpose === "password_reset" && !newPasswordHash) return null;
+        await transaction.emailVerificationToken.update({ where: { tokenHash: hash }, data: { usedAt: now } });
+        const user = await transaction.user.findUniqueOrThrow({ where: { id: token.userId } });
+        const updated = await transaction.user.update({
+          where: { id: user.id },
+          data: { emailVerifiedAt: user.emailVerifiedAt ?? now, ...(newPasswordHash ? { passwordHash: newPasswordHash } : {}) },
+        });
+        if (purpose === "password_reset") {
+          await transaction.authSession.deleteMany({ where: { userId: user.id } });
+          if (!user.emailVerifiedAt) await transaction.oAuthIdentity.deleteMany({ where: { userId: user.id } });
+          await transaction.emailVerificationToken.updateMany({ where: { userId: user.id, usedAt: null }, data: { usedAt: now } });
+        }
+        return accountFromRow(updated);
+      });
+    },
     async oauthIdentity(provider: OAuthIdentity["provider"], subject: string) {
       const row = await db.oAuthIdentity.findUnique({ where: { provider_subject: { provider, subject } } });
       return row ? { ...row, provider: row.provider as OAuthIdentity["provider"] } : null;
@@ -24,7 +73,16 @@ export function prismaStore(db: PrismaClient): Store {
       try { await db.oAuthIdentity.create({ data: identity }); }
       catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ConflictError("This provider identity is already linked to another account."); throw error; }
     },
-    async createSession(session) { await db.authSession.create({ data: session }); },
+    async createSession(session, expectedPasswordHash) {
+      await db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${session.userId}::uuid FOR UPDATE`;
+        const user = await transaction.user.findUnique({ where: { id: session.userId } });
+        if (!user || (expectedPasswordHash && !safeEqual(user.passwordHash, expectedPasswordHash))) {
+          throw new ConflictError("Account credentials changed. Please sign in again.");
+        }
+        await transaction.authSession.create({ data: session });
+      });
+    },
     sessionByHash: tokenHash => db.authSession.findUnique({ where: { tokenHash } }),
     async deleteSession(tokenHash) { await db.authSession.deleteMany({ where: { tokenHash } }); },
     async deleteSessions(userId) { await db.authSession.deleteMany({ where: { userId } }); },
@@ -49,16 +107,32 @@ export function prismaStore(db: PrismaClient): Store {
       });
       return { reservedSeconds: rows._sum.reservedSeconds ?? 0, consumedSeconds: rows._sum.consumedSeconds ?? 0 };
     },
+    async reservationSeconds(reservationId) {
+      const reservation = await db.usageReservation.findUnique({ where: { id: reservationId }, select: { reservedSeconds: true } });
+      return reservation?.reservedSeconds ?? null;
+    },
     async reserveUsage(reservation, allowanceSeconds) {
       await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(
+            hashtext(${reservation.userId} || ':' || ${reservation.dayKey})::bigint
+          )
+        `;
         const rows = await transaction.usageReservation.aggregate({
           where: { userId: reservation.userId, dayKey: reservation.dayKey },
           _sum: { reservedSeconds: true, consumedSeconds: true },
         });
         const reserved = rows._sum.reservedSeconds ?? 0;
-        const consumed = rows._sum.consumedSeconds ?? 0;
         if (reserved + reservation.seconds > allowanceSeconds) throw new ConflictError("Daily voice allowance is exhausted.");
-        await transaction.usageReservation.create({ data: { ...reservation, reservedSeconds: reservation.seconds } });
+        await transaction.usageReservation.create({
+          data: {
+            id: reservation.id,
+            userId: reservation.userId,
+            dayKey: reservation.dayKey,
+            reservedSeconds: reservation.seconds,
+            expiresAt: reservation.expiresAt,
+          },
+        });
       });
     },
     async settleUsage(reservationId, consumedSeconds) {
@@ -68,6 +142,49 @@ export function prismaStore(db: PrismaClient): Store {
         if (!reservation) throw new Error("Usage reservation not found");
         const settled = Math.min(consumedSeconds, reservation.reservedSeconds);
         await transaction.usageReservation.update({ where: { id: reservationId }, data: { reservedSeconds: settled, consumedSeconds: settled } });
+      });
+    },
+    async voiceMonthUsage(userId, monthKey): Promise<VoiceMonthUsage> {
+      const usage = await db.voiceMonthUsage.findUnique({ where: { userId_monthKey: { userId, monthKey } } });
+      return usage
+        ? { userId, monthKey, sessionsUsed: usage.sessionsUsed, consumedSeconds: usage.consumedSeconds }
+        : { userId, monthKey, sessionsUsed: 0, consumedSeconds: 0 };
+    },
+    async totalVoiceSessions(userId) {
+      const result = await db.voiceMonthUsage.aggregate({ where: { userId }, _sum: { sessionsUsed: true } });
+      return result._sum.sessionsUsed ?? 0;
+    },
+    async reserveVoiceSession(userId, monthKey, sessionLimit, lifetimeLimit) {
+      const lockScope = lifetimeLimit ? "lifetime" : monthKey;
+      await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${userId} || ':sessions:' || ${lockScope})::bigint)
+        `;
+        const usage = await transaction.voiceMonthUsage.upsert({
+          where: { userId_monthKey: { userId, monthKey } },
+          create: { userId, monthKey },
+          update: {},
+        });
+        const used = lifetimeLimit
+          ? (await transaction.voiceMonthUsage.aggregate({ where: { userId }, _sum: { sessionsUsed: true } }))._sum.sessionsUsed ?? 0
+          : usage.sessionsUsed;
+        if (used >= sessionLimit) throw new ConflictError("Voice session allowance is exhausted.");
+        await transaction.voiceMonthUsage.update({
+          where: { userId_monthKey: { userId, monthKey } },
+          data: { sessionsUsed: { increment: 1 } },
+        });
+      });
+    },
+    async releaseVoiceSession(userId, monthKey, lifetimeLimit) {
+      const lockScope = lifetimeLimit ? "lifetime" : monthKey;
+      await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${userId} || ':sessions:' || ${lockScope})::bigint)
+        `;
+        await transaction.voiceMonthUsage.updateMany({
+          where: { userId, monthKey, sessionsUsed: { gt: 0 } },
+          data: { sessionsUsed: { decrement: 1 } },
+        });
       });
     },
     async createConversation(conversation) {
@@ -156,8 +273,20 @@ export function prismaStore(db: PrismaClient): Store {
     async createPurchaseIntent(intent: PurchaseIntent) { await db.purchaseIntent.create({ data: intent }); },
     async purchaseIntent(id: string) { const row = await db.purchaseIntent.findUnique({ where: { id } }); return row ? { ...row, provider: row.provider as PurchaseIntent["provider"], status: row.status as PurchaseIntent["status"] } : null; },
     async completePurchaseIntent(id: string) { await db.purchaseIntent.updateMany({ where: { id, status: "pending" }, data: { status: "completed" } }); },
-    async createVoiceSession(session: VoiceSession) { await db.voiceSession.create({ data: session }); },
+    async createVoiceSession(session: VoiceSession) {
+      try { await db.voiceSession.create({ data: session }); }
+      catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+          throw new ConflictError("Another voice session is already active.");
+        }
+        throw error;
+      }
+    },
     async voiceSession(userId: string, id: string) { const row = await db.voiceSession.findFirst({ where: { id, userId } }); return row ? { ...row, status: row.status as VoiceSession["status"] } : null; },
+    async activeVoiceSession(userId: string) {
+      const row = await db.voiceSession.findFirst({ where: { userId, status: "active" } });
+      return row ? { ...row, status: row.status as VoiceSession["status"] } : null;
+    },
     async bindVoiceProviderCall(userId: string, id: string, providerCallId: string) {
       const updated = await db.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { providerCallId } });
       if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
@@ -169,22 +298,53 @@ export function prismaStore(db: PrismaClient): Store {
       const rows = await db.voiceSession.findMany({ where: { status: { not: "active" }, providerCallId: { not: null }, providerTerminatedAt: null } });
       return rows.map(row => ({ ...row, status: row.status as VoiceSession["status"] }));
     },
-    async endVoiceSession(userId: string, id: string, endedAt: Date, status: "ended" | "expired") {
-      const updated = await db.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { status, endedAt } });
-      if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
-      const row = await db.voiceSession.findUniqueOrThrow({ where: { id } });
-      return { ...row, status: row.status as VoiceSession["status"] };
+    async endVoiceSession(userId: string, id: string, endedAt: Date, status: "ended" | "expired", consumedSeconds: number) {
+      return db.$transaction(async transaction => {
+        const row = await transaction.voiceSession.findFirst({ where: { id, userId, status: "active" } });
+        if (!row) throw new ConflictError("Voice session is already closed.");
+        const reservation = await transaction.usageReservation.findUnique({ where: { id: row.reservationId } });
+        if (!reservation) throw new Error("Usage reservation not found");
+        const chargedSeconds = Math.min(consumedSeconds, reservation.reservedSeconds);
+        const updated = await transaction.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { status, endedAt } });
+        if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
+        await transaction.usageReservation.update({
+          where: { id: row.reservationId },
+          data: { reservedSeconds: chargedSeconds, consumedSeconds: chargedSeconds },
+        });
+        await transaction.voiceMonthUsage.upsert({
+          where: { userId_monthKey: { userId, monthKey: row.monthKey } },
+          create: { userId, monthKey: row.monthKey, consumedSeconds: chargedSeconds },
+          update: { consumedSeconds: { increment: chargedSeconds } },
+        });
+        return { ...row, status, endedAt } as VoiceSession;
+      });
     },
     async expireVoiceSessions(now: Date) {
-      const rows = await db.voiceSession.findMany({ where: { status: "active", expiresAt: { lte: now } }, select: { id: true, conversationId: true, reservationId: true } });
+      const rows = await db.voiceSession.findMany({
+        where: { status: "active", expiresAt: { lte: now } },
+        select: { id: true, userId: true, monthKey: true, conversationId: true, reservationId: true, startedAt: true, expiresAt: true },
+      });
+      let expired = 0;
       for (const row of rows) await db.$transaction(async transaction => {
         const updated = await transaction.voiceSession.updateMany({ where: { id: row.id, status: "active" }, data: { status: "expired", endedAt: now } });
         if (updated.count !== 1) return;
         const reservation = await transaction.usageReservation.findUnique({ where: { id: row.reservationId } });
-        if (reservation) await transaction.usageReservation.update({ where: { id: row.reservationId }, data: { reservedSeconds: reservation.consumedSeconds } });
+        if (reservation) {
+          const consumedSeconds = elapsedSeconds(row.startedAt, row.expiresAt, reservation.reservedSeconds);
+          await transaction.usageReservation.update({
+            where: { id: row.reservationId },
+            data: { reservedSeconds: consumedSeconds, consumedSeconds },
+          });
+          await transaction.voiceMonthUsage.upsert({
+            where: { userId_monthKey: { userId: row.userId, monthKey: row.monthKey } },
+            create: { userId: row.userId, monthKey: row.monthKey, consumedSeconds },
+            update: { consumedSeconds: { increment: consumedSeconds } },
+          });
+        }
         await transaction.conversation.updateMany({ where: { id: row.conversationId, state: "ACTIVE" }, data: { state: "EXPIRED" } });
+        expired += 1;
       });
-      return rows.length;
+      return expired;
     },
   };
 }

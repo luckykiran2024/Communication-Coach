@@ -15,7 +15,7 @@
     "dev:portal": "npm run dev -w @coach/portal",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test packages/core/test/*.test.ts apps/api/test/*.test.ts scripts/*.test.ts",
-    "test:regression": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test packages/core/test/*.test.ts apps/api/test/regression.test.ts",
+    "test:regression": "node scripts/run-regression.mjs",
     "test:database": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --env-file-if-exists=apps/api/.env --test apps/api/test/database.integration.ts",
     "release:preflight": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --env-file-if-exists=apps/api/.env scripts/release-preflight.ts",
     "content:hash": "node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs scripts/content-release-hash.ts",

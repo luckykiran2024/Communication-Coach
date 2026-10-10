@@ -16,7 +16,7 @@ export async function request<Result>(path: string, token?: string | null, metho
   }
   return response.status === 204 ? undefined as Result : response.json();
 }
-export type Me = { user: { id: string; email: string }; profile: Profile | null };
+export type Me = { user: { id: string; email: string; emailVerifiedAt: string | null }; profile: Profile | null };
 export type Catalog = { plans: Plan[]; priceNotice: string; liveVoiceAvailable: boolean };
 export type Recommendations = { scenarios: Scenario[]; previewOnly: boolean };
 export type ProgressSnapshot = { totalSessions: number; completedSessions: number; weeklySessions: number; practiceMinutes: number; weeklyPracticeMinutes: number; currentStreakDays: number; engagement: EngagementLevel; mastery: MasteryProgress; practiceDays: number; completedScenarios: number; successfulRetries: number; evidenceAssessments: number; dailyPractice: { day: string; minutes: number; sessions: number }[]; levelTrack: { level: number; title: string; reached: boolean }[]; skillSignal: number | null; skillSignalStatus: "awaiting_assessment" | "available" };

@@ -8,7 +8,7 @@ test("realtime client secret adapter sends server-only credentials and safety id
   const result = await createRealtimeClientSecret({
     apiKey: "server-key",
     safetyIdentifier: "hashed-user-id",
-    model: "gpt-realtime-2.1",
+    model: "gpt-realtime-2.1-mini",
     voice: "marin",
     instructions: "Coach the learner through this scenario.",
     expiresAfterSeconds: 900,
@@ -22,7 +22,7 @@ test("realtime client secret adapter sends server-only credentials and safety id
   assert.equal(request?.url, "https://api.openai.com/v1/realtime/client_secrets");
   assert.equal((request?.init?.headers as Record<string, string>)["OpenAI-Safety-Identifier"], "hashed-user-id");
   assert.equal((request?.init?.headers as Record<string, string>).Authorization, "Bearer server-key");
-  assert.match(String(request?.init?.body), /gpt-realtime-2\.1/);
+  assert.match(String(request?.init?.body), /gpt-realtime-2\.1-mini/);
   assert.match(String(request?.init?.body), /marin/);
   assert.match(String(request?.init?.body), /gpt-4o-mini-transcribe/);
 });

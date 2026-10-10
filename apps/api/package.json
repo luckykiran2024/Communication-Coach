@@ -7,6 +7,7 @@
     "dev": "node --require=../../scripts/node-os-compat.cjs ../../node_modules/tsx/dist/cli.mjs watch --env-file-if-exists=.env src/server.ts",
     "start": "node --require=../../scripts/node-os-compat.cjs ../../node_modules/tsx/dist/cli.mjs --env-file-if-exists=.env src/server.ts",
     "build:vercel": "esbuild src/vercel-handler.ts --bundle --platform=node --format=esm --packages=external --outfile=api/index.js && node -e \"require('node:fs').copyFileSync('api/index.js', 'api/[...path].js')\"",
+    "build:test-vercel": "esbuild src/test-vercel-handler.ts --bundle --platform=node --format=esm --packages=external --outfile=api/index.js && node -e \"require('node:fs').copyFileSync('api/index.js', 'api/[...path].js')\"",
     "typecheck": "tsc -p tsconfig.json",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy"
@@ -21,10 +22,10 @@
     "esbuild": "0.28.2",
     "fastify": "5.12.5",
     "google-auth-library": "11.1.0",
+    "jose": "6.2.12",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "prisma": "6.19.2"
   }
 }
-

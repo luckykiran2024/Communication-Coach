@@ -12,6 +12,13 @@ The portal is currently a public, non-sensitive scenario preview. It has no lear
 
 ## Conversation boundary
 
+Phase 5 account proof is implemented through Store methods in both repositories. Email codes are persisted only as SHA-256
+digests, expire after thirty minutes and are consumed under an account lock. The same lock serializes per-account email
+throttling, password reset and session creation; reset changes the password and revokes sessions atomically.
+OAuth cannot auto-link an unverified password account. Google new-account creation records verified email ownership;
+Microsoft uses signed ID-token oid/tid identity and does not authorize linking by email. Manager email allowlisting requires
+email verification. See ACCOUNT_SECURITY.md for configuration, recovery semantics and release limitations.
+
 `POST /v1/me/conversations` creates an owner-scoped `CREATED` record only after the authenticated profile is authorized for the requested scenario. Learner-only text turns may be saved and explicitly completed; recent sessions and `GET /v1/me/conversations/:id` remain owner-scoped. This establishes the persistence contract for later voice sessions without generating simulated assistant turns or unlocking provider access.
 
 ## Shared learning content
@@ -28,7 +35,7 @@ The proposed live transport is native WebRTC, behind a provider interface. Brows
 
 Before enabling billable voice, implement atomic user/day reservations, provider-side termination, maximum session deadlines, idempotent settlement and usage reconciliation. Expiring a connection credential alone does not end an established connection. Client countdowns cannot enforce an allowance. A server control channel must terminate the provider session on exhaustion, including when a client disappears.
 
-The current increment adds the first part of that boundary: `UsageReservation` rows, atomic allowance checks, settlement that releases unused reserved seconds, a stable profile-timezone `/v1/me/voice-usage` response, and mobile display of remaining configured time. It is currently a 20-minute development allowance and does not unlock live voice or represent a paid entitlement.
+The current increment adds `UsageReservation` and `VoiceMonthUsage` records, atomic monthly session checks, seven-minute maximum session reservations, settlement of unused seconds, a profile-timezone `/v1/me/voice-usage` response, and mobile display of remaining sessions. Paid access comes only from verified entitlements when billing is enabled; otherwise `DEV_PLAN_ID` selects the development plan.
 
 `startLiveConversation` now provides the provider-independent lifecycle coordinator. It reserves the requested allowance before moving through `AUTHORIZED` and `CONNECTING`; only a successful provider connection reaches `ACTIVE`. Any provider error settles the reservation to zero and moves the record to `FAILED`. Provider termination, active-session persistence and client connection credentials remain disabled until a native provider is selected and tested.
 

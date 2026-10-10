@@ -8,7 +8,9 @@ const credentials = { email: "learner@example.com", password: "a-long-test-passw
 const profile = { displayName: "Sam", function: "Engineering", jobTitle: "Engineer", careerLevel: "Experienced individual contributor", audience: "Product team", goal: "Present recommendations" };
 test("production configuration rejects unsafe storage, origins and provider settings", () => {
   const errors = productionConfigurationErrors({ nodeEnv: "production", devMemoryStore: true, corsOrigins: ["http://localhost:3000"], managerEmails: [], realtimeEnabled: true, realtimeApiKey: "", billingEnabled: true, billingWebhookSecret: "replace-with-a-secret", storeVerifierConfigured: false });
-  assert.equal(errors.length, 9);
+  assert.equal(errors.length, 11);
+  assert.match(errors.join(" "), /EMAIL_PROVIDER/);
+  assert.match(errors.join(" "), /ACCOUNT_EMAIL_LINK_BASE_URL/);
   assert.match(errors.join(" "), /PostgreSQL/);
   assert.match(errors.join(" "), /CORS_ORIGINS/);
   assert.match(errors.join(" "), /OPENAI_API_KEY/);
@@ -99,10 +101,13 @@ test("account deletion cascades private data and revokes the current session", a
   assert.equal(store.profiles.size, 0);
   assert.equal(store.sessions.size, 0);
 });
-test("plan catalog preserves the four allowances and registration is rate limited", async context => {
+test("plan catalog exposes the confirmed INR prices and seven-minute monthly session packages", async context => {
   const app = await buildApp(new MemoryStore()); context.after(() => app.close());
   const catalog = (await app.inject({ url: "/v1/catalog" })).json();
-  assert.deepEqual(catalog.plans.map((plan: { dailySeconds: number }) => plan.dailySeconds), [1200,1200,1200,2400]);
+  const packageLimits = catalog.plans.map((plan: { id: string; targetPriceInr: number; voiceSessionsPerMonth: number; maxSessionSeconds: number }) => [
+    plan.id, plan.targetPriceInr, plan.voiceSessionsPerMonth, plan.maxSessionSeconds,
+  ]);
+  assert.deepEqual(packageLimits, [["free", 0, 2, 420], ["essential", 299, 15, 420], ["professional", 399, 20, 420], ["executive", 699, 40, 420], ["extended", 799, 60, 420]]);
   assert.equal(catalog.liveVoiceAvailable, false);
   for (let attempt = 0; attempt < 5; attempt++) await app.inject({ method: "POST", url: "/v1/auth/register", payload: {} });
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/register", payload: {} })).statusCode, 429);
@@ -116,8 +121,9 @@ test("voice usage is calculated on the profile timezone and remains fail-closed"
   assert.equal((await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: profile })).statusCode, 200);
   const usage = (await app.inject({ url: "/v1/me/voice-usage", headers })).json();
   assert.equal(usage.dayKey, "2026-09-24");
-  assert.equal(usage.allowanceSeconds, 1200);
-  assert.equal(usage.remainingSeconds, 1200);
+  assert.equal(usage.planId, "executive");
+  assert.equal(usage.sessionsRemaining, 40);
+  assert.equal(usage.maxSessionSeconds, 420);
   assert.equal(usage.liveVoiceAvailable, false);
   time = new Date("2026-09-24T18:30:00Z");
   assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().dayKey, "2026-09-25");
@@ -134,4 +140,42 @@ test("usage reservations cap concurrent voice time and release unused seconds on
   await store.settleUsage(reservationId, 100);
   await store.reserveUsage({ id: randomUUID(), userId, dayKey: "2026-09-24", seconds: 500, expiresAt: new Date() }, 1200);
   assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 1200);
+});
+
+test("ten parallel usage reservations cannot exceed the allowance", async () => {
+  const store = new MemoryStore();
+  const userId = randomUUID();
+  const attempts = await Promise.allSettled(Array.from({ length: 10 }, () => store.reserveUsage({
+    id: randomUUID(),
+    userId,
+    dayKey: "2026-09-24",
+    seconds: 120,
+    expiresAt: new Date("2026-09-24T00:02:00.000Z"),
+  }, 600)));
+  const usage = await store.usage(userId, "2026-09-24");
+  assert.equal(attempts.filter(result => result.status === "fulfilled").length, 5);
+  assert.equal(usage.reservedSeconds, 600);
+});
+
+test("only one simultaneous active voice session can be created per user", async () => {
+  const store = new MemoryStore();
+  const userId = randomUUID();
+  const startedAt = new Date("2026-09-24T00:00:00.000Z");
+  const createSession = () => store.createVoiceSession({
+    id: randomUUID(),
+    userId,
+    conversationId: randomUUID(),
+    reservationId: randomUUID(),
+    monthKey: "2026-09",
+    providerSessionId: randomUUID(),
+    providerCallId: null,
+    providerTerminatedAt: null,
+    status: "active",
+    startedAt,
+    expiresAt: new Date(startedAt.getTime() + 120_000),
+    endedAt: null,
+  });
+  const results = await Promise.allSettled([createSession(), createSession()]);
+  assert.equal(results.filter(result => result.status === "fulfilled").length, 1);
+  assert.equal(results.filter(result => result.status === "rejected").length, 1);
 });

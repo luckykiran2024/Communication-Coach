@@ -40,7 +40,7 @@ export async function connectRealtimeCall(input: { clientSecret: string; model?:
     await peer.setLocalDescription(offer);
     await waitForIceGathering(peer);
     const offerSdp = peer.localDescription?.sdp ?? offer.sdp;
-    const response = await fetch(`https://api.openai.com/v1/realtime/calls?model=${encodeURIComponent(input.model ?? "gpt-realtime-2.1")}`, { method: "POST", headers: { Authorization: `Bearer ${input.clientSecret}`, "Content-Type": "application/sdp" }, body: offerSdp });
+    const response = await fetch(`https://api.openai.com/v1/realtime/calls?model=${encodeURIComponent(input.model ?? "gpt-realtime-2.1-mini")}`, { method: "POST", headers: { Authorization: `Bearer ${input.clientSecret}`, "Content-Type": "application/sdp" }, body: offerSdp });
     const answerSdp = await response.text();
     if (!response.ok || !answerSdp.startsWith("v=")) throw new Error("The voice provider did not accept the WebRTC offer.");
     const providerCallId = providerCallIdFromLocation(response.headers.get("location"));

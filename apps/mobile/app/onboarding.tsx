@@ -4,6 +4,7 @@ import { Redirect, router } from "expo-router";
 import { careerLevels, functions, goals, planIds, practiceTimezones, profileSchema, type Profile } from "@coach/core";
 import { request } from "../src/api";
 import { useAuth } from "../src/auth";
+import { EmailVerificationBanner } from "../src/email-verification-banner";
 import { Action, Choices, Copy, Field, Heading, Screen, usePreferences } from "../src/ui";
 export default function Onboarding() {
   const auth = useAuth();
@@ -47,14 +48,16 @@ export default function Onboarding() {
       <Choices label="Preferred practice length" options={["5", "10", "15", "20"]} value={String(draft.practiceMinutes)} onChange={value => change("practiceMinutes", Number(value))} />
       <Copy>5 minutes is a quick warm-up, 10 minutes is a balanced daily habit, 15 minutes allows deeper repetition, and 20 minutes is an extended session. This sets your preferred pace; live voice limits are enforced separately when enabled.</Copy>
       {!auth.me?.profile ? <Choices label="Practice timezone" options={practiceTimezones} value={draft.timezone} onChange={value => change("timezone", value)} /> : <><Field label="Practice timezone" editable={false} value={draft.timezone} /><Copy>Your timezone is locked after setup so daily practice allowances reset consistently. Contact support to change it.</Copy></>}
-      <Copy>Your practice timezone controls when your daily allowance resets. It does not track your location or change your device clock.</Copy>
+      <Copy>Your practice timezone determines when monthly voice sessions reset. It does not track your location or change your device clock.</Copy>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}><Copy>Reduce motion</Copy><Switch accessibilityLabel="Reduce motion" value={draft.reducedMotion} onValueChange={value => { change("reducedMotion", value); setReducedMotion(value); }} /></View><Copy>When enabled, the app avoids nonessential movement and transitions, keeping controls visually stable. It does not affect audio or recording.</Copy>
-      <Choices label="Choose your practice plan" options={["Essential", "Professional", "Executive", "Extended Practice"]} value={checkedPlanLabel(draft.planId)} onChange={value => change("planId", planIds[["Essential", "Professional", "Executive", "Extended Practice"].indexOf(value)] as Profile["planId"])} />
+      <Choices label="Choose your practice plan" options={planIds.map(planId => planLabels[planId])} value={checkedPlanLabel(draft.planId)} onChange={value => change("planId", planIds.find(planId => planLabels[planId] === value) ?? "free")} />
       <Copy>We’ll confirm this package next and show the payment step before your first practice begins.</Copy>
       <Copy>Microphone access is requested only when you start an audio check. Optional recordings are not uploaded or retained by the server.</Copy></>}
+    <EmailVerificationBanner />
     {Boolean(error) && <Copy error>{error}</Copy>}
     {step < 2 ? <Action title="Continue" onPress={nextStep} /> : <Action title="Save my profile" onPress={save} busy={busy} />}
     {step > 0 && <Action title="Back" secondary onPress={() => setStep(step - 1)} />}
   </Screen>;
 }
-function checkedPlanLabel(planId: Profile["planId"]) { return ({ essential: "Essential", professional: "Professional", executive: "Executive", extended: "Extended Practice" } as const)[planId]; }
+const planLabels: Record<Profile["planId"], string> = { free: "Free", essential: "Essential", professional: "Professional", executive: "Executive", extended: "Extended Practice" };
+function checkedPlanLabel(planId: Profile["planId"]) { return planLabels[planId]; }

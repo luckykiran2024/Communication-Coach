@@ -9,6 +9,8 @@ function AppStack() {
   const theme = useTheme();
   return <><StatusBar style={theme.isDark ? "light" : "dark"} /><Stack screenOptions={{ animation: theme.reducedMotion ? "none" : "fade", animationDuration: theme.reducedMotion ? 0 : 180, headerStyle: { backgroundColor: theme.surface }, headerTintColor: theme.ink, headerShadowVisible: false, contentStyle: { backgroundColor: theme.background } }}>
     <Stack.Screen name="index" options={{ headerShown: false }} />
+    <Stack.Screen name="verify-email" options={{ title: "Verify your email" }} />
+    <Stack.Screen name="password-reset" options={{ title: "Password recovery" }} />
     <Stack.Screen name="onboarding" options={{ title: "Your practice profile" }} />
     <Stack.Screen name="home" options={{ title: "Today", headerBackVisible: false }} />
     <Stack.Screen name="workshop/[module]" options={{ title: "Practice workshop" }} />
