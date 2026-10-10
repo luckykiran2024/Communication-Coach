@@ -1,0 +1,422 @@
+[
+  {
+    "id": "hr-manager-review-missed-delivery",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Discuss missed commitments",
+    "context": "Asha missed 3 of 8 client reports in September. Ravi needs a dependable Friday handoff.",
+    "question": "Explain the observed pattern and impact. Ask Asha what got in the way; agree one measurable next step.",
+    "independentQuestion": "Asha disputes a missed date and shares a dependency log. Revise the facts and agree a fair checkpoint.",
+    "focus": "Observable performance feedback",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 1,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-review-strong-results",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Recognise results without overlooking behaviour",
+    "context": "Nikhil exceeded sales target by 12%, but 2 colleagues report unannounced handoff changes.",
+    "question": "Recognise the result, name the handoff behaviour and impact, and invite Nikhil to agree a practical change.",
+    "independentQuestion": "Nikhil asks whether results no longer matter. Explain how outcomes and collaboration both inform the review.",
+    "focus": "Balanced review",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 1,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-pip-open",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Open a performance improvement conversation",
+    "context": "Meera has 4 overdue reconciliations. Her manager Dev must explain a documented 30-day support plan.",
+    "question": "Describe the verified gap, expectations and support. Check understanding; do not predict employment outcomes.",
+    "independentQuestion": "Meera reports missing system access. Adjust the support plan and agree who will restore access by Monday.",
+    "focus": "Fair expectations and support",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 1,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-pip-checkpoint",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Review a support-plan checkpoint",
+    "context": "At day 14, Arjun met 2 of 3 agreed checks. One client response is still unverified.",
+    "question": "Separate confirmed progress from the missing evidence. Agree the next check and an explicit owner.",
+    "independentQuestion": "The client confirms they caused the delay. Update the assessment and explain the remaining expectation.",
+    "focus": "Evidence-led checkpoint",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 1,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-pay-budget",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Handle challenging questions",
+    "title": "Explain a compensation constraint",
+    "context": "Leena requests a 15% increase. Omar can confirm a 6% team budget, not individual outcomes.",
+    "question": "Explain what is known and what you cannot promise. Acknowledge the concern and name the review process.",
+    "independentQuestion": "Leena brings a written external offer. Clarify the decision route without promising a matching counter-offer.",
+    "focus": "Boundaries without dismissal",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 2,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-pay-equity",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Handle challenging questions",
+    "title": "Respond to a pay-equity concern",
+    "context": "Priya believes a peer earns ₹80,000 more. HR partner Kunal cannot share another person's salary.",
+    "question": "Acknowledge the concern, protect confidentiality and explain the evidence and review channel available to Priya.",
+    "independentQuestion": "Priya asks for the peer's payslip. Decline respectfully and offer a review of her own role and pay factors.",
+    "focus": "Confidentiality and transparency",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 2,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-promotion-denial",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Explain a promotion decision",
+    "context": "Sana was not promoted after 2 strong projects. Evidence of cross-team ownership is incomplete.",
+    "question": "State the decision clearly, explain the evidence gap and agree specific opportunities without promising promotion.",
+    "independentQuestion": "Sana presents a cross-team project you missed. Explain how the new evidence can be reviewed and by whom.",
+    "focus": "Evidence and development",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 2,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-promotion-expectations",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Reset an implied promotion promise",
+    "context": "Vikram understood 'next cycle' as a promise. Manager Tara has no approved opening in the 6-person team.",
+    "question": "Own the ambiguity, separate aspiration from an approved commitment and agree a documented development conversation.",
+    "independentQuestion": "A vacancy opens in another team. Explain the application route without implying a guaranteed outcome.",
+    "focus": "Repairing expectations",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 2,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-resignation-listen",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Start conversations",
+    "title": "Listen to a resignation",
+    "context": "Isha resigns with 30 days' notice after 2 years. Mohan needs a handover but should not pressure her.",
+    "question": "Acknowledge Isha's decision, ask what she is willing to share and agree an initial handover discussion.",
+    "independentQuestion": "Isha declines to discuss her reasons. Respect that boundary and confirm only the practical transition needs.",
+    "focus": "Respectful transition",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 3,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-counteroffer-boundary",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Handle challenging questions",
+    "title": "Discuss a possible counter-offer",
+    "context": "Rahul asks for a 20% counter-offer by Friday. Neha can seek approval but cannot commit funds.",
+    "question": "Clarify Rahul's priorities and your authority. Explain the approval route and the time you will next update him.",
+    "independentQuestion": "Approval covers 10%, not 20%. State the limit directly and allow Rahul to decide without guilt or pressure.",
+    "focus": "Authority and autonomy",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 3,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-complaint-listen",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Start conversations",
+    "title": "Receive an employee complaint",
+    "context": "Ananya says a supervisor interrupted her in 3 meetings. HR partner Farah has not checked the events.",
+    "question": "Listen without deciding the allegation. Explain next steps, confidentiality limits and the immediate support options.",
+    "independentQuestion": "Ananya asks for guaranteed secrecy. Explain who may need information and ask about her concerns.",
+    "focus": "Neutral listening",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 3,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-complaint-status",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Give a complaint-process update",
+    "context": "Kabir raised a concern 10 days ago. Two interviews are complete and one witness is unavailable.",
+    "question": "Explain the process status without sharing witness details or implying a finding. Set a realistic next update.",
+    "independentQuestion": "Kabir asks whether silence means failure. Explain what remains unresolved and the escalation channel.",
+    "focus": "Process clarity",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 3,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-restructure-announce",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Explain ideas clearly",
+    "title": "Announce a team restructure",
+    "context": "A 12-person support team will become 2 groups next month. Reporting lines are confirmed; shifts are not.",
+    "question": "Explain the reason, what changes now and what is still undecided. Give a named contact and next update date.",
+    "independentQuestion": "A colleague asks if roles will be cut. Use only confirmed decisions and explain how updates will be shared.",
+    "focus": "Change with uncertainty",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 4,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-restructure-one-to-one",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Handle challenging questions",
+    "title": "Discuss a changed reporting line",
+    "context": "Jaya will report to Amit from 1 November. Her role scope is unchanged, but a client handoff is unresolved.",
+    "question": "Explain the confirmed change and its practical impact. Ask for concerns and agree the first transition action.",
+    "independentQuestion": "Jaya identifies a client approval risk. Adjust the handoff plan and assign an owner to confirm the approval.",
+    "focus": "Individual change support",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 4,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-skip-level-capacity",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Present recommendations",
+    "title": "Raise a skip-level capacity concern",
+    "context": "A 5-person team has 11 urgent requests. Team lead Rohan has not responded to 2 capacity reviews.",
+    "question": "Present the verified workload and prior attempts neutrally. Ask the skip-level leader for a prioritisation decision.",
+    "independentQuestion": "The leader says all requests remain urgent. Propose trade-offs and ask who will own the remaining risk.",
+    "focus": "Escalation with evidence",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 4,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-skip-level-trust",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Respond to an unexpected skip-level escalation",
+    "context": "Elena learns that Sam escalated a delivery concern to her director yesterday; the client date is 48 hours away.",
+    "question": "Discuss the delivery facts without retaliation. Ask what prevented an earlier conversation and agree an escalation route.",
+    "independentQuestion": "Sam shows a message Elena missed. Own the gap and agree how urgent concerns will be confirmed next time.",
+    "focus": "Trust after escalation",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 4,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-senior-peer-feedback",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Give feedback to a senior peer",
+    "context": "Director Vivek changed the scope twice after sign-off. Naina's team spent 16 hours reworking the proposal.",
+    "question": "Describe the observable changes and cost respectfully. Invite Vivek's context and propose a scope-change checkpoint.",
+    "independentQuestion": "Vivek names a new regulatory dependency. Adapt the checkpoint to urgent exceptions and keep decisions visible.",
+    "focus": "Influence across seniority",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 5,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-senior-peer-meetings",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Give constructive feedback",
+    "title": "Address interruptions by a senior peer",
+    "context": "In 2 planning meetings, Arun cut off Pooja before the risk summary. The team approved a ₹4 lakh pilot.",
+    "question": "Raise the specific pattern privately, explain its decision impact and ask for a way to protect risk discussion.",
+    "independentQuestion": "Arun says time was limited. Propose a brief risk slot and a signal to continue the discussion separately.",
+    "focus": "Respectful challenge",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 5,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-manager-hiring-priority",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Present recommendations",
+    "title": "Recommend a hiring priority",
+    "context": "Suresh has budget for 1 hire, while operations requests 2 and finance requests 1 for month-end coverage.",
+    "question": "Compare demand, risk and timing using known facts. Recommend a first hire and a review point for the other requests.",
+    "independentQuestion": "Operations fills a vacancy internally. Reassess your recommendation and explain what evidence changed it.",
+    "focus": "Resource trade-offs",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 5,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "hr-manager-manager-remote-boundary",
+    "version": 1,
+    "module": "management",
+    "functions": [
+      "Human Resources",
+      "General Management"
+    ],
+    "goal": "Present recommendations",
+    "title": "Resolve conflicting availability expectations",
+    "context": "A 7-person team spans Pune and London. Aditi received 4 late-night requests last week without agreed urgency rules.",
+    "question": "Explain the impact, ask about genuine urgent needs and propose a clear availability and escalation agreement.",
+    "independentQuestion": "An incident occurs outside agreed hours. Apply an exception path and adjust the next day's workload.",
+    "focus": "Boundaries and business needs",
+    "rubricVersion": "hr-manager-dima-clear-1",
+    "level": 5,
+    "reviewStatus": "draft",
+    "ownerId": null,
+    "reviewedBy": null,
+    "reviewedAt": null
+  }
+]

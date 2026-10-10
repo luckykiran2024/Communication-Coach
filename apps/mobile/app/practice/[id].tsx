@@ -8,7 +8,11 @@ import { useAuth } from "../../src/auth";
 import { connectRealtimeCall, type RealtimeCall } from "../../src/realtime";
 import { Action, Card, Copy, Heading, Icon, MicButton, Screen, usePreferences, useTheme, VoiceWave } from "../../src/ui";
 
-type Practice = { conversation: { id: string; scenarioId: string; state: string; createdAt: string }; scenario: Scenario; turns: { role: string; phase?: "primary" | "independent_retry"; text: string }[]; liveVoiceAvailable: boolean };
+type Practice = {
+  conversation: { id: string; scenarioId: string; state: string; createdAt: string; currentPhase: string };
+  scenario: Scenario; turns: { role: string; phase?: "primary" | "independent_retry"; text: string }[];
+  liveVoiceAvailable: boolean;
+};
 type PromptState = "idle" | "speaking" | "ready";
 
 export default function PracticeDetail() {
@@ -30,6 +34,8 @@ export default function PracticeDetail() {
   const [liveBusy, setLiveBusy] = useState(false);
   const [liveMessage, setLiveMessage] = useState("");
   const liveCallRef = useRef<RealtimeCall | null>(null);
+  const transcriptQueue = useRef<Promise<void>>(Promise.resolve());
+  const transcriptFailure = useRef(false);
   const speechTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -39,13 +45,14 @@ export default function PracticeDetail() {
   }, [auth.token, id]);
   if (auth.loading) return <Screen><Copy>Loading…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
-  if (error) return <Screen><Copy error>{error}</Copy><Action title="Back to today" onPress={() => router.replace("/home")} /></Screen>;
+  if (error && !practice) return <Screen><Copy error>{error}</Copy>
+    <Action title="Back to today" onPress={() => router.replace("/home")} /></Screen>;
   if (!practice) return <Screen><Copy>Loading practice…</Copy></Screen>;
 
   const module = modules.find(item => item.id === practice.scenario.module);
   const primaryResponse = practice.turns.find(turn => turn.role === "user" && (turn.phase ?? "primary") === "primary");
   const retryResponse = practice.turns.find(turn => turn.role === "user" && turn.phase === "independent_retry");
-  const retryStarted = Boolean(primaryResponse);
+  const retryStarted = practice.conversation.currentPhase === "independent_retry";
   const retryCompleted = Boolean(retryResponse);
   const activeQuestion = retryStarted ? practice.scenario.independentQuestion : practice.scenario.question;
   const promptText = `${practice.scenario.context} ${activeQuestion}`;
@@ -95,19 +102,37 @@ export default function PracticeDetail() {
     if (!auth.token || !id || !draft.trim()) return;
     setSaving(true); setError(""); setSavedMessage("");
     try {
-      const result = await request<{ turn: { role: string; phase: "primary" | "independent_retry"; text: string }; message: string }>(`/v1/me/conversations/${id}/turns`, auth.token, "POST", { role: "user", phase: retryStarted ? "independent_retry" : "primary", text: draft });
+      const result = await request<{ turn: Practice["turns"][number]; message: string }>(
+        `/v1/me/conversations/${id}/turns`, auth.token, "POST", { role: "user", text: draft },
+      );
       setPractice(current => current ? { ...current, turns: [...current.turns, result.turn] } : current);
       setDraft(""); setSavedMessage(result.message);
+      transcriptFailure.current = false;
     } catch (failure) { setError((failure as Error).message); } finally { setSaving(false); }
+  }
+
+  async function advancePractice() {
+    if (!auth.token || !id || liveCall || liveBusy || transcriptFailure.current) return;
+    setSaving(true);
+    try {
+      await request(`/v1/me/conversations/${id}/advance`, auth.token, "POST");
+      setPractice(await request<Practice>(`/v1/me/conversations/${id}`, auth.token));
+      setDraft(""); setSavedMessage("New situation ready. Respond independently by voice or text.");
+      stopSpeaking();
+    } catch (failure) { setError((failure as Error).message); }
+    finally { setSaving(false); }
   }
 
   async function finishPractice() {
     if (!auth.token || !id || !practice || practice.turns.length === 0) return;
     setFinishing(true); setError("");
     try {
-      const result = await request<{ conversation: { state: string }; message: string }>(`/v1/me/conversations/${id}/complete`, auth.token, "POST");
+      const result = await request<{ conversation: { state: string }; message?: string }>(
+        `/v1/me/conversations/${id}/complete`, auth.token, "POST", undefined, 60000,
+      );
       setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
-      setSavedMessage(result.message);
+      setSavedMessage(result.message ?? "Your evidence-linked feedback is ready.");
+      if (result.conversation.state === "FEEDBACK_READY") { router.replace(`/feedback/${id}`); return; }
       router.replace(`/workshop/${practice.scenario.module}?programLevel=${practice.scenario.level}&completedScenarioId=${encodeURIComponent(practice.scenario.id)}`);
     } catch (failure) { setError((failure as Error).message); } finally { setFinishing(false); }
   }
@@ -117,19 +142,25 @@ export default function PracticeDetail() {
     setLiveBusy(true); setError(""); setLiveMessage("Connecting the coach microphone…");
     let sessionId = "";
     let call: RealtimeCall | null = null;
-    let transcriptQueue = Promise.resolve();
+    transcriptQueue.current = Promise.resolve();
+    transcriptFailure.current = false;
     const persistTranscript = (event: Record<string, unknown>, role: "user" | "assistant") => {
       const transcript = typeof event.transcript === "string" ? event.transcript.trim() : "";
       if (!transcript || !auth.token || !sessionId) return;
-      transcriptQueue = transcriptQueue.then(async () => {
-        const result = await request<{ turn: { role: string; phase: "primary" | "independent_retry"; text: string } }>(`/v1/voice/sessions/${sessionId}/transcript`, auth.token, "POST", { role, phase: "primary", text: transcript });
+      transcriptQueue.current = transcriptQueue.current.then(async () => {
+        const result = await request<{ turn: Practice["turns"][number] }>(
+          `/v1/voice/sessions/${sessionId}/transcript`, auth.token, "POST", { role, text: transcript },
+        );
         setPractice(current => current ? { ...current, turns: [...current.turns, result.turn] } : current);
-      }).catch(() => undefined);
+      }).catch(() => {
+        transcriptFailure.current = true;
+        setLiveMessage("A transcript could not be saved. Stop voice and save a text response before continuing.");
+      });
     };
     try {
-      const result = await request<{ sessionId: string; clientSecret: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
+      const result = await request<{ sessionId: string; clientSecret: string; model: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
       sessionId = result.sessionId;
-      call = await connectRealtimeCall({ clientSecret: result.clientSecret, onEvent: event => {
+      call = await connectRealtimeCall({ clientSecret: result.clientSecret, model: result.model, onEvent: event => {
         if (event.type === "error") setLiveMessage("The coach voice reported an error. You can stop and retry.");
         if (event.type === "response.output_audio_transcript.done" || event.type === "response.audio_transcript.done") { setLiveMessage("Coach is speaking…"); persistTranscript(event, "assistant"); }
         if (event.type === "conversation.item.input_audio_transcription.completed") { setLiveMessage("Coach heard your response."); persistTranscript(event, "user"); }
@@ -150,16 +181,29 @@ export default function PracticeDetail() {
     const consumedSeconds = Math.max(0, Math.round((Date.now() - (liveStartedAt ?? Date.now())) / 1000));
     liveCall.close();
     liveCallRef.current = null;
-    try { await request(`/v1/voice/sessions/${liveSessionId}/stop`, auth.token, "POST", { consumedSeconds }); setLiveMessage("Live practice ended. Your session allowance was settled safely."); setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current); }
+    try {
+      await transcriptQueue.current;
+      const result = await request<{ consumedSeconds: number }>(
+        `/v1/voice/sessions/${liveSessionId}/stop`, auth.token, "POST", { consumedSeconds },
+      );
+      setLiveMessage(`Live practice ended. ${result.consumedSeconds} seconds were charged to your allowance.`);
+      setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current);
+    }
     catch (failure) { setError((failure as Error).message); }
     finally { setLiveCall(null); setLiveSessionId(""); setLiveStartedAt(null); setLiveBusy(false); }
   }
 
   const isSpeaking = promptState === "speaking";
+  const canStartLive = ["CREATED", "INTERRUPTED"].includes(practice.conversation.state);
   const statusText = isSpeaking ? "Coach is speaking" : promptState === "ready" ? "Your turn to speak" : "Ready when you are";
   return <Screen>
     <Heading eyebrow={`${module?.title ?? "Practice"} · ${practicePrograms[practice.scenario.level - 1]?.title ?? "Practice programme"}`}>{practice.scenario.title.replace(/\s*·\s*(?:Clarity foundation|Structured message|Evidence and trade-offs|Audience adaptation|Leadership transfer)$/i, "")}</Heading>
     <Copy>Session status: {practice.conversation.state} · Created {new Date(practice.conversation.createdAt).toLocaleString()}</Copy>
+    {practice.conversation.state === "FEEDBACK_READY" &&
+      <Action title="Review your feedback" onPress={() => router.push(`/feedback/${id}`)} />}
+    {primaryResponse && !retryStarted && ["CREATED", "INTERRUPTED"].includes(practice.conversation.state) &&
+      <Action title="Ready for the new situation" disabled={liveBusy || Boolean(liveCall) || saving}
+        busy={saving} onPress={() => void advancePractice()} />}
     <Card tone="accent">
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="spark" size={19} color={theme.ink} /><Text style={{ color: theme.ink, fontWeight: "700", letterSpacing: 1.5, fontSize: 12 }}>CONVERSATION MODE</Text></View>
       <Heading eyebrow="Coach prompt">Speak to the situation, not a script.</Heading>
@@ -172,7 +216,9 @@ export default function PracticeDetail() {
       <Text style={{ color: theme.ink, textAlign: "center", fontWeight: "700", fontSize: 17 }}>{statusText}</Text>
       <Copy>{speechMessage || (promptState === "ready" ? "Tap the microphone to record your answer." : "Tap the microphone and let the coach set the scene out loud.")}</Copy>
       {isSpeaking && <Action title="Stop speaking" secondary icon="mic" onPress={stopSpeaking} />}
-      <Action title={liveCall ? "Stop live coach" : practice.liveVoiceAvailable ? "Start AI live coach" : "AI live coach unavailable"} icon="mic" disabled={liveBusy || practice.conversation.state === "COMPLETED" || (!practice.liveVoiceAvailable && !liveCall)} busy={liveBusy} onPress={() => void (liveCall ? stopLiveVoice() : startLiveVoice())} />
+      <Action title={liveCall ? "Stop live coach" : practice.liveVoiceAvailable ? "Start AI live coach" : "AI live coach unavailable"}
+        icon="mic" disabled={liveBusy || (!liveCall && (!canStartLive || !practice.liveVoiceAvailable))}
+        busy={liveBusy} onPress={() => void (liveCall ? stopLiveVoice() : startLiveVoice())} />
       {!practice.liveVoiceAvailable && <Copy>Live AI requires an enabled server voice provider and a verified Android/iOS WebRTC build. Text practice and local microphone recording remain available; this button stays disabled until those checks pass.</Copy>}
       {Boolean(liveMessage) && <Copy>{liveMessage}</Copy>}
     </Card>

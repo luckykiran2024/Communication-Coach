@@ -1,10 +1,16 @@
 export type ProductionConfiguration = {
+  vercel?: boolean;
+  rateLimitStorage?: "memory" | "postgres";
+  cronSecret?: string;
   nodeEnv: string;
   databaseUrl?: string;
   devMemoryStore: boolean;
   corsOrigins: string[];
   managerEmails: string[];
   googleClientIds?: string[];
+  microsoftClientIds?: string[];
+  emailSenderConfigured?: boolean;
+  emailLinkBaseUrl?: string;
   realtimeEnabled: boolean;
   realtimeApiKey?: string;
   billingEnabled: boolean;
@@ -17,6 +23,19 @@ export type ProductionConfiguration = {
 export function productionConfigurationErrors(config: ProductionConfiguration) {
   if (config.nodeEnv !== "production") return [];
   const errors: string[] = [];
+  if (config.vercel && config.rateLimitStorage !== "postgres") {
+    errors.push("Vercel production requires shared PostgreSQL rate limiting.");
+  }
+  if (config.vercel && (!config.cronSecret || config.cronSecret.length < 32)) {
+    errors.push("Vercel production requires CRON_SECRET with at least 32 characters.");
+  }
+  if (!config.emailSenderConfigured) errors.push("Configure EMAIL_PROVIDER=resend, RESEND_API_KEY and EMAIL_FROM in production.");
+  if (!config.emailLinkBaseUrl || !/^https:\/\/[^\s?#]+$/.test(config.emailLinkBaseUrl)) {
+    errors.push("ACCOUNT_EMAIL_LINK_BASE_URL must be a production HTTPS app-link or web origin.");
+  }
+  if (config.microsoftClientIds?.some(id => !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id))) {
+    errors.push("MICROSOFT_OAUTH_CLIENT_IDS must contain Microsoft application UUIDs.");
+  }
   const documentationPlaceholder = /(^|[.@])example\.(com|org|net)(?=[:/]|$)/i;
   if (config.devMemoryStore) errors.push("DEV_MEMORY_STORE must be false in production.");
   if (!config.databaseUrl || config.databaseUrl.includes("replace-with-") || documentationPlaceholder.test(config.databaseUrl) || !/^postgres(?:ql)?:\/\//.test(config.databaseUrl)) errors.push("DATABASE_URL must point to the production PostgreSQL database.");

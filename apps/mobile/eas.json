@@ -24,6 +24,13 @@
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "true"
       }
     },
+    "test-preview": {
+      "extends": "preview",
+      "channel": "test-preview",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-test-api-luckykiran2024s-projects.vercel.app/api"
+      }
+    },
     "local-preview": {
       "extends": "preview",
       "channel": "local-preview",

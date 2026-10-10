@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 datasource db {
   provider = "postgresql"
@@ -9,6 +10,8 @@ model User {
   id           String @id @default(uuid()) @db.Uuid
   email        String @unique
   passwordHash String
+  emailVerifiedAt DateTime?
+  emailTokens EmailVerificationToken[]
   role         String @default("learner")
   createdAt    DateTime @default(now())
   profile      UserProfile?
@@ -19,6 +22,7 @@ model User {
   oauthIdentities OAuthIdentity[]
   purchaseIntents PurchaseIntent[]
   voiceSessions VoiceSession[]
+  voiceMonthUsage VoiceMonthUsage[]
 }
 
 model UsageReservation {
@@ -34,18 +38,59 @@ model UsageReservation {
   @@index([expiresAt])
 }
 
+model VoiceMonthUsage {
+  userId         String   @db.Uuid
+  monthKey       String
+  sessionsUsed   Int      @default(0)
+  consumedSeconds Int     @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, monthKey])
+}
+
 model Conversation {
   id        String   @id @db.Uuid
   userId    String   @db.Uuid
   scenarioId String
   scenarioData Json?
+  currentPhase String @default("primary")
   state     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   turns     ConversationTurn[]
   voiceSessions VoiceSession[]
+  assessment Assessment?
+  assessmentUsage AssessmentUsage[]
   @@index([userId, createdAt])
+}
+
+model Assessment {
+  id String @id @db.Uuid
+  conversationId String @unique @db.Uuid
+  rubricVersion String
+  modelVersion String
+  priorities Json
+  transferResult String
+  inputTokens Int
+  outputTokens Int
+  costMicros Int?
+  createdAt DateTime @default(now())
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model AssessmentUsage {
+  id String @id @db.Uuid
+  conversationId String @db.Uuid
+  attempt Int
+  modelVersion String
+  inputTokens Int?
+  outputTokens Int?
+  costMicros Int?
+  createdAt DateTime @default(now())
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@unique([conversationId, attempt])
 }
 
 model ConversationTurn {
@@ -122,6 +167,7 @@ model VoiceSession {
   userId            String   @db.Uuid
   conversationId    String   @db.Uuid
   reservationId     String   @db.Uuid
+  monthKey          String
   providerSessionId String
   providerCallId    String?
   providerTerminatedAt DateTime?
@@ -149,4 +195,23 @@ model AuthSession {
   createdAt DateTime @default(now())
   @@index([userId])
   @@index([expiresAt])
+}
+
+model EmailVerificationToken {
+  tokenHash String @id
+  userId String @db.Uuid
+  purpose String
+  createdAt DateTime
+  expiresAt DateTime
+  usedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, purpose, createdAt])
+  @@index([expiresAt])
+}
+
+model RateLimitBucket {
+  keyHash String @id
+  hits Int
+  resetAt DateTime
+  @@index([resetAt])
 }

@@ -4,28 +4,92 @@ import { brand } from "@coach/core";
 import { useEffect, useState } from "react";
 import { useAuth } from "../src/auth";
 import { request, type ProgressSnapshot } from "../src/api";
-import { Card, Copy, Heading, Icon, ProgressBar, Screen, useTheme } from "../src/ui";
+import { Card, Copy, Heading, ProgressBar, Screen, useTheme } from "../src/ui";
+
+const minutes = (value: number) => value.toLocaleString(undefined, { maximumFractionDigits: 1 });
 
 export default function Progress() {
   const auth = useAuth();
   const theme = useTheme();
   const [progress, setProgress] = useState<ProgressSnapshot | null>(null);
   const [error, setError] = useState("");
-  useEffect(() => { if (auth.token && auth.me?.profile) request<ProgressSnapshot>("/v1/me/progress", auth.token).then(setProgress).catch(failure => setError((failure as Error).message)); }, [auth.token, auth.me?.profile]);
+  const token = auth.token;
+  const profile = auth.me?.profile;
+  useEffect(() => {
+    let active = true;
+    if (token && profile) {
+      request<ProgressSnapshot>("/v1/me/progress", token)
+        .then(value => { if (active) setProgress(value); })
+        .catch(failure => { if (active) setError((failure as Error).message); });
+    }
+    return () => { active = false; };
+  }, [token, profile]);
   if (auth.loading) return <Screen><Copy>Loading your progress…</Copy></Screen>;
-  if (!auth.token) return <Redirect href="/" />;
-  if (!auth.me?.profile) return <Redirect href="/onboarding" />;
-  const profile = auth.me.profile;
+  if (!token) return <Redirect href="/" />;
+  if (!profile) return <Redirect href="/onboarding" />;
+  const weeklyMinutes = progress?.weeklyPracticeMinutes ?? 0;
+  const daily = progress?.dailyPractice ?? [];
+  const maxMinutes = Math.max(1, ...daily.map(day => day.minutes));
+  const aiEvidence = progress?.evidenceSource === "ai_assessment";
   return <Screen>
-    <Heading eyebrow={brand.name}>See your communication practice add up.</Heading>
-    <Copy>{error || "Levels are earned through practice days, completed scenarios, independent retries, and saved-response evidence. Audio is never scored by this local preview."}</Copy>
-    <Card tone="accent"><View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}><Icon name="progress" size={28} color={theme.ink} /><View style={{ flex: 1 }}><Heading eyebrow="Current streak">{progress?.currentStreakDays ?? 0} practice days</Heading><Copy>Keep the conversation moving.</Copy></View></View></Card>
-    <Card><View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}><Icon name="spark" size={25} color={theme.accent} /><View style={{ flex: 1 }}><Heading eyebrow={`Level ${progress?.mastery.level ?? 1}`}>{progress?.mastery.title ?? "Getting started"}</Heading><Copy>{progress?.mastery.practiceDays ?? 0} practice days · {progress?.mastery.completedScenarios ?? 0} completed scenarios · {progress?.mastery.successfulRetries ?? 0} successful retries.</Copy></View></View><ProgressBar value={progress?.mastery.progressPercent ?? 0} /><Copy>{progress?.mastery.nextLevel ? `Progress toward Level ${progress.mastery.nextLevel} includes practice days, scenarios, retries, and evidence checks.` : "You have reached the current top level."}</Copy></Card>
-    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="clock" size={23} color={theme.accent} /><Heading eyebrow="Practice time">{progress?.practiceMinutes ?? 0} minutes completed</Heading></View><ProgressBar value={Math.min(100, ((progress?.weeklyPracticeMinutes ?? 0) / Math.max(1, profile.practiceMinutes * 7)) * 100)} /><Copy>{progress?.weeklyPracticeMinutes ?? 0} minutes logged this week against your {profile.practiceMinutes}-minute daily pace.</Copy></Card>
-    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="clock" size={23} color={theme.accent} /><Heading eyebrow="Across the last seven days">Practice rhythm</Heading></View><View style={{ height: 150, flexDirection: "row", alignItems: "flex-end", gap: 8 }}>{(progress?.dailyPractice ?? []).map(day => { const maxMinutes = Math.max(profile.practiceMinutes, ...(progress?.dailyPractice ?? []).map(item => item.minutes)); const height = day.minutes ? Math.max(12, (day.minutes / maxMinutes) * 100) : 6; return <View key={day.day} style={{ flex: 1, alignItems: "center", justifyContent: "flex-end", gap: 6 }}><View accessibilityLabel={`${day.day}: ${day.minutes} minutes`} style={{ width: "70%", maxWidth: 24, height, borderRadius: 8, backgroundColor: day.minutes ? theme.accent : theme.border }} /><Text style={{ color: theme.muted, fontSize: 11 }}>{day.day.slice(3)}</Text></View>; })}</View><Copy>{progress?.weeklyPracticeMinutes ?? 0} minutes logged this week against your {profile.practiceMinutes}-minute daily pace.</Copy></Card>
-    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="spark" size={23} color={theme.positive} /><Heading eyebrow="Across levels">Practice milestones</Heading></View><View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 4 }}>{(progress?.levelTrack ?? []).map(item => <View key={item.level} style={{ flex: 1, alignItems: "center", gap: 6 }}><View accessibilityLabel={`Level ${item.level} ${item.reached ? "reached" : "locked"}`} style={{ width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: item.reached ? theme.positive : theme.border }}><Text style={{ color: item.reached ? "#FFFFFF" : theme.muted, fontWeight: "700" }}>{item.level}</Text></View><Text numberOfLines={2} style={{ color: theme.muted, fontSize: 10, textAlign: "center" }}>{item.title}</Text></View>)}</View></Card>
-    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="spark" size={23} color={theme.positive} /><Heading eyebrow="Communication evidence">{progress?.skillSignalStatus === "available" ? `${progress.skillSignal}% local signal` : "Evidence not captured yet"}</Heading></View><ProgressBar value={progress?.skillSignal ?? 0} color={theme.positive} /><Copy>{progress?.skillSignalStatus === "available" ? `Based on ${progress.evidenceAssessments} saved primary/retry comparison${progress.evidenceAssessments === 1 ? "" : "s"}. It does not analyze audio or claim clinical ability.` : "Complete a primary response and an independent retry to create the first evidence check."}</Copy></Card>
-    <Card><Heading eyebrow="Your next milestone">Build the next evidence gate</Heading><Copy>{progress?.practiceDays ?? 0} practice days · {progress?.completedScenarios ?? 0} completed scenarios · {progress?.successfulRetries ?? 0} successful retries.</Copy><Copy>{progress?.mastery.nextLevel ? `Keep practising toward Level ${progress.mastery.nextLevel}. Each level requires all four gates, not just app opens.` : "All current mastery gates are complete."}</Copy><ProgressBar value={progress?.mastery.progressPercent ?? 0} /></Card>
-    <Copy>Profile pace: {profile.practiceMinutes} minutes per day · Goal: {profile.goal}</Copy>
+    <Heading eyebrow={brand.name}>Progress you can trace to practice.</Heading>
+    {Boolean(error) && <Copy error>{error}</Copy>}
+    <Copy>Voice time comes from settled server usage, never from your chosen practice length.
+      Text practice is counted separately. Audio and accent are not scored.</Copy>
+    <Card tone="accent">
+      <Heading eyebrow="Current streak">{progress?.currentStreakDays ?? 0} practice days</Heading>
+      <Copy>Built from completed responses and measured voice activity—not opening the app.</Copy>
+    </Card>
+    <Card>
+      <Heading eyebrow={`Level ${progress?.mastery.level ?? 1}`}>
+        {progress?.mastery.title ?? "Getting started"}
+      </Heading>
+      <Copy>{progress?.practiceDays ?? 0} days · {progress?.completedScenarios ?? 0} scenarios ·
+        {" "}{progress?.successfulRetries ?? 0} successful independent retries.</Copy>
+      <ProgressBar value={progress?.mastery.progressPercent ?? 0} />
+      <Copy>{progress?.mastery.nextLevel
+        ? `Your next milestone is Level ${progress.mastery.nextLevel}. All four evidence gates must be met.`
+        : "You have reached the current top level."}</Copy>
+    </Card>
+    <Card>
+      <Heading eyebrow="Measured voice time">{minutes(progress?.measuredVoiceMinutes ?? 0)} minutes</Heading>
+      <Copy>{minutes(weeklyMinutes)} measured minutes this week · {progress?.settledVoiceSessions ?? 0} settled voice calls.</Copy>
+      <ProgressBar value={Math.min(100, weeklyMinutes / Math.max(1, profile.practiceMinutes * 7) * 100)} />
+      <Copy>Your {profile.practiceMinutes}-minute daily target is a goal, not recorded practice.</Copy>
+      {Boolean(progress?.unknownVoiceDurations) &&
+        <Copy>{progress?.unknownVoiceDurations} call durations are unavailable and are excluded—not estimated.</Copy>}
+    </Card>
+    <Card>
+      <Heading eyebrow="Completed text practice">{progress?.textSessions ?? 0} sessions</Heading>
+      <Copy>Completed conversations with saved learner responses and no settled voice call. No minutes are invented.</Copy>
+    </Card>
+    <Card>
+      <Heading eyebrow="Last seven days">Measured voice rhythm</Heading>
+      <View style={{ height: 150, flexDirection: "row", alignItems: "flex-end", gap: 8 }}>
+        {daily.map(day => <View key={day.day} style={{ flex: 1, alignItems: "center", gap: 6 }}>
+          <View accessibilityLabel={`${day.day}: ${minutes(day.minutes)} measured voice minutes`}
+            style={{ width: "70%", maxWidth: 24, height: day.minutes ? Math.max(12, day.minutes / maxMinutes * 100) : 6,
+              borderRadius: 8, backgroundColor: day.minutes ? theme.accent : theme.border }} />
+          <Text style={{ color: theme.muted, fontSize: 11 }}>{day.day.slice(3)}</Text>
+        </View>)}
+      </View>
+    </Card>
+    <Card>
+      <Heading eyebrow="Practice milestones">Your learning path</Heading>
+      {(progress?.levelTrack ?? []).map(item => <Copy key={item.level}>
+        Level {item.level} · {item.title} · {item.reached ? "Reached" : "Next evidence needed"}
+      </Copy>)}
+    </Card>
+    <Card>
+      <Heading eyebrow={aiEvidence ? "Evidence-linked AI feedback" : "Local evidence check"}>
+        {progress?.successfulRetries ?? 0} demonstrated retries
+      </Heading>
+      <Copy>{progress?.evidenceAssessments ?? 0} saved comparisons. {aiEvidence
+        ? "Only validated feedback showing demonstrated transfer counts as a successful retry."
+        : "AI feedback is disabled. Local checks are a limited development fallback, not an AI quality rating."}</Copy>
+      {!aiEvidence && progress?.skillSignalStatus === "available" &&
+        <Copy>Local heuristic signal: {progress.skillSignal}%. This is not a validated ability score.</Copy>}
+    </Card>
+    <Copy>Your goal: {profile.goal}</Copy>
   </Screen>;
 }

@@ -7,6 +7,9 @@ const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "";
 const googleAndroidClientId = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID ?? "";
 const googleIosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ?? "";
 const microsoftClientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? "";
+const supabaseConfigured = process.env.EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED === "true"
+  && /^https:\/\/[a-z0-9]+\.supabase\.co\/?$/.test(process.env.EXPO_PUBLIC_SUPABASE_URL ?? "")
+  && Boolean(process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.startsWith("sb_publishable_"));
 const documentationPlaceholder = /(^|[.@])example\.(com|org|net)(?=[:/]|$)/i;
 const configuredClientId = (value: string) => Boolean(value && !value.startsWith("replace-with-") && !documentationPlaceholder.test(value) && !["android-client-id", "ios-client-id", "web-client-id"].includes(value));
 if (production && baseId.startsWith("com.example.")) throw new Error("Set APP_IDENTIFIER before production builds.");
@@ -14,8 +17,14 @@ if (preview && !/^https?:\/\//.test(apiUrl)) throw new Error("Set EXPO_PUBLIC_AP
 if (production && (!apiUrl.startsWith("https://") || apiUrl.includes("localhost") || apiUrl.includes("127.0.0.1") || documentationPlaceholder.test(apiUrl))) {
   throw new Error("Set EXPO_PUBLIC_API_URL to the production HTTPS API before building.");
 }
-if (production && (!configuredClientId(googleAndroidClientId) || !configuredClientId(googleIosClientId) || !configuredClientId(microsoftClientId))) {
-  throw new Error("Set Google Android/iOS and Microsoft client IDs before production builds.");
+if (production && process.env.EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED === "true" && !supabaseConfigured) {
+  throw new Error("Configure the hosted Supabase URL and publishable key before production builds.");
+}
+if (production && !supabaseConfigured && (!configuredClientId(googleAndroidClientId) || !configuredClientId(googleIosClientId))) {
+  throw new Error("Configure Supabase Google sign-in or Google Android/iOS client IDs before production builds.");
+}
+if (production && microsoftClientId && !configuredClientId(microsoftClientId)) {
+  throw new Error("Set a valid Microsoft client ID or leave Microsoft sign-in disabled.");
 }
 const config: ExpoConfig = {
   owner: "luckysoma",

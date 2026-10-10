@@ -66,6 +66,10 @@ npm run dev:mobile
 Portal: http://localhost:3000. API health: http://localhost:4000/health. Database readiness: /ready.
 A healthy /health response alone does not prove a database connection.
 
+API feature flags `DEV_MEMORY_STORE`, `OPENAI_REALTIME_ENABLED`, `BILLING_ENABLED` and `SUPABASE_OAUTH_ENABLED`
+accept only the literal strings `true` or `false`; omitted flags default to `false`. Empty, numeric, padded and
+mixed-case values fail startup validation rather than accidentally enabling a feature.
+
 The release direction is mobile-only: Android and iOS are the customer products. The portal remains a development/reference surface and is not required for customer hosting. See `docs/MOBILE_RELEASE_PLAN.md` for publishing, pricing and OAuth preparation.
 
 For an initial browser UI preview of the mobile app:
@@ -103,7 +107,9 @@ npm exec -w @coach/mobile -- expo install --check
 npm exec -w @coach/mobile -- expo export --platform all
 ```
 
-test:database needs an isolated PostgreSQL database with migrations applied. It creates disposable accounts and removes them afterward. CI provisions PostgreSQL for this test; local database execution is currently blocked because PostgreSQL/Docker is absent.
+`test:database` requires explicit `DATABASE_TEST_URL` and the isolated `coach_verification` schema with migrations applied.
+Hosted URLs require strict TLS. CI provisions a loopback PostgreSQL service; only explicit loopback CI tests may omit TLS.
+Fixtures and their tracked rate-limit buckets are removed afterward. Hosted Supabase verification is available locally.
 
 `test:regression` is the focused release-gate suite. It covers malformed and expired credentials, duplicate-account handling, invalid profile rollback, private-profile isolation, timezone-bound usage, fail-closed voice behavior, security headers/CORS and database-readiness error handling.
 
@@ -123,3 +129,16 @@ Edit branding and design tokens in packages/core/src/index.ts. Native app name a
 Plan targets and allowances live in apps/api/config/plans.json and are returned by the API; none unlock paid access.
 
 See docs/IMPLEMENTATION_STATUS.md for honest feature status, docs/TESTING_STATUS.md for verification, and docs/KNOWN_ISSUES.md before considering deployment.
+
+## Feedback and serverless continuation
+
+Phases 6–9 are implemented in source; activation and release gates are documented in `docs/REMAINING_PHASES.md`.
+AI assessment defaults off. Set `ASSESSMENT_ENABLED=true`, `ASSESSMENT_MODEL` and the server-only provider key only
+after controlled verification. Optional `ASSESSMENT_INPUT_MICROS_PER_MILLION` and `ASSESSMENT_OUTPUT_MICROS_PER_MILLION`
+are explicit USD-micro rates per million tokens; absent rates stay unknown, not zero.
+`npm run cost:report` is read-only and includes invalid assessment attempts. Optional `VOICE_COST_LEDGER_PATH` points
+to a private JSON array of provider-reconciled `{ "providerCallId": "...", "costMicros": 123 }` rows; keep it out of Git.
+Never infer a voice price from elapsed seconds. The API's PostgreSQL limiter is shared across function instances.
+Use a 32-character-or-longer `CRON_SECRET` and the authenticated every-minute cleanup endpoint before serverless voice release.
+Vercel Hobby cannot run the configured every-minute cron; upgrade or explicitly arrange an equivalent trusted scheduler.
+No deployment, APK update or content publication is implied by these source changes.

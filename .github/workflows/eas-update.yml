@@ -2,14 +2,6 @@ name: Publish mobile preview update
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "apps/mobile/**"
-      - "packages/core/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/eas-update.yml"
 
 jobs:
   publish:

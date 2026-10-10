@@ -2,8 +2,10 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { ApiError, request, type Me } from "./api";
+import { signInWithSupabaseGoogle } from "./supabase-oauth";
 type Auth = { token: string | null; me: Me | null; loading: boolean; error: string; signIn(email: string, password: string, register: boolean): Promise<void>; signInWithProvider(provider: "google" | "microsoft", accessToken: string): Promise<void>; signOut(): Promise<void>; signOutAll(): Promise<void>; deleteAccount(): Promise<void>; refresh(): Promise<void> };
-const Context = createContext<Auth | null>(null);
+type SupabaseAuth = Auth & { signInWithSupabaseGoogle(password?: string): Promise<void> };
+const Context = createContext<SupabaseAuth | null>(null);
 const key = "coach-session-v1";
 async function persist(token: string | null) {
   if (Platform.OS === "web") return;
@@ -31,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       finally { setLoading(false); }
     })();
   }, []);
-  const value: Auth = {
+  const value: SupabaseAuth = {
     token, me, loading, error,
     async refresh() { if (token) await load(token); },
     async signIn(email, password, register) {
@@ -39,8 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await persist(response.token); setToken(response.token); await load(response.token);
     },
     async signInWithProvider(provider, accessToken) {
-      const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", { provider, accessToken });
+      const credential = provider === "google" ? { provider, accessToken } : { provider, idToken: accessToken };
+      const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", credential);
       await persist(response.token); setToken(response.token); await load(response.token);
+    },
+    async signInWithSupabaseGoogle(password) {
+      await signInWithSupabaseGoogle(async accessToken => {
+        const response = await request<{ token: string }>("/v1/auth/supabase", null, "POST", {
+          accessToken, ...(password ? { password } : {}),
+        });
+        await persist(response.token); setToken(response.token); await load(response.token);
+      });
     },
     async signOut() {
       if (token) {

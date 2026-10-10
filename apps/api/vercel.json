@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "main": false,
+      "test-apk-ready": false
+    }
+  },
   "framework": null,
   "buildCommand": "test -n \"$Communicatio_Caoch_DATABASE_URL\" || { echo \"Database URL integration variable is missing\" >&2; exit 1; }; DATABASE_URL=\"$Communicatio_Caoch_DATABASE_URL\" npm run db:migrate && npm run build:vercel",
   "outputDirectory": "public",
@@ -11,10 +17,11 @@
   ],
   "functions": {
     "api/index.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     },
     "api/[...path].js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
-  }
+  },
+  "crons": [{ "path": "/api/internal/cron/reap-voice-sessions", "schedule": "* * * * *" }]
 }

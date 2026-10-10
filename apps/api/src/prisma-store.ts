@@ -1,11 +1,60 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { profileSchema, scenarioSchema, type Profile, type Scenario, states, type SessionState } from "@coach/core";
-import { ConflictError, type Account, type ConversationTurn, type Entitlement, type OAuthIdentity, type PurchaseIntent, type ScenarioRevision, type Store, type VoiceSession } from "./store";
-type AccountRow = { id: string; email: string; passwordHash: string; role: string };
-const accountFromRow = (row: AccountRow): Account => ({ id: row.id, email: row.email, passwordHash: row.passwordHash, role: row.role === "manager" ? "manager" : "learner" });
+import {
+  ConflictError, type Account, type ConversationTurn, type Entitlement, type OAuthIdentity,
+  type PurchaseIntent, type ScenarioRevision, type Store, type VoiceMonthUsage, type VoiceSession,
+} from "./store";
+import { elapsedSeconds } from "./lib/time";
+import { safeEqual } from "./lib/safe-equal";
+import { checkedAssessment, checkedAssessmentUsage } from "./lib/assessment-record";
+import type { Assessment } from "./store";
+import type { MeasuredVoiceSession } from "./store";
+const currentPhase = (phase: string): ConversationTurn["phase"] =>
+  phase === "independent_retry" ? "independent_retry" : "primary";
+type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null };
+const accountFromRow = (row: AccountRow): Account => ({
+  id: row.id, email: row.email, passwordHash: row.passwordHash,
+  role: row.role === "manager" ? "manager" : "learner", emailVerifiedAt: row.emailVerifiedAt,
+});
 const accountFromNullableRow = (row: AccountRow | null): Account | null => row ? accountFromRow(row) : null;
 export function prismaStore(db: PrismaClient): Store {
   return {
+    rateLimitStorage: "postgres",
+    async incrementRateLimit(keyHash, windowMs, now) {
+      const resetAt = new Date(now.getTime() + windowMs);
+      const rows = await db.$queryRaw<{ current: number; ttl: number }[]>`
+        INSERT INTO "RateLimitBucket" ("keyHash", "hits", "resetAt") VALUES (${keyHash}, 1, ${resetAt})
+        ON CONFLICT ("keyHash") DO UPDATE SET
+          "hits" = CASE WHEN "RateLimitBucket"."resetAt" <= ${now} THEN 1
+            ELSE LEAST("RateLimitBucket"."hits"::bigint + 1, 2147483647)::integer END,
+          "resetAt" = CASE WHEN "RateLimitBucket"."resetAt" <= ${now} THEN ${resetAt}
+            ELSE "RateLimitBucket"."resetAt" END
+        RETURNING "hits" AS "current", GREATEST(1, EXTRACT(EPOCH FROM ("resetAt" - ${now}::timestamp)) * 1000)::integer AS "ttl"
+      `;
+      return rows[0];
+    },
+    async pruneRateLimits(now) { await db.rateLimitBucket.deleteMany({ where: { resetAt: { lte: now } } }); },
+    async learningRecords(userId) {
+      const rows = await db.conversation.findMany({ where: { userId }, relationLoadStrategy: "join",
+        orderBy: { createdAt: "desc" }, include: { turns: { orderBy: { createdAt: "asc" } }, assessment: true } });
+      return rows.filter(row => states.includes(row.state as SessionState)).map(row => ({
+        conversation: { id: row.id, userId: row.userId, scenarioId: row.scenarioId,
+          scenarioSnapshot: row.scenarioData ? scenarioSchema.parse(row.scenarioData) : undefined,
+          currentPhase: currentPhase(row.currentPhase), state: row.state as SessionState,
+          createdAt: row.createdAt, updatedAt: row.updatedAt },
+        turns: row.turns.map(turn => ({ ...turn,
+          role: turn.role as ConversationTurn["role"], phase: currentPhase(turn.phase) })),
+        assessment: row.assessment ? checkedAssessment({ ...row.assessment, audioAssessed: false } as Assessment) : null,
+      }));
+    },
+    async measuredVoiceSessions(userId) {
+      return db.$queryRaw<MeasuredVoiceSession[]>`
+        SELECT voice."conversationId", voice."startedAt", usage."consumedSeconds"
+        FROM "VoiceSession" voice LEFT JOIN "UsageReservation" usage
+          ON usage."id" = voice."reservationId" AND usage."userId" = voice."userId"
+        WHERE voice."userId" = ${userId}::uuid AND voice."status" IN ('ended', 'expired')
+      `;
+    },
     async ready() { await db.$queryRaw`SELECT 1`; },
     async createAccount(email, passwordHash) {
       try { return accountFromRow(await db.user.create({ data: { email, passwordHash } })); }
@@ -16,6 +65,47 @@ export function prismaStore(db: PrismaClient): Store {
     },
     async accountByEmail(email) { return accountFromNullableRow(await db.user.findUnique({ where: { email } })); },
     async accountById(id) { return accountFromNullableRow(await db.user.findUnique({ where: { id } })); },
+    async markEmailVerified(userId, now) {
+      await db.user.updateMany({ where: { id: userId, emailVerifiedAt: null }, data: { emailVerifiedAt: now } });
+      return accountFromRow(await db.user.findUniqueOrThrow({ where: { id: userId } }));
+    },
+    async issueEmailToken(token, hourlyLimit) {
+      return db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${token.userId}::uuid FOR UPDATE`;
+        const count = await transaction.emailVerificationToken.count({
+          where: {
+            userId: token.userId, purpose: token.purpose,
+            createdAt: { gt: new Date(token.createdAt.getTime() - 3600000) },
+          },
+        });
+        if (count >= hourlyLimit) return false;
+        await transaction.emailVerificationToken.create({ data: token });
+        return true;
+      });
+    },
+    async consumeEmailToken(hash, purpose, now, userId, newPasswordHash) {
+      return db.$transaction(async transaction => {
+        const candidate = await transaction.emailVerificationToken.findUnique({ where: { tokenHash: hash } });
+        if (!candidate) return null;
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${candidate.userId}::uuid FOR UPDATE`;
+        const token = await transaction.emailVerificationToken.findUnique({ where: { tokenHash: hash } });
+        if (!token || token.purpose !== purpose || token.usedAt || token.expiresAt <= now) return null;
+        if (userId && token.userId !== userId) return null;
+        if (purpose === "password_reset" && !newPasswordHash) return null;
+        await transaction.emailVerificationToken.update({ where: { tokenHash: hash }, data: { usedAt: now } });
+        const user = await transaction.user.findUniqueOrThrow({ where: { id: token.userId } });
+        const updated = await transaction.user.update({
+          where: { id: user.id },
+          data: { emailVerifiedAt: user.emailVerifiedAt ?? now, ...(newPasswordHash ? { passwordHash: newPasswordHash } : {}) },
+        });
+        if (purpose === "password_reset") {
+          await transaction.authSession.deleteMany({ where: { userId: user.id } });
+          if (!user.emailVerifiedAt) await transaction.oAuthIdentity.deleteMany({ where: { userId: user.id } });
+          await transaction.emailVerificationToken.updateMany({ where: { userId: user.id, usedAt: null }, data: { usedAt: now } });
+        }
+        return accountFromRow(updated);
+      });
+    },
     async oauthIdentity(provider: OAuthIdentity["provider"], subject: string) {
       const row = await db.oAuthIdentity.findUnique({ where: { provider_subject: { provider, subject } } });
       return row ? { ...row, provider: row.provider as OAuthIdentity["provider"] } : null;
@@ -24,7 +114,16 @@ export function prismaStore(db: PrismaClient): Store {
       try { await db.oAuthIdentity.create({ data: identity }); }
       catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ConflictError("This provider identity is already linked to another account."); throw error; }
     },
-    async createSession(session) { await db.authSession.create({ data: session }); },
+    async createSession(session, expectedPasswordHash) {
+      await db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${session.userId}::uuid FOR UPDATE`;
+        const user = await transaction.user.findUnique({ where: { id: session.userId } });
+        if (!user || (expectedPasswordHash && !safeEqual(user.passwordHash, expectedPasswordHash))) {
+          throw new ConflictError("Account credentials changed. Please sign in again.");
+        }
+        await transaction.authSession.create({ data: session });
+      });
+    },
     sessionByHash: tokenHash => db.authSession.findUnique({ where: { tokenHash } }),
     async deleteSession(tokenHash) { await db.authSession.deleteMany({ where: { tokenHash } }); },
     async deleteSessions(userId) { await db.authSession.deleteMany({ where: { userId } }); },
@@ -49,16 +148,32 @@ export function prismaStore(db: PrismaClient): Store {
       });
       return { reservedSeconds: rows._sum.reservedSeconds ?? 0, consumedSeconds: rows._sum.consumedSeconds ?? 0 };
     },
+    async reservationSeconds(reservationId) {
+      const reservation = await db.usageReservation.findUnique({ where: { id: reservationId }, select: { reservedSeconds: true } });
+      return reservation?.reservedSeconds ?? null;
+    },
     async reserveUsage(reservation, allowanceSeconds) {
       await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(
+            hashtext(${reservation.userId} || ':' || ${reservation.dayKey})::bigint
+          )
+        `;
         const rows = await transaction.usageReservation.aggregate({
           where: { userId: reservation.userId, dayKey: reservation.dayKey },
           _sum: { reservedSeconds: true, consumedSeconds: true },
         });
         const reserved = rows._sum.reservedSeconds ?? 0;
-        const consumed = rows._sum.consumedSeconds ?? 0;
         if (reserved + reservation.seconds > allowanceSeconds) throw new ConflictError("Daily voice allowance is exhausted.");
-        await transaction.usageReservation.create({ data: { ...reservation, reservedSeconds: reservation.seconds } });
+        await transaction.usageReservation.create({
+          data: {
+            id: reservation.id,
+            userId: reservation.userId,
+            dayKey: reservation.dayKey,
+            reservedSeconds: reservation.seconds,
+            expiresAt: reservation.expiresAt,
+          },
+        });
       });
     },
     async settleUsage(reservationId, consumedSeconds) {
@@ -70,23 +185,146 @@ export function prismaStore(db: PrismaClient): Store {
         await transaction.usageReservation.update({ where: { id: reservationId }, data: { reservedSeconds: settled, consumedSeconds: settled } });
       });
     },
+    async voiceMonthUsage(userId, monthKey): Promise<VoiceMonthUsage> {
+      const usage = await db.voiceMonthUsage.findUnique({ where: { userId_monthKey: { userId, monthKey } } });
+      return usage
+        ? { userId, monthKey, sessionsUsed: usage.sessionsUsed, consumedSeconds: usage.consumedSeconds }
+        : { userId, monthKey, sessionsUsed: 0, consumedSeconds: 0 };
+    },
+    async totalVoiceSessions(userId) {
+      const result = await db.voiceMonthUsage.aggregate({ where: { userId }, _sum: { sessionsUsed: true } });
+      return result._sum.sessionsUsed ?? 0;
+    },
+    async reserveVoiceSession(userId, monthKey, sessionLimit, lifetimeLimit) {
+      const lockScope = lifetimeLimit ? "lifetime" : monthKey;
+      await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${userId} || ':sessions:' || ${lockScope})::bigint)
+        `;
+        const usage = await transaction.voiceMonthUsage.upsert({
+          where: { userId_monthKey: { userId, monthKey } },
+          create: { userId, monthKey },
+          update: {},
+        });
+        const used = lifetimeLimit
+          ? (await transaction.voiceMonthUsage.aggregate({ where: { userId }, _sum: { sessionsUsed: true } }))._sum.sessionsUsed ?? 0
+          : usage.sessionsUsed;
+        if (used >= sessionLimit) throw new ConflictError("Voice session allowance is exhausted.");
+        await transaction.voiceMonthUsage.update({
+          where: { userId_monthKey: { userId, monthKey } },
+          data: { sessionsUsed: { increment: 1 } },
+        });
+      });
+    },
+    async releaseVoiceSession(userId, monthKey, lifetimeLimit) {
+      const lockScope = lifetimeLimit ? "lifetime" : monthKey;
+      await db.$transaction(async transaction => {
+        await transaction.$executeRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${userId} || ':sessions:' || ${lockScope})::bigint)
+        `;
+        await transaction.voiceMonthUsage.updateMany({
+          where: { userId, monthKey, sessionsUsed: { gt: 0 } },
+          data: { sessionsUsed: { decrement: 1 } },
+        });
+      });
+    },
     async createConversation(conversation) {
-      await db.conversation.create({ data: { id: conversation.id, userId: conversation.userId, scenarioId: conversation.scenarioId, scenarioData: conversation.scenarioSnapshot, state: conversation.state, createdAt: conversation.createdAt, updatedAt: conversation.updatedAt } });
+      await db.conversation.create({ data: { id: conversation.id, userId: conversation.userId,
+        scenarioId: conversation.scenarioId, scenarioData: conversation.scenarioSnapshot,
+        currentPhase: conversation.currentPhase ?? "primary", state: conversation.state,
+        createdAt: conversation.createdAt, updatedAt: conversation.updatedAt } });
     },
     async conversation(userId, id) {
       const row = await db.conversation.findFirst({ where: { id, userId } });
       if (!row || !states.includes(row.state as SessionState)) return null;
-      return { ...row, scenarioSnapshot: row.scenarioData ? scenarioSchema.parse(row.scenarioData) : undefined, state: row.state as SessionState };
+      return { ...row, currentPhase: currentPhase(row.currentPhase),
+        scenarioSnapshot: row.scenarioData ? scenarioSchema.parse(row.scenarioData) : undefined, state: row.state as SessionState };
     },
     async conversations(userId, limit) {
       const rows = await db.conversation.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, ...(limit === undefined ? {} : { take: Math.min(Math.max(limit, 1), 20) }) });
-      return rows.filter(row => states.includes(row.state as SessionState)).map(row => ({ ...row, scenarioSnapshot: row.scenarioData ? scenarioSchema.parse(row.scenarioData) : undefined, state: row.state as SessionState }));
+      return rows.filter(row => states.includes(row.state as SessionState)).map(row => ({ ...row,
+        currentPhase: currentPhase(row.currentPhase),
+        scenarioSnapshot: row.scenarioData ? scenarioSchema.parse(row.scenarioData) : undefined, state: row.state as SessionState }));
     },
     async updateConversationState(userId, id, state) {
       const row = await db.conversation.updateMany({ where: { id, userId }, data: { state } });
       if (row.count !== 1) throw new Error("Conversation not found");
       const updated = await db.conversation.findUniqueOrThrow({ where: { id } });
-      return { ...updated, scenarioSnapshot: updated.scenarioData ? scenarioSchema.parse(updated.scenarioData) : undefined, state: updated.state as SessionState };
+      return { ...updated, currentPhase: currentPhase(updated.currentPhase),
+        scenarioSnapshot: updated.scenarioData ? scenarioSchema.parse(updated.scenarioData) : undefined,
+        state: updated.state as SessionState };
+    },
+    async claimConversationCompletion(userId, id) {
+      const result = await db.conversation.updateMany({
+        where: { id, userId, state: { in: ["CREATED", "INTERRUPTED"] } }, data: { state: "COMPLETED" },
+      });
+      return result.count === 1;
+    },
+    async assessment(userId, conversationId) {
+      const row = await db.assessment.findFirst({ where: { conversationId, conversation: { userId } } });
+      if (!row) return null;
+      return checkedAssessment({ ...row, audioAssessed: false } as Assessment);
+    },
+    async advanceConversation(userId, id) {
+      return db.$transaction(async transaction => {
+        await transaction.$queryRaw`
+          SELECT "id" FROM "Conversation" WHERE "id" = ${id}::uuid AND "userId" = ${userId}::uuid FOR UPDATE
+        `;
+        const result = await transaction.conversation.updateMany({
+          where: { id, userId, currentPhase: "primary", state: { in: ["CREATED", "INTERRUPTED"] },
+            turns: { some: { role: "user", phase: "primary" } }, voiceSessions: { none: { status: "active" } } },
+          data: { currentPhase: "independent_retry" },
+        });
+        return result.count === 1;
+      });
+    },
+    async appendConversationTurn(userId, turn) {
+      return db.$transaction(async transaction => {
+        await transaction.$queryRaw`
+          SELECT "id" FROM "Conversation" WHERE "id" = ${turn.sessionId}::uuid AND "userId" = ${userId}::uuid FOR UPDATE
+        `;
+        const row = await transaction.conversation.findFirst({ where: { id: turn.sessionId, userId } });
+        if (!row) throw new Error("Conversation not found");
+        if (!["CREATED", "ACTIVE", "INTERRUPTED"].includes(row.state)) throw new ConflictError("Practice is closed.");
+        const saved = { ...turn, phase: currentPhase(row.currentPhase) };
+        await transaction.conversationTurn.create({ data: saved });
+        return saved;
+      });
+    },
+    async saveAssessment(userId, assessment) {
+      const record = checkedAssessment(assessment);
+      try {
+        await db.assessment.create({
+          data: {
+            id: record.id, conversation: { connect: { id: record.conversationId, userId } },
+            rubricVersion: record.rubricVersion, modelVersion: record.modelVersion,
+            priorities: record.priorities, transferResult: record.transferResult,
+            inputTokens: record.inputTokens, outputTokens: record.outputTokens,
+            costMicros: record.costMicros, createdAt: record.createdAt,
+          },
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (["P2002", "P2014"].includes(error.code)) throw new ConflictError("Assessment already exists.");
+          if (error.code === "P2025") throw new Error("Conversation not found");
+        }
+        throw error;
+      }
+    },
+    async recordAssessmentUsage(userId, usage) {
+      const record = checkedAssessmentUsage(usage);
+      const { conversationId, ...data } = record;
+      try {
+        await db.assessmentUsage.create({
+          data: { ...data, conversation: { connect: { id: conversationId, userId } } },
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (error.code === "P2002") throw new ConflictError("Assessment attempt usage already exists.");
+          if (error.code === "P2025") throw new Error("Conversation not found");
+        }
+        throw error;
+      }
     },
     async addConversationTurn(turn) {
       await db.conversationTurn.create({ data: turn });
@@ -156,8 +394,20 @@ export function prismaStore(db: PrismaClient): Store {
     async createPurchaseIntent(intent: PurchaseIntent) { await db.purchaseIntent.create({ data: intent }); },
     async purchaseIntent(id: string) { const row = await db.purchaseIntent.findUnique({ where: { id } }); return row ? { ...row, provider: row.provider as PurchaseIntent["provider"], status: row.status as PurchaseIntent["status"] } : null; },
     async completePurchaseIntent(id: string) { await db.purchaseIntent.updateMany({ where: { id, status: "pending" }, data: { status: "completed" } }); },
-    async createVoiceSession(session: VoiceSession) { await db.voiceSession.create({ data: session }); },
+    async createVoiceSession(session: VoiceSession) {
+      try { await db.voiceSession.create({ data: session }); }
+      catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+          throw new ConflictError("Another voice session is already active.");
+        }
+        throw error;
+      }
+    },
     async voiceSession(userId: string, id: string) { const row = await db.voiceSession.findFirst({ where: { id, userId } }); return row ? { ...row, status: row.status as VoiceSession["status"] } : null; },
+    async activeVoiceSession(userId: string) {
+      const row = await db.voiceSession.findFirst({ where: { userId, status: "active" } });
+      return row ? { ...row, status: row.status as VoiceSession["status"] } : null;
+    },
     async bindVoiceProviderCall(userId: string, id: string, providerCallId: string) {
       const updated = await db.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { providerCallId } });
       if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
@@ -169,22 +419,55 @@ export function prismaStore(db: PrismaClient): Store {
       const rows = await db.voiceSession.findMany({ where: { status: { not: "active" }, providerCallId: { not: null }, providerTerminatedAt: null } });
       return rows.map(row => ({ ...row, status: row.status as VoiceSession["status"] }));
     },
-    async endVoiceSession(userId: string, id: string, endedAt: Date, status: "ended" | "expired") {
-      const updated = await db.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { status, endedAt } });
-      if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
-      const row = await db.voiceSession.findUniqueOrThrow({ where: { id } });
-      return { ...row, status: row.status as VoiceSession["status"] };
+    async endVoiceSession(userId: string, id: string, endedAt: Date, status: "ended" | "expired", consumedSeconds: number) {
+      return db.$transaction(async transaction => {
+        const row = await transaction.voiceSession.findFirst({ where: { id, userId, status: "active" } });
+        if (!row) throw new ConflictError("Voice session is already closed.");
+        const reservation = await transaction.usageReservation.findUnique({ where: { id: row.reservationId } });
+        if (!reservation) throw new Error("Usage reservation not found");
+        const chargedSeconds = Math.min(consumedSeconds, reservation.reservedSeconds);
+        const updated = await transaction.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { status, endedAt } });
+        if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
+        await transaction.usageReservation.update({
+          where: { id: row.reservationId },
+          data: { reservedSeconds: chargedSeconds, consumedSeconds: chargedSeconds },
+        });
+        await transaction.voiceMonthUsage.upsert({
+          where: { userId_monthKey: { userId, monthKey: row.monthKey } },
+          create: { userId, monthKey: row.monthKey, consumedSeconds: chargedSeconds },
+          update: { consumedSeconds: { increment: chargedSeconds } },
+        });
+        return { ...row, status, endedAt } as VoiceSession;
+      });
     },
     async expireVoiceSessions(now: Date) {
-      const rows = await db.voiceSession.findMany({ where: { status: "active", expiresAt: { lte: now } }, select: { id: true, conversationId: true, reservationId: true } });
+      const rows = await db.voiceSession.findMany({
+        where: { status: "active", expiresAt: { lte: now } },
+        select: { id: true, userId: true, monthKey: true, conversationId: true, reservationId: true, startedAt: true, expiresAt: true },
+      });
+      let expired = 0;
       for (const row of rows) await db.$transaction(async transaction => {
         const updated = await transaction.voiceSession.updateMany({ where: { id: row.id, status: "active" }, data: { status: "expired", endedAt: now } });
         if (updated.count !== 1) return;
         const reservation = await transaction.usageReservation.findUnique({ where: { id: row.reservationId } });
-        if (reservation) await transaction.usageReservation.update({ where: { id: row.reservationId }, data: { reservedSeconds: reservation.consumedSeconds } });
-        await transaction.conversation.updateMany({ where: { id: row.conversationId, state: "ACTIVE" }, data: { state: "EXPIRED" } });
+        if (reservation) {
+          const consumedSeconds = elapsedSeconds(row.startedAt, row.expiresAt, reservation.reservedSeconds);
+          await transaction.usageReservation.update({
+            where: { id: row.reservationId },
+            data: { reservedSeconds: consumedSeconds, consumedSeconds },
+          });
+          await transaction.voiceMonthUsage.upsert({
+            where: { userId_monthKey: { userId: row.userId, monthKey: row.monthKey } },
+            create: { userId: row.userId, monthKey: row.monthKey, consumedSeconds },
+            update: { consumedSeconds: { increment: consumedSeconds } },
+          });
+        }
+        await transaction.conversation.updateMany({
+          where: { id: row.conversationId, state: "ACTIVE" }, data: { state: "INTERRUPTED" },
+        });
+        expired += 1;
       });
-      return rows.length;
+      return expired;
     },
   };
 }

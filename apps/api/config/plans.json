@@ -1,9 +1,20 @@
 [
   {
+    "id": "free",
+    "title": "Free",
+    "targetPriceInr": 0,
+    "voiceSessionsPerMonth": 2,
+    "maxSessionSeconds": 420,
+    "modules": [
+      "daily"
+    ]
+  },
+  {
     "id": "essential",
     "title": "Essential",
-    "targetPriceInr": 199,
-    "dailySeconds": 1200,
+    "targetPriceInr": 299,
+    "voiceSessionsPerMonth": 15,
+    "maxSessionSeconds": 420,
     "modules": [
       "daily"
     ]
@@ -11,8 +22,9 @@
   {
     "id": "professional",
     "title": "Professional",
-    "targetPriceInr": 299,
-    "dailySeconds": 1200,
+    "targetPriceInr": 399,
+    "voiceSessionsPerMonth": 20,
+    "maxSessionSeconds": 420,
     "modules": [
       "daily",
       "management"
@@ -22,7 +34,8 @@
     "id": "executive",
     "title": "Executive",
     "targetPriceInr": 699,
-    "dailySeconds": 1200,
+    "voiceSessionsPerMonth": 40,
+    "maxSessionSeconds": 420,
     "modules": [
       "daily",
       "management",
@@ -31,9 +44,10 @@
   },
   {
     "id": "extended",
-    "title": "Extended Practice",
+    "title": "Extended",
     "targetPriceInr": 799,
-    "dailySeconds": 2400,
+    "voiceSessionsPerMonth": 60,
+    "maxSessionSeconds": 420,
     "modules": [
       "daily",
       "management",

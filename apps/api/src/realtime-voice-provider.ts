@@ -19,7 +19,12 @@ export class RealtimeVoiceProvider implements VoiceProvider {
     return { providerSessionId: secret.sessionId, expiresAt: new Date(secret.expiresAt), clientSecret: secret.value };
   }
   async terminate(providerCallId: string) {
-    const response = await (this.input.fetchImpl ?? fetch)(`https://api.openai.com/v1/realtime/calls/${encodeURIComponent(providerCallId)}/hangup`, { method: "POST", headers: { Authorization: `Bearer ${this.input.apiKey}`, "OpenAI-Safety-Identifier": providerCallId } });
+    const response = await (this.input.fetchImpl ?? fetch)(
+      `https://api.openai.com/v1/realtime/calls/${encodeURIComponent(providerCallId)}/hangup`, {
+        method: "POST", signal: AbortSignal.timeout(10000), redirect: "error",
+        headers: { Authorization: `Bearer ${this.input.apiKey}`, "OpenAI-Safety-Identifier": providerCallId },
+      },
+    );
     if (!response.ok) throw new Error("Realtime provider did not terminate the call.");
   }
 }

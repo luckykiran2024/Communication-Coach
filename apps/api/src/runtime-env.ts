@@ -1,0 +1,38 @@
+import { z } from "zod";
+
+const environmentBoolean = z.enum(["true", "false"]).default("false").transform(value => value === "true");
+
+export const runtimeEnvironmentSchema = z.object({
+  DATABASE_URL: z.string().url().optional(),
+  DEV_MEMORY_STORE: environmentBoolean,
+  NODE_ENV: z.string().default("development"),
+  RUNTIME: z.enum(["server", "serverless"]).default("serverless"),
+  VERCEL: z.string().optional(),
+  CRON_SECRET: z.string().optional(),
+  CORS_ORIGINS: z.string().default("http://localhost:3000,http://localhost:8081"),
+  MANAGER_EMAILS: z.string().default(""),
+  GOOGLE_OAUTH_CLIENT_IDS: z.string().default(""),
+  MICROSOFT_OAUTH_CLIENT_IDS: z.string().default(""),
+  SUPABASE_OAUTH_ENABLED: environmentBoolean,
+  ASSESSMENT_ENABLED: environmentBoolean,
+  ASSESSMENT_MODEL: z.string().trim().min(1).default("gpt-5-mini"),
+  ASSESSMENT_INPUT_MICROS_PER_MILLION: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().nonnegative()).optional(),
+  ASSESSMENT_OUTPUT_MICROS_PER_MILLION: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().nonnegative()).optional(),
+  SUPABASE_URL: z.string().optional(),
+  SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
+  OPENAI_REALTIME_ENABLED: environmentBoolean,
+  OPENAI_API_KEY: z.string().optional(),
+  BILLING_ENABLED: environmentBoolean,
+  BILLING_WEBHOOK_SECRET: z.string().optional(),
+  GOOGLE_PUBSUB_WEBHOOK_SECRET: z.string().optional(),
+  GOOGLE_PUBSUB_AUDIENCE: z.string().url().optional(),
+  BILLING_PRODUCT_MAP: z.string().optional(),
+  APPLE_PRIVATE_KEY: z.string().optional(),
+  APPLE_KEY_ID: z.string().optional(),
+  APPLE_ISSUER_ID: z.string().optional(),
+  APPLE_BUNDLE_ID: z.string().optional(),
+  APPLE_ROOT_CERT_PATHS: z.string().optional(),
+  GOOGLE_PLAY_PACKAGE_NAME: z.string().optional(),
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string().optional(),
+  GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: z.string().optional(),
+});

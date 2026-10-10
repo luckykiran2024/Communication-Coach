@@ -2,6 +2,8 @@ import { existsSync } from "node:fs";
 import { planIds, scenarios } from "@coach/core";
 import { contentCatalogReady, loadContentReviewEvidence } from "./content-release";
 import { loadNativeQaEvidence } from "./native-qa";
+import { supabaseOAuthConfigured } from "../apps/api/src/lib/supabase-oauth";
+import { supabaseGoogleConfigured } from "../apps/mobile/src/supabase-config";
 
 type CheckStatus = "PASS" | "BLOCKED" | "MANUAL";
 type Check = { name: string; status: CheckStatus; detail: string };
@@ -22,6 +24,18 @@ function validManagerAllowlist() {
 function validGoogleAudienceAllowlist() {
   const ids = (process.env.GOOGLE_OAUTH_CLIENT_IDS ?? "").split(",").map(id => id.trim()).filter(Boolean);
   return ids.length > 0 && ids.every(configuredValue);
+}
+
+function validGoogleOAuthConfiguration() {
+  if (process.env.EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED === "true") {
+    return supabaseGoogleConfigured() && supabaseOAuthConfigured({
+      enabled: process.env.SUPABASE_OAUTH_ENABLED === "true",
+      url: process.env.SUPABASE_URL, publishableKey: process.env.SUPABASE_PUBLISHABLE_KEY,
+    }) && new URL(process.env.SUPABASE_URL!).origin === new URL(process.env.EXPO_PUBLIC_SUPABASE_URL!).origin
+      && process.env.SUPABASE_PUBLISHABLE_KEY === process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  }
+  return productionValue("EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID") && productionValue("EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID")
+    && validGoogleAudienceAllowlist();
 }
 
 function validBillingProductMap() {
@@ -50,10 +64,17 @@ function check(name: string, status: CheckStatus, detail: string): Check {
 }
 
 const checks: Check[] = [
+  check("AI assessment", process.env.ASSESSMENT_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED",
+    "Enable ASSESSMENT_ENABLED and configure the provider only after controlled quality and cost verification."),
+  check("Serverless scheduler", process.env.RUNTIME === "server" ? "PASS"
+    : productionValue("CRON_SECRET") && (process.env.CRON_SECRET?.length ?? 0) >= 32 ? "MANUAL" : "BLOCKED",
+    "Serverless requires a verified every-minute scheduler and a private CRON_SECRET; Vercel Hobby is daily-only."),
   check("PostgreSQL", productionValue("DATABASE_URL") && /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "") ? "PASS" : "BLOCKED", productionValue("DATABASE_URL") ? "DATABASE_URL is configured; run migrations and the isolated database test." : "Set DATABASE_URL to an isolated PostgreSQL database."),
   check("Voice provider", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "Server provider credentials are configured." : "Set OPENAI_REALTIME_ENABLED=true and OPENAI_API_KEY."),
   check("Store billing", validBillingConfiguration() ? "PASS" : "BLOCKED", process.env.BILLING_ENABLED === "true" ? "Billing configuration is incomplete or contains placeholders; verify product mapping, Apple roots, and Google credentials." : "Enable billing and configure the webhook secret, Pub/Sub audience, product map, Apple roots/app ID, and Google verifier credentials."),
-  check("OAuth", productionValue("EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID") && productionValue("EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID") && productionValue("EXPO_PUBLIC_MICROSOFT_CLIENT_ID") && validGoogleAudienceAllowlist() ? "PASS" : "BLOCKED", "Production Google Android/iOS, Microsoft and server Google audience client IDs are required."),
+  check("OAuth", validGoogleOAuthConfiguration() ? "PASS" : "BLOCKED",
+    "Configure matching Supabase Google OAuth settings, or direct Google native clients and server audiences. " +
+    "Verify live sign-in separately."),
   check("Manager authentication", validManagerAllowlist() ? "PASS" : "BLOCKED", validManagerAllowlist() ? "Manager allowlist is configured with valid email addresses." : "Set MANAGER_EMAILS to one or more valid production manager email addresses."),
   check("Native device QA", process.env.NATIVE_QA_SIGNOFF !== "true" ? "MANUAL" : loadNativeQaEvidence(process.env.NATIVE_QA_EVIDENCE_PATH).valid ? "PASS" : "BLOCKED", process.env.NATIVE_QA_SIGNOFF !== "true" ? "Physical Android and iOS development-build evidence is required." : loadNativeQaEvidence(process.env.NATIVE_QA_EVIDENCE_PATH).errors.join(" ")),
   check("Content and release", !contentCatalogReady() ? "BLOCKED" : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? "MANUAL" : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).valid ? "PASS" : "BLOCKED", !contentCatalogReady() ? `${scenarios.length} scenarios fail the structural release gate.` : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? `${scenarios.length} scenarios are structurally ready; human content review and release sign-off are required.` : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).errors.join(" ")),

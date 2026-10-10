@@ -1,5 +1,8 @@
 import { z } from "zod";
+import { z as assessmentZod } from "zod/v4";
+export { assessmentRubrics, assessmentInstructions } from "./rubrics";
 import scenarioData from "../content/scenarios.json" with { type: "json" };
+import hrManagerDrafts from "../content/hr-manager-pack.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";
 export const brand = { name: "Communication Coach", tagline: "Speak with clarity. Lead with confidence." };
 export const palette = {
@@ -22,7 +25,7 @@ export const colorPalettes = {
 export const functions = ["Human Resources", "Engineering", "Product Management", "Finance", "Sales", "Marketing", "Operations", "Procurement", "Customer Success", "General Management", "Entrepreneurship", "Other/custom"] as const;
 export const careerLevels = ["Early-career professional", "Experienced individual contributor", "First-time manager", "Experienced manager", "Senior leader", "Executive", "Founder/entrepreneur"] as const;
 export const goals = ["Start conversations", "Explain ideas clearly", "Give constructive feedback", "Present recommendations", "Handle challenging questions"] as const;
-export const planIds = ["essential", "professional", "executive", "extended"] as const;
+export const planIds = ["free", "essential", "professional", "executive", "extended"] as const;
 export const coachAccents = ["Indian English", "British English", "American English", "Australian English"] as const;
 export type CoachAccent = typeof coachAccents[number];
 export const practiceTimezones = ["Asia/Kolkata", "UTC", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Berlin", "Asia/Singapore", "Australia/Sydney"] as const;
@@ -94,7 +97,10 @@ export const credentialsSchema = z.object({
   email: z.string().trim().toLowerCase().email().max(254),
   password: z.string().min(12).max(128),
 }).strict();
-export const oauthSchema = z.object({ provider: z.enum(["google", "microsoft"]), accessToken: z.string().trim().min(20).max(5000) }).strict();
+export const oauthSchema = z.discriminatedUnion("provider", [
+  z.object({ provider: z.literal("google"), accessToken: z.string().trim().min(20).max(5000) }).strict(),
+  z.object({ provider: z.literal("microsoft"), idToken: z.string().trim().min(20).max(10000) }).strict(),
+]);
 export const scenarioSchema = z.object({
   id: z.string().trim().min(1).max(120), version: z.number().int().positive(), module: moduleSchema,
   functions: z.array(z.enum(functions)).max(functions.length), goal: z.enum(goals), title: z.string().trim().min(1).max(160),
@@ -103,10 +109,11 @@ export const scenarioSchema = z.object({
   reviewStatus: z.enum(["draft", "published", "deprecated"]).optional(), ownerId: z.string().uuid().nullable().optional(), reviewedBy: z.string().uuid().nullable().optional(), reviewedAt: z.string().datetime().nullable().optional(),
 });
 export type Scenario = z.infer<typeof scenarioSchema>;
-export const scenarios = z.array(scenarioSchema).parse([...scenarioData, ...generatedScenarios]);
+export const scenarios = z.array(scenarioSchema).parse([...scenarioData, ...generatedScenarios, ...hrManagerDrafts]);
 export function isPublishedScenario(scenario: Scenario) { return scenario.reviewStatus === undefined || scenario.reviewStatus === "published"; }
 export function recommendScenarios(profile: Profile, catalog: readonly Scenario[] = scenarios, masteryLevel = 1, completedScenarioIds: readonly string[] = []): Scenario[] {
-  const eligible = catalog.filter(scenario => scenario.level <= Math.min(5, masteryLevel) && (scenario.module === "daily" || scenario.functions.includes(profile.function)));
+  const eligible = catalog.filter(scenario => isPublishedScenario(scenario) && scenario.level <= Math.min(5, masteryLevel)
+    && (scenario.module === "daily" || scenario.functions.includes(profile.function)));
   const unseen = eligible.filter(scenario => !completedScenarioIds.includes(scenario.id));
   const source = unseen.length > 0 ? unseen : eligible;
   return source
@@ -114,8 +121,17 @@ export function recommendScenarios(profile: Profile, catalog: readonly Scenario[
     .sort((first, second) => second.rank - first.rank || first.scenario.id.localeCompare(second.scenario.id))
     .map(item => item.scenario);
 }
-export const planSchema = z.object({ id: z.enum(planIds), title: z.string(), targetPriceInr: z.number().positive(), dailySeconds: z.number().int().positive(), modules: z.array(moduleSchema).min(1) });
-export const plansSchema = z.array(planSchema).length(4).refine(items => new Set(items.map(item => item.id)).size === 4);
+export const planSchema = z.object({
+  id: z.enum(planIds),
+  title: z.string(),
+  targetPriceInr: z.number().nonnegative(),
+  voiceSessionsPerMonth: z.number().int().positive(),
+  maxSessionSeconds: z.number().int().positive(),
+  modules: z.array(moduleSchema).min(1),
+});
+export const plansSchema = z.array(planSchema).length(5).refine(items =>
+  new Set(items.map(item => item.id)).size === 5 && items.some(item => item.id === "free" && item.targetPriceInr === 0),
+);
 export type Plan = z.infer<typeof planSchema>;
 export const states = ["CREATED", "AUTHORIZED", "CONNECTING", "ACTIVE", "PAUSED", "COMPLETED", "ASSESSING", "FEEDBACK_READY", "FAILED", "INTERRUPTED", "CANCELLED", "EXPIRED"] as const;
 export type SessionState = typeof states[number];
@@ -123,7 +139,8 @@ const transitions: Record<SessionState, readonly SessionState[]> = {
   CREATED: ["AUTHORIZED", "COMPLETED", "CANCELLED", "EXPIRED"], AUTHORIZED: ["CONNECTING", "CANCELLED", "EXPIRED"],
   CONNECTING: ["ACTIVE", "FAILED", "CANCELLED", "EXPIRED"], ACTIVE: ["PAUSED", "COMPLETED", "INTERRUPTED", "FAILED", "EXPIRED"],
   PAUSED: ["ACTIVE", "COMPLETED", "CANCELLED", "EXPIRED"], COMPLETED: ["ASSESSING"],
-  ASSESSING: ["FEEDBACK_READY", "FAILED"], FEEDBACK_READY: [], FAILED: [], INTERRUPTED: ["COMPLETED"], CANCELLED: [], EXPIRED: ["ASSESSING"],
+  ASSESSING: ["FEEDBACK_READY", "FAILED"], FEEDBACK_READY: [], FAILED: [],
+  INTERRUPTED: ["AUTHORIZED", "COMPLETED"], CANCELLED: [], EXPIRED: ["ASSESSING"],
 };
 export function transition(current: SessionState, next: SessionState): SessionState {
   if (!transitions[current].includes(next)) throw new Error("Invalid session transition");
@@ -133,7 +150,8 @@ export const conversationCreateSchema = z.object({ scenarioId: z.string().min(1)
 export const conversationTurnPhaseSchema = z.enum(["primary", "independent_retry"]);
 export type ConversationTurnPhase = z.infer<typeof conversationTurnPhaseSchema>;
 export const conversationTurnSchema = z.object({ role: z.enum(["user", "assistant", "system"]), text: z.string().trim().min(1).max(10000), phase: conversationTurnPhaseSchema.default("primary") }).strict();
-export const userConversationTurnSchema = conversationTurnSchema.extend({ role: z.literal("user") });
+export const userConversationTurnSchema = conversationTurnSchema.omit({ phase: true })
+  .extend({ role: z.literal("user"), phase: z.unknown().optional() });
 export type ConversationTurnRole = z.infer<typeof conversationTurnSchema>["role"];
 export const voiceTransportStatusSchema = z.object({ platform: z.enum(["android", "ios", "web"]), transport: z.literal("react-native-webrtc"), nativeModuleAvailable: z.boolean(), developmentBuild: z.boolean(), providerConfigured: z.boolean(), liveVoiceAvailable: z.boolean(), code: z.enum(["WEB_PREVIEW_ONLY", "DEV_CLIENT_REQUIRED", "PROVIDER_NOT_CONFIGURED", "READY"]) }).strict();
 export type VoiceTransportStatus = z.infer<typeof voiceTransportStatusSchema>;
@@ -142,11 +160,20 @@ export function voiceTransportStatus(input: Pick<VoiceTransportStatus, "platform
   const code = input.platform === "web" ? "WEB_PREVIEW_ONLY" : !input.nativeModuleAvailable || !input.developmentBuild ? "DEV_CLIENT_REQUIRED" : !input.providerConfigured ? "PROVIDER_NOT_CONFIGURED" : "READY";
   return { ...input, transport: "react-native-webrtc", liveVoiceAvailable, code };
 }
-export const assessmentSchema = z.object({
-  rubricVersion: z.string().min(1), modelVersion: z.string().min(1),
-  priorities: z.array(z.object({ observation: z.string().min(1), quote: z.string().min(1), turnId: z.string().min(1), nextExercise: z.string().min(1), confidence: z.enum(["low", "medium", "high"]) }).strict()).max(2),
-  audioAssessed: z.literal(false),
+export const assessmentSchema = assessmentZod.object({
+  rubricVersion: assessmentZod.string().min(1), modelVersion: assessmentZod.string().min(1),
+  priorities: assessmentZod.array(assessmentZod.object({
+    observation: assessmentZod.string().min(1).max(1200), quote: assessmentZod.string().trim().min(1).max(2000),
+    turnId: assessmentZod.string().min(1), nextExercise: assessmentZod.string().min(1).max(1200),
+    confidence: assessmentZod.enum(["low", "medium", "high"]),
+  }).strict()).max(2),
+  audioAssessed: assessmentZod.literal(false),
 }).strict();
+export const feedbackAssessmentSchema = assessmentSchema.extend({
+  transferResult: assessmentZod.enum(["demonstrated", "partial", "not_yet"]),
+});
+export type FeedbackAssessment = assessmentZod.infer<typeof feedbackAssessmentSchema>;
+export const assessmentJsonSchema = assessmentZod.toJSONSchema(feedbackAssessmentSchema);
 export function validateAssessment(value: unknown, turns: { id: string; role: string; text: string }[]) {
   const assessment = assessmentSchema.parse(value);
   for (const evidence of assessment.priorities) {

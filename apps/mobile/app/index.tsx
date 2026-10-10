@@ -3,14 +3,41 @@ import { Platform } from "react-native";
 import { Redirect, router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri, ResponseType, useAuthRequest, useAutoDiscovery } from "expo-auth-session";
+import { exchangeCodeAsync, makeRedirectUri, ResponseType, useAuthRequest, useAutoDiscovery } from "expo-auth-session";
 import { brand } from "@coach/core";
 import { useAuth } from "../src/auth";
 import { Action, Card, Copy, Field, Heading, Screen } from "../src/ui";
+import { supabaseGoogleConfigured } from "../src/supabase-config";
+import { ApiError } from "../src/api";
 
 WebBrowser.maybeCompleteAuthSession();
 
 type SocialProps = { auth: ReturnType<typeof useAuth>; busy: boolean; setBusy(value: boolean): void; setMessage(value: string): void };
+
+function SupabaseGoogleButton({ auth, busy, setBusy, setMessage }: SocialProps) {
+  const [needsPassword, setNeedsPassword] = useState(false);
+  const [existingPassword, setExistingPassword] = useState("");
+  async function signIn() {
+    setBusy(true); setMessage("");
+    try {
+      await auth.signInWithSupabaseGoogle(needsPassword ? existingPassword : undefined);
+      setExistingPassword("");
+    } catch (failure) {
+      if (failure instanceof ApiError && failure.status === 409) {
+        setNeedsPassword(true);
+        setMessage("You already have an account. Enter its existing password below, then continue with Google again to link safely.");
+      } else {
+        setMessage(failure instanceof Error ? failure.message : "Google sign-in failed. Please try again.");
+      }
+    } finally { setBusy(false); }
+  }
+  return <>
+    {needsPassword && <Field label="Existing account password" value={existingPassword} onChangeText={setExistingPassword}
+      secureTextEntry autoComplete="current-password" />}
+    <Action title="Continue with Google" secondary icon="person" busy={busy}
+      disabled={busy || (needsPassword && existingPassword.length < 12)} onPress={signIn} />
+  </>;
+}
 
 function GoogleButton({ auth, busy, setBusy, setMessage }: SocialProps) {
   const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
@@ -31,16 +58,33 @@ function GoogleButton({ auth, busy, setBusy, setMessage }: SocialProps) {
 function MicrosoftButton({ auth, busy, setBusy, setMessage }: SocialProps) {
   const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID as string;
   const discovery = useAutoDiscovery("https://login.microsoftonline.com/common/v2.0");
-  const [request, response, prompt] = useAuthRequest({ clientId, responseType: ResponseType.Token, redirectUri: makeRedirectUri({ scheme: "communicationcoach", path: "oauth" }), scopes: ["openid", "profile", "email", "User.Read"], extraParams: { prompt: "select_account" } }, discovery);
-  const handledToken = useRef("");
+  const redirectUri = makeRedirectUri({ scheme: "communicationcoach", path: "oauth" });
+  const [request, response, prompt] = useAuthRequest({
+    clientId, responseType: ResponseType.Code, usePKCE: true, redirectUri,
+    scopes: ["openid", "profile", "email"], extraParams: { prompt: "select_account" },
+  }, discovery);
+  const handledCode = useRef("");
   useEffect(() => {
-    const accessToken = response?.type === "success" ? response.authentication?.accessToken ?? response.params.access_token : undefined;
-    if (!accessToken || handledToken.current === accessToken) return;
-    handledToken.current = accessToken;
-    setBusy(true); setMessage("");
-    auth.signInWithProvider("microsoft", accessToken).catch(failure => setMessage((failure as Error).message)).finally(() => setBusy(false));
-  }, [auth, response, setBusy, setMessage]);
-  return <Action title="Continue with Microsoft" secondary icon="client" disabled={!request || busy} busy={busy} onPress={() => { setMessage(""); void prompt().catch(failure => setMessage((failure as Error).message)); }} />;
+    const code = response?.type === "success" ? response.params.code : undefined;
+    if (!code || !request?.codeVerifier || !discovery || handledCode.current === code) return;
+    handledCode.current = code;
+    const codeVerifier = request.codeVerifier;
+    setBusy(true);
+    setMessage("");
+    void (async () => {
+      try {
+        const tokens = await exchangeCodeAsync({
+          clientId, code, redirectUri, extraParams: { code_verifier: codeVerifier },
+        }, discovery);
+        if (!tokens.idToken) throw new Error("Microsoft did not return an ID token. Check the application configuration.");
+        await auth.signInWithProvider("microsoft", tokens.idToken);
+      } catch (failure) {
+        setMessage(failure instanceof Error ? failure.message : "Microsoft sign-in failed.");
+      } finally { setBusy(false); }
+    })();
+  }, [auth, clientId, discovery, redirectUri, request, response, setBusy, setMessage]);
+  return <Action title="Continue with Microsoft" secondary icon="client" disabled={!request || busy} busy={busy}
+    onPress={() => { setMessage(""); void prompt().catch(failure => setMessage((failure as Error).message)); }} />;
 }
 
 export default function Welcome() {
@@ -53,6 +97,7 @@ export default function Welcome() {
   const [socialMessage, setSocialMessage] = useState("");
   const googleConfigured = Platform.OS === "android" ? Boolean(process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID) : Platform.OS === "ios" ? Boolean(process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID) : Boolean(process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID);
   const microsoftConfigured = Boolean(process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID);
+  const supabaseConfigured = supabaseGoogleConfigured();
   if (auth.loading) return <Screen topInset><Copy>Restoring your session…</Copy></Screen>;
   if (auth.token && auth.me) return <Redirect href={auth.me.profile ? "/home" : "/onboarding"} />;
   async function submit() {
@@ -65,12 +110,22 @@ export default function Welcome() {
       <Field label="Password · at least 12 characters" value={password} onChangeText={setPassword} secureTextEntry autoComplete={register ? "new-password" : "current-password"} />
       {Boolean(error || auth.error) && <Copy error>{error || auth.error}</Copy>}
       <Action title={register ? "Create account" : "Sign in"} busy={busy} onPress={submit} />
+      <Action secondary title="Forgot password?" onPress={() => router.push("/password-reset")} />
       <Copy>Or continue with</Copy>
-      {googleConfigured ? <GoogleButton auth={auth} busy={busy} setBusy={setBusy} setMessage={setSocialMessage} /> : <Action title="Set up Google sign-in" secondary icon="person" onPress={() => setSocialMessage("Add the Google Android/iOS client ID to apps/mobile/.env, then restart Expo.")} />}
+      {supabaseConfigured
+        ? <SupabaseGoogleButton auth={auth} busy={busy} setBusy={setBusy} setMessage={setSocialMessage} />
+        : googleConfigured
+          ? <GoogleButton auth={auth} busy={busy} setBusy={setBusy} setMessage={setSocialMessage} />
+          : <Action title="Google sign-in · setup pending" secondary icon="person"
+            onPress={() => setSocialMessage("Google sign-in is awaiting provider configuration. Email and password still work.")} />}
       {microsoftConfigured ? <MicrosoftButton auth={auth} busy={busy} setBusy={setBusy} setMessage={setSocialMessage} /> : <Action title="Set up Microsoft sign-in" secondary icon="client" onPress={() => setSocialMessage("Add EXPO_PUBLIC_MICROSOFT_CLIENT_ID to apps/mobile/.env, then restart Expo.")} />}
       {Boolean(socialMessage) && <Copy>{socialMessage}</Copy>}
       <Action secondary title={register ? "Already have an account? Sign in" : "Create a new account"} onPress={() => setRegister(!register)} />
       <Action secondary title="About, terms & privacy" onPress={() => router.push("/legal")} />
-    </Card><Copy>Development preview. Profiles are stored on your configured server. Live AI coaching, email verification and account recovery are not available yet. Use test accounts only.</Copy>
+    </Card>
+    <Copy>
+      Development preview. Email verification and recovery require a configured email sender.
+      Use test accounts until release verification is complete.
+    </Copy>
   </Screen>;
 }

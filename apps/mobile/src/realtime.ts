@@ -1,4 +1,5 @@
 type RealtimeEvent = Record<string, unknown>;
+import { initialRealtimeResponse } from "./realtime-events";
 
 export type RealtimeCall = {
   providerCallId: string;
@@ -40,7 +41,7 @@ export async function connectRealtimeCall(input: { clientSecret: string; model?:
     await peer.setLocalDescription(offer);
     await waitForIceGathering(peer);
     const offerSdp = peer.localDescription?.sdp ?? offer.sdp;
-    const response = await fetch(`https://api.openai.com/v1/realtime/calls?model=${encodeURIComponent(input.model ?? "gpt-realtime-2.1")}`, { method: "POST", headers: { Authorization: `Bearer ${input.clientSecret}`, "Content-Type": "application/sdp" }, body: offerSdp });
+    const response = await fetch(`https://api.openai.com/v1/realtime/calls?model=${encodeURIComponent(input.model ?? "gpt-realtime-2.1-mini")}`, { method: "POST", headers: { Authorization: `Bearer ${input.clientSecret}`, "Content-Type": "application/sdp" }, body: offerSdp });
     const answerSdp = await response.text();
     if (!response.ok || !answerSdp.startsWith("v=")) throw new Error("The voice provider did not accept the WebRTC offer.");
     const providerCallId = providerCallIdFromLocation(response.headers.get("location"));
@@ -48,8 +49,8 @@ export async function connectRealtimeCall(input: { clientSecret: string; model?:
     const send = (event: RealtimeEvent) => { if (channel.readyState === "open") channel.send(JSON.stringify(event)); };
     const close = () => { channel.close(); localStream?.getTracks().forEach(track => track.stop()); peer.close(); };
     const call = { providerCallId, send, close } satisfies RealtimeCall;
-    if (channel.readyState === "open") send({ type: "response.create", response: { modalities: ["audio", "text"] } });
-    else channel.onopen = () => send({ type: "response.create", response: { modalities: ["audio", "text"] } });
+    if (channel.readyState === "open") send(initialRealtimeResponse());
+    else channel.onopen = () => send(initialRealtimeResponse());
     return call;
   } catch (error) {
     localStream?.getTracks().forEach(track => track.stop());
