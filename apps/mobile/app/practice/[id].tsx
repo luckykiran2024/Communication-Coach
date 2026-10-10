@@ -127,9 +127,9 @@ export default function PracticeDetail() {
       }).catch(() => undefined);
     };
     try {
-      const result = await request<{ sessionId: string; clientSecret: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
+      const result = await request<{ sessionId: string; clientSecret: string; model: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
       sessionId = result.sessionId;
-      call = await connectRealtimeCall({ clientSecret: result.clientSecret, onEvent: event => {
+      call = await connectRealtimeCall({ clientSecret: result.clientSecret, model: result.model, onEvent: event => {
         if (event.type === "error") setLiveMessage("The coach voice reported an error. You can stop and retry.");
         if (event.type === "response.output_audio_transcript.done" || event.type === "response.audio_transcript.done") { setLiveMessage("Coach is speaking…"); persistTranscript(event, "assistant"); }
         if (event.type === "conversation.item.input_audio_transcription.completed") { setLiveMessage("Coach heard your response."); persistTranscript(event, "user"); }
@@ -150,7 +150,13 @@ export default function PracticeDetail() {
     const consumedSeconds = Math.max(0, Math.round((Date.now() - (liveStartedAt ?? Date.now())) / 1000));
     liveCall.close();
     liveCallRef.current = null;
-    try { await request(`/v1/voice/sessions/${liveSessionId}/stop`, auth.token, "POST", { consumedSeconds }); setLiveMessage("Live practice ended. Your session allowance was settled safely."); setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current); }
+    try {
+      const result = await request<{ consumedSeconds: number }>(
+        `/v1/voice/sessions/${liveSessionId}/stop`, auth.token, "POST", { consumedSeconds },
+      );
+      setLiveMessage(`Live practice ended. ${result.consumedSeconds} seconds were charged to your allowance.`);
+      setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current);
+    }
     catch (failure) { setError((failure as Error).message); }
     finally { setLiveCall(null); setLiveSessionId(""); setLiveStartedAt(null); setLiveBusy(false); }
   }

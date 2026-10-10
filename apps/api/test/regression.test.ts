@@ -85,39 +85,43 @@ test("regression: OAuth identities link by stable provider subject and do not tr
   assert.equal(returning.json().user.id, firstUserId);
   assert.equal(returning.json().user.email, "oauth-owner@example.com");
   assert.equal(store.accounts.size, 1);
-  const microsoft = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "microsoft", accessToken: "microsoft-access-token-123" } });
-  assert.equal(microsoft.statusCode, 200);
-  assert.equal(microsoft.json().user.id, firstUserId);
-  assert.equal(store.oauthIdentities.size, 2);
+  const microsoft = await app.inject({
+    method: "POST", url: "/v1/auth/oauth", payload: { provider: "microsoft", idToken: "microsoft-id-token-123456" },
+  });
+  assert.equal(microsoft.statusCode, 503);
+  assert.equal(store.oauthIdentities.size, 1);
   googleVerified = false;
   googleEmail = "unverified@example.com";
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload })).statusCode, 401);
 });
 
-test("regression: practice plan changes gate business and leadership workshops", async context => {
-  const { app, token } = await registeredApp();
+test("regression: server-selected active plan gates business and leadership workshops", async context => {
+  const app = await buildApp(new MemoryStore(), { devPlanId: "professional" });
   context.after(() => app.close());
-  const headers = { authorization: `Bearer ${token}` };
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
   const library = await app.inject({ url: "/v1/scenarios/library" });
   const leadershipScenario = library.json().scenarios.find((item: { module: string; level: number }) => item.module === "leadership" && item.level === 1);
   const businessScenario = library.json().scenarios.find((item: { module: string; level: number }) => item.module === "management" && item.level === 1);
   assert.ok(leadershipScenario);
   assert.ok(businessScenario);
 
-  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "professional" } });
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "essential" } });
   const professional = await app.inject({ url: "/v1/me/scenarios", headers });
   assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "management"), true);
   assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "leadership"), false);
-
-  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "essential" } });
-  const essential = await app.inject({ url: "/v1/me/scenarios", headers });
-  assert.equal(essential.json().scenarios.every((item: { module: string }) => item.module === "daily"), true);
-  const blockedBusiness = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: businessScenario.id } });
-  assert.equal(blockedBusiness.statusCode, 403);
-
-  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "executive" } });
-  const executive = await app.inject({ url: "/v1/me/scenarios", headers });
-  assert.equal(executive.json().scenarios.some((item: { module: string }) => item.module === "leadership"), true);
+  const profileDoesNotGrantExecutiveAccess = await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "executive" } });
+  assert.equal(profileDoesNotGrantExecutiveAccess.statusCode, 200);
+  const stillProfessional = await app.inject({ url: "/v1/me/scenarios", headers });
+  assert.equal(stillProfessional.json().scenarios.some((item: { module: string }) => item.module === "leadership"), false);
+  const allowedBusiness = await app.inject({
+    method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: businessScenario.id },
+  });
+  assert.equal(allowedBusiness.statusCode, 201);
+  const blockedLeadership = await app.inject({
+    method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: leadershipScenario.id },
+  });
+  assert.equal(blockedLeadership.statusCode, 403);
 });
 
 test("regression: manager scenarios require a key and become library content", async context => {
@@ -189,6 +193,9 @@ test("regression: authenticated manager allowlist can publish without the develo
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "manager@example.com", password: "manager-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
+  const unverified = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers, payload: {} });
+  assert.equal(unverified.statusCode, 403);
+  await store.markEmailVerified(registration.json().user.id, new Date());
   const response = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers, payload: { id: "manager-authenticated-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Open a useful conversation", context: "You meet a colleague before a meeting.", question: "Start the conversation and explain what you are working on.", independentQuestion: "Open a similar conversation with someone from another team.", rubricVersion: "daily-manager-1", focus: "Conversation initiation", level: 1 } });
   assert.equal(response.statusCode, 201);
   const nonManager = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "learner@example.com", password: "learner-password-123" } });
@@ -216,7 +223,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   const headers = { authorization: `Bearer ${registration.json().token}` };
   assert.deepEqual((await app.inject({ url: "/v1/me/entitlement", headers })).json(), { entitlement: null });
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 0);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "free");
   const intentResponse = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
   assert.equal(intentResponse.statusCode, 201);
   const purchaseIntentId = intentResponse.json().intent.id as string;
@@ -227,7 +234,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(created.statusCode, 201);
   assert.equal(created.json().received, true);
   assert.equal(created.json().idempotent, false);
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 1200);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "executive");
   const repeated = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: event });
   assert.equal(repeated.statusCode, 200);
   assert.equal(repeated.json().idempotent, true);
@@ -235,7 +242,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(updated.statusCode, 200);
   assert.equal(updated.json().entitlement.status, "expired");
   assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.status, "expired");
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 0);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "free");
   const other = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "billing-other@example.com", password: "billing-password-123" } });
   const otherHeaders = { authorization: `Bearer ${other.json().token}` };
   const otherIntent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers: otherHeaders, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
@@ -258,7 +265,7 @@ test("regression: verified mobile store purchases grant only matched entitlement
   assert.equal(verified.json().verified, true);
   assert.equal(verified.json().entitlement.productId, payload.productId);
   assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.transactionId, payload.transactionId);
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().allowanceSeconds, 1200);
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "professional");
 });
 
 test("regression: verified Apple lifecycle notifications update matching entitlements and ignore stale events", async context => {
@@ -364,12 +371,96 @@ test("regression: usage endpoint is private, timezone-bound and never unlocks li
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
   const usage = await app.inject({ url: "/v1/me/voice-usage", headers });
   assert.equal(usage.statusCode, 200);
-  assert.deepEqual(usage.json(), { timezone: "Asia/Kolkata", dayKey: "2026-09-24", allowanceSeconds: 1200, reservedSeconds: 0, consumedSeconds: 0, remainingSeconds: 1200, resetsAt: "2026-09-24T18:30:00.000Z", enforcement: "server_reservations", liveVoiceAvailable: false });
+  assert.deepEqual(usage.json(), { planId: "executive", planTitle: "Executive", timezone: "Asia/Kolkata", dayKey: "2026-09-24", monthKey: "2026-09", sessionsUsedThisMonth: 0, sessionsRemainingThisMonth: 40, sessionsAllowed: 40, sessionsRemaining: 40, lifetimeFreeLimit: false, consumedSecondsThisMonth: 0, maxSessionSeconds: 420, reservedSecondsToday: 0, consumedSecondsToday: 0, resetsAt: "2026-09-24T18:30:00.000Z", monthResetsAt: "2026-09-30T18:30:00.000Z", enforcement: "server_reservations", liveVoiceAvailable: false });
   now = new Date("2026-09-24T18:31:00.000Z");
   assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().dayKey, "2026-09-25");
   const voice = await app.inject({ method: "POST", url: "/v1/voice/sessions", headers });
   assert.equal(voice.statusCode, 503);
   assert.equal(store.reservations.size, 0);
+});
+
+test("regression: monthly usage rolls over at midnight in the profile timezone", async context => {
+  let now = new Date("2026-10-31T18:29:00.000Z");
+  const app = await buildApp(new MemoryStore(), { now: () => now });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
+  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().monthKey, "2026-10");
+  now = new Date("2026-10-31T18:30:00.000Z");
+  const usage = (await app.inject({ url: "/v1/me/voice-usage", headers })).json();
+  assert.equal(usage.monthKey, "2026-11");
+  assert.equal(usage.sessionsRemaining, 40);
+});
+
+test("regression: Essential plan filters leadership from recommendations and conversation creation", async context => {
+  const app = await buildApp(new MemoryStore(), { devPlanId: "essential" });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
+  const recommendations = await app.inject({ url: "/v1/me/scenarios", headers });
+  assert.equal(recommendations.json().scenarios.some((scenario: { module: string }) => scenario.module !== "daily"), false);
+  const createLeadership = await app.inject({
+    method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "founder-pitch" },
+  });
+  assert.equal(createLeadership.statusCode, 403);
+});
+
+test("regression: free tier allows exactly two lifetime seven-minute voice sessions", async context => {
+  const store = new MemoryStore();
+  let time = new Date("2026-10-09T12:00:00.000Z");
+  const app = await buildApp(store, {
+    now: () => new Date(time),
+    devPlanId: "free",
+    voice: {
+      enabled: true,
+      apiKey: "server-only-key",
+      fetchImpl: async () => new Response(JSON.stringify({
+        value: "secret", expires_at: 1790000000, session: { id: randomUUID() },
+      }), { status: 200, headers: { "content-type": "application/json" } }),
+    },
+  });
+  context.after(() => app.close());
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const headers = { authorization: `Bearer ${registration.json().token}` };
+  await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
+  for (let index = 0; index < 2; index++) {
+    const practice = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "daily-opening" } });
+    assert.equal(practice.statusCode, 201);
+    const session = await app.inject({
+      method: "POST", url: "/v1/voice/sessions", headers,
+      payload: { conversationId: practice.json().conversation.id, scenarioId: "daily-opening" },
+    });
+    assert.equal(session.statusCode, 201);
+    assert.equal(session.json().model, "gpt-realtime-2.1-mini");
+    assert.equal(session.json().expiresAt <= new Date(time.getTime() + 420_000).toISOString(), true);
+    time = new Date(time.getTime() + 1_000);
+    const stopped = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers });
+    assert.equal(stopped.statusCode, 200);
+    assert.equal(stopped.json().consumedSeconds, 1);
+  }
+  const thirdPractice = await app.inject({
+    method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "daily-opening" },
+  });
+  const thirdSession = await app.inject({
+    method: "POST", url: "/v1/voice/sessions", headers,
+    payload: { conversationId: thirdPractice.json().conversation.id, scenarioId: "daily-opening" },
+  });
+  assert.equal(thirdSession.statusCode, 409);
+  assert.match(thirdSession.json().error, /two free voice sessions/i);
+  const usage = (await app.inject({ url: "/v1/me/voice-usage", headers })).json();
+  assert.equal(usage.sessionsRemaining, 0);
+  assert.equal(usage.sessionsUsedThisMonth, 2);
+  assert.equal(usage.consumedSecondsThisMonth, 2);
+});
+
+test("regression: concurrent monthly session reservations never exceed plan cap", async () => {
+  const store = new MemoryStore();
+  const userId = randomUUID();
+  const attempts = await Promise.allSettled(Array.from({ length: 10 }, () => store.reserveVoiceSession(userId, "2026-10", 2, false)));
+  assert.equal(attempts.filter(result => result.status === "fulfilled").length, 2);
+  assert.equal((await store.voiceMonthUsage(userId, "2026-10")).sessionsUsed, 2);
 });
 
 test("regression: conversation creation authorizes scenarios and preserves ownership", async context => {
@@ -475,11 +566,16 @@ test("regression: expired voice sessions release unused reservations and expire 
   const startedAt = new Date("2026-09-24T00:00:00.000Z");
   await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "ACTIVE", createdAt: startedAt, updatedAt: startedAt });
   await store.reserveUsage({ id: reservationId, userId, dayKey: "2026-09-24", seconds: 1200, expiresAt: new Date("2026-09-24T00:20:00.000Z") }, 1200);
-  await store.createVoiceSession({ id: sessionId, userId, conversationId, reservationId, providerSessionId: "provider-session", providerCallId: "call_expired", providerTerminatedAt: null, status: "active", startedAt, expiresAt: new Date("2026-09-24T00:20:00.000Z"), endedAt: null });
-  assert.equal(await store.expireVoiceSessions(new Date("2026-09-24T00:21:00.000Z")), 1);
+  await store.createVoiceSession({
+    id: sessionId, userId, conversationId, reservationId, monthKey: "2026-09", providerSessionId: "provider-session",
+    providerCallId: "call_expired", providerTerminatedAt: null, status: "active", startedAt,
+    expiresAt: new Date("2026-09-24T00:02:00.000Z"), endedAt: null,
+  });
+  assert.equal(await store.expireVoiceSessions(new Date("2026-09-24T00:02:05.000Z")), 1);
   assert.equal((await store.voiceSession(userId, sessionId))?.status, "expired");
   assert.equal((await store.conversation(userId, conversationId))?.state, "EXPIRED");
-  assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 0);
+  assert.equal((await store.usage(userId, "2026-09-24")).reservedSeconds, 120);
+  assert.equal((await store.usage(userId, "2026-09-24")).consumedSeconds, 120);
   assert.deepEqual((await store.pendingVoiceProviderCalls()).map(session => session.providerCallId), ["call_expired"]);
   await store.markVoiceProviderTerminated(sessionId, new Date("2026-09-24T00:22:00.000Z"));
   assert.equal((await store.pendingVoiceProviderCalls()).length, 0);
@@ -502,9 +598,9 @@ test("regression: voice capabilities clearly identify the web preview boundary",
 test("regression: configured realtime voice creates a reserved provider session without exposing the API key", async context => {
   const store = new MemoryStore();
   let providerRequest: Request | undefined;
-  const now = new Date("2026-10-06T00:00:00.000Z");
+  let time = new Date("2026-10-06T00:00:00.000Z");
   const app = await buildApp(store, {
-    now: () => now,
+    now: () => new Date(time),
     voice: {
       enabled: true,
       apiKey: "server-only-key",
@@ -540,12 +636,25 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal(capabilities.json().providerConfigured, true);
   assert.equal(capabilities.json().liveVoiceAvailable, true);
   assert.equal(capabilities.json().code, "READY");
-  const stopped = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } });
+  const otherConversation = await app.inject({
+    method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "engineering-delay" },
+  });
+  const duplicateSession = await app.inject({
+    method: "POST", url: "/v1/voice/sessions", headers,
+    payload: { conversationId: otherConversation.json().conversation.id, scenarioId: "engineering-delay" },
+  });
+  assert.equal(duplicateSession.statusCode, 409);
+  time = new Date(time.getTime() + 120_000);
+  const stopped = await app.inject({
+    method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers,
+    payload: { consumedSeconds: 0 },
+  });
   assert.equal(stopped.statusCode, 200);
+  assert.equal(stopped.json().consumedSeconds, 120);
   assert.equal(stopped.json().providerTermination, "completed");
   assert.match(String(providerRequest?.url), /realtime\/calls\/call_123\/hangup/);
   assert.equal(stopped.json().status, "ended");
-  assert.equal((await store.usage(registration.json().user.id, "2026-10-06")).reservedSeconds, 90);
+  assert.equal((await store.usage(registration.json().user.id, "2026-10-06")).reservedSeconds, 120);
   assert.equal((await store.conversation(registration.json().user.id, conversation.json().conversation.id))?.state, "INTERRUPTED");
   assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/turns`, headers, payload: { role: "user", phase: "primary", text: "I would explain the change, impact and recommendation." } })).statusCode, 201);
   assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/turns`, headers, payload: { role: "user", phase: "independent_retry", text: "I would tailor the same recommendation for another stakeholder." } })).statusCode, 201);

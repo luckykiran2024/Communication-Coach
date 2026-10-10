@@ -4,6 +4,7 @@ import { Redirect, router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { brand, coachAccents, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
 import { useAuth } from "../src/auth";
+import { request } from "../src/api";
 import { Action, Card, Choices, Copy, Field, Heading, Icon, Screen, usePreferences, useTheme } from "../src/ui";
 
 const socialLinks = [
@@ -22,7 +23,9 @@ export default function Settings() {
   const [avatarDraft, setAvatarDraft] = useState(avatarUri);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [voiceUsage, setVoiceUsage] = useState<{ planTitle: string; sessionsRemaining: number; lifetimeFreeLimit: boolean; sessionsAllowed: number } | null>(null);
   useEffect(() => { setAvatarDraft(avatarUri); }, [avatarUri]);
+  useEffect(() => { if (auth.token) void request<typeof voiceUsage>("/v1/me/voice-usage", auth.token).then(setVoiceUsage).catch(() => setVoiceUsage(null)); }, [auth.token]);
   useEffect(() => { void ImagePicker.getPendingResultAsync().then(result => { if (result && "canceled" in result && !result.canceled && result.assets[0]?.uri) { setAvatarUri(result.assets[0].uri); setAvatarDraft(result.assets[0].uri); setMessage("Display picture restored from your device."); } }); }, [setAvatarUri]);
   if (auth.loading) return <Screen><Copy>Loading your settings…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
@@ -76,7 +79,8 @@ export default function Settings() {
 
     <Card>
       <Heading eyebrow="Your practice">Shortcuts</Heading>
-      <Copy>Current plan: {profile.planId}</Copy>
+      <Copy>Current plan: {voiceUsage?.planTitle ?? profile.planId}</Copy>
+      {voiceUsage && <Copy>{voiceUsage.lifetimeFreeLimit ? `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} free voice sessions remaining (lifetime).` : `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} voice sessions remaining this month.`}</Copy>}
       <Action title="Change practice plan" icon="clock" onPress={() => router.push("/plans")} />
       <Action title="View my progress" secondary icon="progress" onPress={() => router.push("/progress")} />
       <Action title="Edit practice profile" secondary icon="person" onPress={() => router.push("/onboarding")} />

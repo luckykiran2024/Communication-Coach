@@ -39,7 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await persist(response.token); setToken(response.token); await load(response.token);
     },
     async signInWithProvider(provider, accessToken) {
-      const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", { provider, accessToken });
+      const credential = provider === "google" ? { provider, accessToken } : { provider, idToken: accessToken };
+      const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", credential);
       await persist(response.token); setToken(response.token); await load(response.token);
     },
     async signOut() {

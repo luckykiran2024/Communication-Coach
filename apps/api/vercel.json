@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "test-apk-ready": false
+    }
+  },
   "framework": null,
   "buildCommand": "test -n \"$Communicatio_Caoch_DATABASE_URL\" || { echo \"Database URL integration variable is missing\" >&2; exit 1; }; DATABASE_URL=\"$Communicatio_Caoch_DATABASE_URL\" npm run db:migrate && npm run build:vercel",
   "outputDirectory": "public",
