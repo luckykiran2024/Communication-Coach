@@ -1,5 +1,15 @@
 # Implementation status — first development increment
 
+## Light/Dark-only appearance — 2026-10-10
+
+- Removed System from Settings and the theme-mode type; only Light and Dark remain.
+- New installs default to Light. Saved System/missing/invalid preferences migrate to persisted Light;
+  existing explicit Light/Dark preferences are preserved. Appearance no longer follows the device theme.
+- Colour palettes, voice accents and device reduced-motion support are unchanged.
+- Actual checks: typecheck PASS, general tests 138/138, regression tests 117/117, targeted theme tests 3/3.
+- Source-only change prepared for the requested GitHub publication; APK/OTA and production remain unchanged.
+  Physical-device QA has not been performed for this theme change.
+
 ## Source publication checkpoint — 2026-10-10
 
 The founder requested a GitHub push and production deployment, then explicitly chose to keep production gated until

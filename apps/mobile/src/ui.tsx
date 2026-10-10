@@ -1,8 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { AccessibilityInfo, ActivityIndicator, Animated, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useColorScheme, View, type TextInputProps } from "react-native";
+import {
+  AccessibilityInfo, ActivityIndicator, Animated, KeyboardAvoidingView, Platform, Pressable,
+  ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SymbolView, type AndroidSymbol, type SFSymbol } from "expo-symbols";
 import { coachAccents, colorPalettes, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
+import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
 
 type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
@@ -18,7 +22,7 @@ const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: Andr
 };
 const fontFamily = Platform.select({ ios: "System", android: "sans-serif", default: "system-ui" });
 
-export type ThemeMode = "system" | "light" | "dark";
+export type { ThemeMode } from "./theme-preferences";
 type Preferences = { themeMode: ThemeMode; setThemeMode(mode: ThemeMode): void; colorTheme: ColorTheme; setColorTheme(theme: ColorTheme): void; avatarUri: string; setAvatarUri(uri: string): void; voiceAccent: CoachAccent; setVoiceAccent(accent: CoachAccent): void; reducedMotion: boolean; setReducedMotion(value: boolean): void };
 const PreferencesContext = createContext<Preferences | null>(null);
 const preferenceKeys = { theme: "coach-theme-v1", colorTheme: "coach-color-theme-v1", avatar: "coach-avatar-v1", voiceAccent: "coach-voice-accent-v1", reducedMotion: "coach-reduced-motion-v1" };
@@ -33,12 +37,28 @@ async function writePreference(key: string, value: string | null) {
   if (value === null) await SecureStore.deleteItemAsync(key); else await SecureStore.setItemAsync(key, value);
 }
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>("system");
+  const [themeMode, setThemeModeState] = useState<ThemeMode>("light");
   const [colorTheme, setColorThemeState] = useState<ColorTheme>("sunrise");
   const [avatarUri, setAvatarUriState] = useState("");
   const [voiceAccent, setVoiceAccentState] = useState<CoachAccent>("Indian English");
   const [reducedMotion, setReducedMotionState] = useState(false);
-  useEffect(() => { void Promise.all([readPreference(preferenceKeys.theme), readPreference(preferenceKeys.colorTheme), readPreference(preferenceKeys.avatar), readPreference(preferenceKeys.voiceAccent), readPreference(preferenceKeys.reducedMotion), AccessibilityInfo.isReduceMotionEnabled()]).then(([savedTheme, savedColorTheme, savedAvatar, savedVoiceAccent, savedReducedMotion, systemReducedMotion]) => { if (savedTheme === "system" || savedTheme === "light" || savedTheme === "dark") setThemeModeState(savedTheme); if (colorThemes.includes(savedColorTheme as ColorTheme)) setColorThemeState(savedColorTheme as ColorTheme); if (savedAvatar) setAvatarUriState(savedAvatar); if (coachAccents.includes(savedVoiceAccent as CoachAccent)) setVoiceAccentState(savedVoiceAccent as CoachAccent); setReducedMotionState(savedReducedMotion === "true" || systemReducedMotion === true); }); const subscription = AccessibilityInfo.addEventListener("reduceMotionChanged", value => setReducedMotionState(value)); return () => subscription.remove(); }, []);
+  useEffect(() => {
+    void Promise.all([
+      readPreference(preferenceKeys.theme), readPreference(preferenceKeys.colorTheme),
+      readPreference(preferenceKeys.avatar), readPreference(preferenceKeys.voiceAccent),
+      readPreference(preferenceKeys.reducedMotion), AccessibilityInfo.isReduceMotionEnabled(),
+    ]).then(([savedTheme, savedColorTheme, savedAvatar, savedVoiceAccent, savedReducedMotion, systemReducedMotion]) => {
+      const nextTheme = normalizeThemeMode(savedTheme);
+      setThemeModeState(nextTheme);
+      if (savedTheme !== nextTheme) void writePreference(preferenceKeys.theme, nextTheme);
+      if (colorThemes.includes(savedColorTheme as ColorTheme)) setColorThemeState(savedColorTheme as ColorTheme);
+      if (savedAvatar) setAvatarUriState(savedAvatar);
+      if (coachAccents.includes(savedVoiceAccent as CoachAccent)) setVoiceAccentState(savedVoiceAccent as CoachAccent);
+      setReducedMotionState(savedReducedMotion === "true" || systemReducedMotion === true);
+    });
+    const subscription = AccessibilityInfo.addEventListener("reduceMotionChanged", value => setReducedMotionState(value));
+    return () => subscription.remove();
+  }, []);
   function setThemeMode(mode: ThemeMode) { setThemeModeState(mode); void writePreference(preferenceKeys.theme, mode); }
   function setColorTheme(theme: ColorTheme) { setColorThemeState(theme); void writePreference(preferenceKeys.colorTheme, theme); }
   function setAvatarUri(uri: string) { setAvatarUriState(uri); void writePreference(preferenceKeys.avatar, uri || null); }
@@ -47,7 +67,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   return <PreferencesContext.Provider value={{ themeMode, setThemeMode, colorTheme, setColorTheme, avatarUri, setAvatarUri, voiceAccent, setVoiceAccent, reducedMotion, setReducedMotion }}>{children}</PreferencesContext.Provider>;
 }
 export function usePreferences() { const value = useContext(PreferencesContext); if (!value) throw new Error("PreferencesProvider missing"); return value; }
-export function useTheme() { const { themeMode, colorTheme, reducedMotion } = usePreferences(); const system = useColorScheme(); const mode = themeMode === "system" ? (system === "dark" ? "dark" : "light") : themeMode; return { ...colorPalettes[colorTheme][mode], isDark: mode === "dark", reducedMotion }; }
+export function useTheme() {
+  const { themeMode, colorTheme, reducedMotion } = usePreferences();
+  return { ...colorPalettes[colorTheme][themeMode], isDark: themeMode === "dark", reducedMotion };
+}
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: string }) {
   return <SymbolView name={icons[name]} size={size} tintColor={color} weight="semibold" />;

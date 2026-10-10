@@ -18,6 +18,7 @@ const tests = [
   "scripts/supabase-oauth-flow.test.ts",
   "scripts/cost-summary.test.ts",
   "scripts/realtime-events.test.ts",
+  "scripts/theme-preferences.test.ts",
 ];
 const result = spawnSync(process.execPath, [
   "--require=./scripts/node-os-compat.cjs", "./node_modules/tsx/dist/cli.mjs", "--test", ...tests,

@@ -1,5 +1,19 @@
 # Testing status
 
+## Light/Dark-only appearance — 2026-10-10
+
+- Targeted `scripts/theme-preferences.test.ts`: PASS, 3/3; choices, saved selections and legacy/default migration.
+- `npm run typecheck`: PASS across all workspaces, exit 0.
+- `npm test`: PASS, 138/138, zero failed/skipped/cancelled/todo; exit 0; duration_ms 8208.7373.
+- `npm run test:regression`: PASS, 117/117, zero failed/skipped/cancelled/todo; exit 0; duration_ms 6480.7015.
+- `git -c core.whitespace=cr-at-eol diff --check`: PASS, exit 0.
+- Settings uses the shared two-option list; theme rendering no longer subscribes to the device colour scheme.
+  Legacy System values are replaced with Light in preference storage. Existing Light/Dark selections remain intact.
+- React review: hooks remain unconditional, existing accessible radio choices are preserved and options are module-level.
+- No physical-device/browser interaction, APK rebuild, OTA publication, database writes or production deployment performed.
+
+Logs: artifacts/theme-typecheck.log, artifacts/theme-tests.log and artifacts/theme-regression.log.
+
 ## Source-push release gates — 2026-10-10
 
 The founder requested Git and production publication, then explicitly chose to keep production gated because email

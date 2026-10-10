@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, Linking, Switch, Text, useColorScheme, View } from "react-native";
+import { Alert, Image, Linking, Switch, Text, View } from "react-native";
 import { Redirect, router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { brand, coachAccents, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
 import { useAuth } from "../src/auth";
 import { request } from "../src/api";
 import { Action, Card, Choices, Copy, Field, Heading, Icon, Screen, usePreferences, useTheme } from "../src/ui";
+import { normalizeThemeMode, themeModes } from "../src/theme-preferences";
 
 const socialLinks = [
   { name: "Twitter", url: process.env.EXPO_PUBLIC_TWITTER_URL ?? "https://twitter.com/" },
@@ -18,7 +19,6 @@ const colorThemeLabels = { sunrise: "Sunrise energy", ocean: "Ocean clarity", be
 export default function Settings() {
   const auth = useAuth();
   const theme = useTheme();
-  const systemColorScheme = useColorScheme();
   const { themeMode, setThemeMode, colorTheme, setColorTheme, avatarUri, setAvatarUri, voiceAccent, setVoiceAccent, reducedMotion, setReducedMotion } = usePreferences();
   const [avatarDraft, setAvatarDraft] = useState(avatarUri);
   const [message, setMessage] = useState("");
@@ -67,8 +67,13 @@ export default function Settings() {
 
     <Card>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="settings" size={23} color={theme.accent} /><Heading eyebrow="Appearance">Theme</Heading></View>
-      <Choices label="Choose your theme" options={["system", "light", "dark"]} value={themeMode} onChange={value => { setThemeMode(value as typeof themeMode); setMessage("Theme updated."); }} />
-      <Copy>{themeMode === "system" ? `System currently follows your phone’s ${systemColorScheme === "dark" ? "dark" : "light"} appearance. It will look the same as ${systemColorScheme === "dark" ? "Dark" : "Light"} while your phone is set this way; choose the opposite fixed theme to compare.` : `The app is using ${themeMode} appearance, regardless of your phone setting.`}</Copy>
+      <Choices
+        label="Choose your theme"
+        options={themeModes}
+        value={themeMode}
+        onChange={value => { setThemeMode(normalizeThemeMode(value)); setMessage("Theme updated."); }}
+      />
+      <Copy>{`The app is using ${themeMode} appearance, regardless of your phone setting.`}</Copy>
       <Choices label="Choose your colour palette" options={colorThemes.map(item => colorThemeLabels[item])} value={colorThemeLabels[colorTheme]} onChange={value => { const next = (Object.keys(colorThemeLabels) as ColorTheme[]).find(item => colorThemeLabels[item] === value) ?? "sunrise"; setColorTheme(next); setMessage(`${value} palette selected.`); }} />
       <Copy>Each palette keeps coral, teal, and neutral contrast in a different visual mood. This changes the app colours, not your practice data.</Copy>
       <Choices label="Coach voice accent" options={coachAccents} value={voiceAccent} onChange={value => { setVoiceAccent(value as CoachAccent); setMessage(`Coach voice set to ${value}.`); }} />
