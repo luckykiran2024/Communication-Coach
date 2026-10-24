@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { buildApp } from "../src/app";
 import { MemoryStore } from "./memory-store";
@@ -19,7 +20,7 @@ const validProfile = {
 async function registeredApp() {
   const store = new MemoryStore();
   const app = await buildApp(store, { origins: ["http://allowed.example"] });
-  const response = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const response = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   assert.equal(response.statusCode, 201);
   return { app, store, token: response.json().token as string };
 }
@@ -31,7 +32,7 @@ test("regression: authentication rejects malformed, missing and expired credenti
   context.after(() => app.close());
   assert.equal((await app.inject({ url: "/v1/me" })).statusCode, 401);
   assert.equal((await app.inject({ url: "/v1/me", headers: { authorization: "Bearer invalid" } })).statusCode, 401);
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const token = registration.json().token as string;
   assert.equal((await app.inject({ url: "/v1/me", headers: { authorization: `Bearer ${token}` } })).statusCode, 200);
   now = new Date("2026-10-01T00:00:00.000Z");
@@ -71,7 +72,7 @@ test("regression: OAuth identities link by stable provider subject and do not tr
     },
   });
   context.after(() => app.close());
-  const googlePayload = { provider: "google", accessToken: "google-access-token-123456" };
+  const googlePayload = { provider: "google", accessToken: "google-access-token-123456", ...legalConsent };
   googleAudience = "unrecognized-client-id";
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: googlePayload })).statusCode, 401);
   googleAudience = "google-client-id";
@@ -98,7 +99,7 @@ test("regression: OAuth identities link by stable provider subject and do not tr
 test("regression: server-selected active plan gates business and leadership workshops", async context => {
   const app = await buildApp(new MemoryStore(), { devPlanId: "professional" });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   const library = await app.inject({ url: "/v1/scenarios/library" });
   const leadershipScenario = library.json().scenarios.find((item: { module: string; level: number }) => item.module === "leadership" && item.level === 1);
@@ -199,14 +200,14 @@ test("regression: authenticated manager allowlist can publish without the develo
   const store = new MemoryStore();
   const app = await buildApp(store, { managerEmails: ["manager@example.com"] });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "manager@example.com", password: "manager-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "manager@example.com", password: "manager-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   const unverified = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers, payload: {} });
   assert.equal(unverified.statusCode, 403);
   await store.markEmailVerified(registration.json().user.id, new Date());
   const response = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers, payload: { id: "manager-authenticated-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Open a useful conversation", context: "You meet a colleague before a meeting.", question: "Start the conversation and explain what you are working on.", independentQuestion: "Open a similar conversation with someone from another team.", rubricVersion: "daily-manager-1", focus: "Conversation initiation", level: 1 } });
   assert.equal(response.statusCode, 201);
-  const nonManager = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "learner@example.com", password: "learner-password-123" } });
+  const nonManager = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "learner@example.com", password: "learner-password-123" } });
   const forbidden = await app.inject({ method: "POST", url: "/v1/manager/scenarios", headers: { authorization: `Bearer ${nonManager.json().token}` }, payload: { id: "manager-forbidden-scenario", version: 1, module: "daily", functions: [], goal: "Start conversations", title: "Should not publish", context: "A context.", question: "A prompt.", independentQuestion: "A retry.", rubricVersion: "daily-manager-1", focus: "Focus", level: 1 } });
   assert.equal(forbidden.statusCode, 403);
 });
@@ -215,7 +216,7 @@ test("regression: persisted manager role grants access without an email allowlis
   const store = new MemoryStore();
   const app = await buildApp(store, { managerEmails: [] });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "role-manager@example.com", password: "manager-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "role-manager@example.com", password: "manager-password-123" } });
   const account = store.accounts.get(registration.json().user.id);
   assert.ok(account);
   account.role = "manager";
@@ -227,7 +228,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   const store = new MemoryStore();
   const app = await buildApp(store, { billing: { enabled: true, webhookSecret: "billing-secret" } });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "billing-owner@example.com", password: "billing-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "billing-owner@example.com", password: "billing-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   assert.deepEqual((await app.inject({ url: "/v1/me/entitlement", headers })).json(), { entitlement: null });
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
@@ -251,7 +252,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(updated.json().entitlement.status, "expired");
   assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.status, "expired");
   assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "free");
-  const other = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "billing-other@example.com", password: "billing-password-123" } });
+  const other = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "billing-other@example.com", password: "billing-password-123" } });
   const otherHeaders = { authorization: `Bearer ${other.json().token}` };
   const otherIntent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers: otherHeaders, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
   const conflict = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: { ...event, purchaseIntentId: otherIntent.json().intent.id, transactionId: "google-transaction-1" } });
@@ -269,7 +270,7 @@ test("regression: verified mobile store purchases grant only matched entitlement
     }),
   } });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "store-purchase@example.com", password: "store-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "store-purchase@example.com", password: "store-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   const intent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "apple", productId: "com.communicationcoach.professional.monthly" } });
   assert.equal(intent.statusCode, 201);
@@ -287,7 +288,7 @@ test("regression: verified Apple lifecycle notifications update matching entitle
   const store = new MemoryStore();
   const app = await buildApp(store, { now: () => new Date("2026-10-06T00:00:00.000Z"), billing: { enabled: true, verifyAppleNotification: async signedPayload => signedPayload === "renewal" ? { notificationId: "notification-renewal", notificationType: "DID_RENEW", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-2", originalTransactionId: "apple-original-1", status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-05T00:00:00.000Z") } : signedPayload === "stale" ? { notificationId: "notification-stale", notificationType: "EXPIRED", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", status: "expired", environment: "sandbox", expiresAt: new Date("2026-10-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-04T00:00:00.000Z") } : null } });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "apple-lifecycle@example.com", password: "apple-lifecycle-password" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "apple-lifecycle@example.com", password: "apple-lifecycle-password" } });
   const userId = registration.json().user.id as string;
   await store.saveEntitlement({ id: randomUUID(), userId, provider: "apple", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", purchaseToken: "apple-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
   const renewal = await app.inject({ method: "POST", url: "/v1/billing/notifications/apple", payload: { signedPayload: "renewal" } });
@@ -304,7 +305,7 @@ test("regression: Google Pub/Sub lifecycle notifications reverify tokens before 
   const store = new MemoryStore();
   const app = await buildApp(store, { billing: { enabled: true, googleNotificationSecret: "google-secret", verifyPurchase: async input => ({ productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.purchaseToken, purchaseToken: input.purchaseToken, status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: null }) } });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "google-lifecycle@example.com", password: "google-lifecycle-password" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "google-lifecycle@example.com", password: "google-lifecycle-password" } });
   const userId = registration.json().user.id as string;
   await store.saveEntitlement({ id: randomUUID(), userId, provider: "google", productId: "com.communicationcoach.professional.monthly", transactionId: "google-transaction-1", originalTransactionId: "google-purchase-token", purchaseToken: "google-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
   const data = Buffer.from(JSON.stringify({ packageName: "com.communicationcoach", eventTimeMillis: "1791244800000", subscriptionNotification: { purchaseToken: "google-purchase-token", subscriptionId: "com.communicationcoach.professional.monthly", notificationType: 2 } })).toString("base64");
@@ -341,10 +342,10 @@ test("regression: registration normalizes email and rejects duplicate accounts",
   const store = new MemoryStore();
   const app = await buildApp(store);
   context.after(() => app.close());
-  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "  REGRESSION@EXAMPLE.COM " } });
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, ...validCredentials, email: "  REGRESSION@EXAMPLE.COM " } });
   assert.equal(first.statusCode, 201);
   assert.equal(first.json().user.email, validCredentials.email);
-  const duplicate = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const duplicate = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   assert.equal(duplicate.statusCode, 409);
   assert.equal(store.accounts.size, 1);
 });
@@ -364,8 +365,8 @@ test("regression: private routes never expose another account profile", async co
   const store = new MemoryStore();
   const app = await buildApp(store);
   context.after(() => app.close());
-  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
-  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "other-regression@example.com" } });
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
+  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, ...validCredentials, email: "other-regression@example.com" } });
   const firstHeaders = { authorization: `Bearer ${first.json().token}` };
   const secondHeaders = { authorization: `Bearer ${second.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers: firstHeaders, payload: validProfile });
@@ -380,7 +381,7 @@ test("regression: usage endpoint is private, timezone-bound and never unlocks li
   const store = new MemoryStore();
   const app = await buildApp(store, { now: () => now });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   assert.equal((await app.inject({ url: "/v1/me/voice-usage" })).statusCode, 401);
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
@@ -398,7 +399,7 @@ test("regression: monthly usage rolls over at midnight in the profile timezone",
   let now = new Date("2026-10-31T18:29:00.000Z");
   const app = await buildApp(new MemoryStore(), { now: () => now });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
   assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().monthKey, "2026-10");
@@ -411,7 +412,7 @@ test("regression: monthly usage rolls over at midnight in the profile timezone",
 test("regression: Essential plan filters leadership from recommendations and conversation creation", async context => {
   const app = await buildApp(new MemoryStore(), { devPlanId: "essential" });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
   const recommendations = await app.inject({ url: "/v1/me/scenarios", headers });
@@ -437,7 +438,7 @@ test("regression: free tier allows exactly two lifetime seven-minute voice sessi
     },
   });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
   await store.markEmailVerified(registration.json().user.id, time);
@@ -483,8 +484,8 @@ test("regression: conversation creation authorizes scenarios and preserves owner
   const store = new MemoryStore();
   const app = await buildApp(store);
   context.after(() => app.close());
-  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
-  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, email: "conversation-owner@example.com" } });
+  const first = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...validCredentials, ...legalConsent } });
+  const second = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, ...validCredentials, email: "conversation-owner@example.com" } });
   const firstHeaders = { authorization: `Bearer ${first.json().token}` };
   const secondHeaders = { authorization: `Bearer ${second.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers: firstHeaders, payload: validProfile });
@@ -629,7 +630,7 @@ test("regression: configured realtime voice creates a reserved provider session 
     },
   });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "voice-provider@example.com", password: "voice-provider-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "voice-provider@example.com", password: "voice-provider-password-123" } });
   await store.markEmailVerified(registration.json().user.id, time);
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });

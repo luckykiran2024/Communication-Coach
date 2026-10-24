@@ -56,9 +56,10 @@ export class MemoryStore implements Store {
   purchaseIntents = new Map<string, PurchaseIntent>();
   voiceSessions = new Map<string, VoiceSession>();
   async ready() {}
-  async createAccount(email: string, passwordHash: string) {
+  async createAccount(email: string, passwordHash: string, legalAcceptance?: { version: string; acceptedAt: Date }) {
     if ([...this.accounts.values()].some(account => account.email === email)) throw new ConflictError();
-    const account: Account = { id: randomUUID(), email, passwordHash, role: "learner", emailVerifiedAt: null };
+    const account: Account = { id: randomUUID(), email, passwordHash, role: "learner", emailVerifiedAt: null,
+      legalVersion: legalAcceptance?.version ?? null, legalAcceptedAt: legalAcceptance?.acceptedAt ?? null };
     this.accounts.set(account.id, account);
     return { ...account };
   }

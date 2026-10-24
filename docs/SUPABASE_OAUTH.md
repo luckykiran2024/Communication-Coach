@@ -55,27 +55,32 @@ EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<same public publishable key>
 Only modern `sb_publishable_` client keys and hosted HTTPS `*.supabase.co` project URLs are accepted. Custom domains and
 legacy anonymous JWT keys are not supported by this implementation. Never use a service-role, admin or Google secret key here.
 
-Ignored local `.env` files were prepared with the public URL/key, but both activation flags remain **false**.
-The installed test APK and hosted API are unchanged. The deployed test handler still disables OAuth. The working-tree
-handler now supports explicit opt-in activation, pinned to this Supabase project and a public publishable key; omitted
-or false flags stay disabled and malformed values fail validation. It needs an intentional code/config deployment.
+The ignored local `.env` files now enable Google OAuth for development. The local API was tested with an in-memory
+store, so that verification did not write an application user to the production database. The isolated
+`communication-coach-test-api` Vercel project now has the three API variables above in its preview/production
+environments and was redeployed. A deliberately invalid, well-formed-length token receives HTTP 401 from its
+Supabase verifier rather than the disabled-feature response. This is not the public production API.
+
+Expo's `preview` environment has the public Supabase URL/key. Only the `test-preview` EAS build profile enables the
+mobile Google button; the regular `preview` profile remains disabled. An existing installed APK cannot acquire these
+build-time values retroactively. The test APK has not been rebuilt or tested on Android in this continuation.
+Omitted or false flags stay disabled and malformed values fail validation.
 Production startup's existing email/security gates remain enforced; Google OAuth does not remove those requirements.
 
 The API runtime now parses all four boolean feature flags strictly: only the strings `true` and `false` are valid;
 missing flags default to false. Earlier JavaScript truthiness coercion incorrectly interpreted the string `false` as true.
 This source fix has not been deployed. No production credential, billing or email requirement was removed.
 
-Before activation:
+Before native release:
 
-1. The separate Phase 6 Store contract is now implemented and full typecheck passes; review the combined working tree.
-2. Review the prepared test-handler opt-in, then explicitly enable and deploy only that environment with matching public values.
-3. Export/build a matching test app with the intended API URL and enabled mobile flag. Do not rebuild the final APK without approval.
-4. Sign in with the approved Google test account; verify browser return, existing-account linking, onboarding/home,
+1. Review the combined working tree, including the `test-preview` build-profile flag, before any Git push.
+2. Build a new `test-preview` APK from this checkout; the installed older APK still lacks these settings.
+3. Sign in with the approved Google test account; verify browser return, existing-account linking, onboarding/home,
    cancellation, repeat login, logout and revoked app sessions on a physical device. Test web on the exact allowed localhost URL.
-5. Add any additional testers explicitly in Google; before public release review consent publishing, branding/privacy URLs,
+4. Add any additional testers explicitly in Google; before public release review consent publishing, branding/privacy URLs,
    production HTTPS redirects/Site URL and provider verification requirements. Supabase Site URL remains the pre-existing
    `http://localhost:3000`; no production wildcard redirects were added.
-6. Resolve external Auth user deletion/retention and update privacy disclosures. An app-account deletion currently removes
+5. Resolve external Auth user deletion/retention and update privacy disclosures. An app-account deletion currently removes
    custom data/sessions only, not Supabase Auth's user. Scoped server-side admin cleanup needs separate design and credentials.
 
 Rollback: disable the mobile feature and API flag; existing password accounts continue to work. Do not delete Google
@@ -89,11 +94,16 @@ testing SMTP is not a replacement for unrestricted production delivery. Microsof
 
 ## Verification evidence
 
-See TESTING_STATUS.md for actual command results and failures. General tests pass 105/105 and regression tests 83/83.
-The 20 new tests include the installed SDK's actual S256 verifier/challenge behavior against a mock endpoint.
-This is not an end-to-end real Google/phone sign-in result. In the continuation, the existing assessment migration was
-applied only to `coach_verification`, not public or APK-test data. No production writes, Git push, deployment or APK
-update was performed for this OAuth task.
+See TESTING_STATUS.md for actual command results and failures. The original integration checkpoint passed 105/105
+general tests and 83/83 regression tests; the current full suites pass 201/201 and 179/179, respectively.
+The original 20 tests include the installed SDK's actual S256 verifier/challenge behavior against a mock endpoint.
+The original 2026-10-10 results were not an end-to-end real Google/phone sign-in result. On 2026-10-24, a local
+Expo web export completed the real Google → Supabase PKCE → local API session → `/v1/me` flow, ending on onboarding.
+The local API returned HTTP 200 for both the session exchange and profile request; a fake token returned HTTP 401.
+The isolated hosted test API returned HTTP 401 for a fake token after redeployment. Neither an Android native callback
+nor a real-token hosted exchange was verified. See TESTING_STATUS.md for exact scope and commands. In the earlier
+checkpoint, the assessment migration was applied only to `coach_verification`; this OAuth continuation did not run
+database migrations, push Git or build an APK. The only hosted change here was a redeploy of the isolated test API.
 
 Official references: [Google provider setup](https://supabase.com/docs/guides/auth/social-login/auth-google),
 [server user verification](https://supabase.com/docs/reference/javascript/auth-getuser),

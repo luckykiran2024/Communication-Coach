@@ -1,5 +1,38 @@
 # Testing status
 
+## Account-creation legal consent — 2026-10-24
+
+- `npm run db:generate`: PASS. `npm run typecheck`: PASS in all four workspaces.
+- `npm test`: PASS, 201/201. `npm run test:regression`: PASS, 179/179. `git -c core.whitespace=cr-at-eol diff --check`: PASS.
+- New API tests verify rejected missing/false/stale acceptance, a persisted server-dated receipt, unchanged returning login,
+  and first-time Supabase/direct OAuth rejection without acceptance followed by accepted account creation.
+- Expo web export: PASS. In the Codex in-app browser, Sign in has no consent switch; Create account shows the legal link
+  and an unchecked switch with account/Google creation disabled; the link opens the C2Coach policy and returns to signup.
+- No real account was created during browser testing. Hosted database migration, native screen review, deployed OAuth,
+  public policy/contact configuration, and APK verification remain NOT RUN. Existing APKs are unchanged.
+
+## Supabase Google sign-in activation — 2026-10-24
+
+- Supabase dashboard: Google provider enabled; allowed redirects include `communicationcoach://oauth` and
+  `http://localhost:8092/oauth`. Google consent remains in External/Testing mode.
+- Local web export with OAuth enabled: PASS. In a browser, the approved Google sign-in returned through Supabase PKCE;
+  `POST /v1/auth/supabase` and `GET /v1/me` both returned HTTP 200, and the app navigated to onboarding. The API used a
+  temporary in-memory test store; no application record was written to the production database. A fake token returned 401.
+- Isolated Vercel test API: redeploy `dpl_AP9JAv5fcQu6SgLkJxwqTHsVgfVR` READY after adding the pinned public
+  Supabase URL/key and OAuth flag. A fake, sufficiently long token returned HTTP 401 from the verifier. This proves
+  activation and invalid-token rejection, not a real-token hosted sign-in. The public production API was not changed.
+- Expo preview environment now contains the public Supabase URL/key. `test-preview` enables OAuth; regular `preview`
+  does not. The profile-isolation assertion passed. The older installed APK was not rebuilt and cannot gain these
+  build-time settings automatically.
+- `npm run typecheck`: PASS across API, mobile, portal and core. `npm test`: PASS 200/200. `npm run test:regression`:
+  PASS 179/179. `git -c core.whitespace=cr-at-eol diff --check`: PASS. Expo web export with OAuth enabled: PASS.
+- Not verified: native Android/iOS callback, existing-account linking with a real account, logout/relogin on a device,
+  or a real-token exchange against the isolated hosted test API. No physical device was tested; ADB was not found at
+  the default Android SDK path in this run.
+  Google consent publication, production email recovery and Supabase Auth user deletion remain public-launch gates.
+- Local screenshots: ignored `artifacts/supabase-google-local-onboarding.png` and
+  `artifacts/expo-preview-oauth-config.png`. The temporary memory API and web server were stopped after validation.
+
 ## Emerald Studio visual checks — 2026-10-24
 
 - `npm run typecheck`: PASS in all workspaces, exit 0.

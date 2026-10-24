@@ -1,4 +1,5 @@
 import { test, type TestContext } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { buildApp } from "../src/app";
 import { MemoryStore } from "../src/memory-store";
@@ -23,7 +24,7 @@ async function setup(context: TestContext, fetchImpl: typeof fetch = async () =>
   const store = new MemoryStore();
   const app = await buildApp(store, { oauth: { supabase: { enabled: true, url, publishableKey, fetchImpl } } });
   context.after(() => app.close());
-  const signIn = (body: Record<string, unknown> = { accessToken }) => app.inject({
+  const signIn = (body: Record<string, unknown> = { accessToken, ...legalConsent }) => app.inject({
     method: "POST", url: "/v1/auth/supabase", payload: body,
   });
   return { app, store, signIn };
@@ -64,6 +65,8 @@ test("supabase: identity is fetched from the pinned Auth server, not decoded fro
 
 test("supabase: new Google account gets a revocable application session", async context => {
   const { app, store, signIn } = await setup(context);
+  assert.equal((await signIn({ accessToken })).statusCode, 428);
+  assert.equal(store.accounts.size, 0);
   const response = await signIn();
   assert.equal(response.statusCode, 200);
   assert.match(response.json().token, /^[a-f0-9]{64}$/);
@@ -72,6 +75,8 @@ test("supabase: new Google account gets a revocable application session", async 
   assert.equal(store.accounts.size, 1);
   assert.equal(store.oauthIdentities.size, 1);
   assert.equal([...store.oauthIdentities.values()][0].subject, subject);
+  assert.equal((await store.accountById(response.json().user.id))?.legalVersion, legalConsent.legalVersion);
+  assert.equal((await signIn({ accessToken })).statusCode, 200);
   const headers = { authorization: `Bearer ${response.json().token}` };
   assert.equal((await app.inject({ url: "/v1/me", headers })).statusCode, 200);
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/logout", headers })).statusCode, 204);

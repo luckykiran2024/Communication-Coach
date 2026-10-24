@@ -12,10 +12,12 @@ import type { MeasuredVoiceSession } from "./store";
 import { prismaAssessmentRuns } from "./lib/prisma-assessment-runs";
 const currentPhase = (phase: string): ConversationTurn["phase"] =>
   phase === "independent_retry" ? "independent_retry" : "primary";
-type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null };
+type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null;
+  legalVersion: string | null; legalAcceptedAt: Date | null };
 const accountFromRow = (row: AccountRow): Account => ({
   id: row.id, email: row.email, passwordHash: row.passwordHash,
   role: row.role === "manager" ? "manager" : "learner", emailVerifiedAt: row.emailVerifiedAt,
+  legalVersion: row.legalVersion, legalAcceptedAt: row.legalAcceptedAt,
 });
 const accountFromNullableRow = (row: AccountRow | null): Account | null => row ? accountFromRow(row) : null;
 export function prismaStore(db: PrismaClient): Store {
@@ -58,8 +60,9 @@ export function prismaStore(db: PrismaClient): Store {
       `;
     },
     async ready() { await db.$queryRaw`SELECT 1`; },
-    async createAccount(email, passwordHash) {
-      try { return accountFromRow(await db.user.create({ data: { email, passwordHash } })); }
+    async createAccount(email, passwordHash, legalAcceptance) {
+      try { return accountFromRow(await db.user.create({ data: { email, passwordHash,
+        legalVersion: legalAcceptance?.version, legalAcceptedAt: legalAcceptance?.acceptedAt } })); }
       catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ConflictError();
         throw error;

@@ -28,7 +28,8 @@
       "extends": "preview",
       "channel": "test-preview",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://communication-coach-test-api-luckykiran2024s-projects.vercel.app/api"
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-test-api-luckykiran2024s-projects.vercel.app/api",
+        "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true"
       }
     },
     "local-preview": {

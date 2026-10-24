@@ -11,6 +11,8 @@ model User {
   email        String @unique
   passwordHash String
   emailVerifiedAt DateTime?
+  legalVersion String?
+  legalAcceptedAt DateTime?
   emailTokens EmailVerificationToken[]
   role         String @default("learner")
   createdAt    DateTime @default(now())

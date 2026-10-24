@@ -3,8 +3,12 @@ import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { ApiError, request, type Me } from "./api";
 import { signInWithSupabaseGoogle } from "./supabase-oauth";
-type Auth = { token: string | null; me: Me | null; loading: boolean; error: string; signIn(email: string, password: string, register: boolean): Promise<void>; signInWithProvider(provider: "google" | "microsoft", accessToken: string): Promise<void>; signOut(): Promise<void>; signOutAll(): Promise<void>; deleteAccount(): Promise<void>; refresh(): Promise<void> };
-type SupabaseAuth = Auth & { signInWithSupabaseGoogle(password?: string): Promise<void> };
+import { legalVersion } from "@coach/core";
+type Auth = { token: string | null; me: Me | null; loading: boolean; error: string;
+  signIn(email: string, password: string, register: boolean, accepted?: boolean): Promise<void>;
+  signInWithProvider(provider: "google" | "microsoft", accessToken: string, accepted?: boolean): Promise<void>;
+  signOut(): Promise<void>; signOutAll(): Promise<void>; deleteAccount(): Promise<void>; refresh(): Promise<void> };
+type SupabaseAuth = Auth & { signInWithSupabaseGoogle(password?: string, accepted?: boolean): Promise<void> };
 const Context = createContext<SupabaseAuth | null>(null);
 const key = "coach-session-v1";
 async function persist(token: string | null) {
@@ -36,19 +40,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: SupabaseAuth = {
     token, me, loading, error,
     async refresh() { if (token) await load(token); },
-    async signIn(email, password, register) {
-      const response = await request<{ token: string }>(register ? "/v1/auth/register" : "/v1/auth/login", null, "POST", { email, password });
+    async signIn(email, password, register, accepted) {
+      const response = await request<{ token: string }>(register ? "/v1/auth/register" : "/v1/auth/login", null, "POST",
+        { email, password, ...(register ? { legalAccepted: accepted === true, legalVersion } : {}) });
       await persist(response.token); setToken(response.token); await load(response.token);
     },
-    async signInWithProvider(provider, accessToken) {
-      const credential = provider === "google" ? { provider, accessToken } : { provider, idToken: accessToken };
+    async signInWithProvider(provider, accessToken, accepted) {
+      const legal = accepted ? { legalAccepted: true, legalVersion } : {};
+      const credential = provider === "google" ? { provider, accessToken, ...legal } : { provider, idToken: accessToken, ...legal };
       const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", credential);
       await persist(response.token); setToken(response.token); await load(response.token);
     },
-    async signInWithSupabaseGoogle(password) {
+    async signInWithSupabaseGoogle(password, accepted) {
       await signInWithSupabaseGoogle(async accessToken => {
         const response = await request<{ token: string }>("/v1/auth/supabase", null, "POST", {
-          accessToken, ...(password ? { password } : {}),
+          accessToken, ...(password ? { password } : {}), ...(accepted ? { legalAccepted: true, legalVersion } : {}),
         });
         await persist(response.token); setToken(response.token); await load(response.token);
       });

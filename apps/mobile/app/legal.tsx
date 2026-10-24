@@ -1,38 +1,35 @@
 import { Linking } from "react-native";
 import { router } from "expo-router";
-import { brand } from "@coach/core";
+import { legalVersion } from "@coach/core";
 import { Action, Card, Copy, Heading, Screen } from "../src/ui";
 
-const privacyContact = process.env.EXPO_PUBLIC_PRIVACY_EMAIL ?? "Add a privacy contact before public release";
+const privacyEmail = process.env.EXPO_PUBLIC_PRIVACY_EMAIL;
+const privacyUrl = process.env.EXPO_PUBLIC_PRIVACY_URL;
 
 export default function Legal() {
   return <Screen>
-    <Heading eyebrow="About this app">{brand.name}</Heading>
-    <Copy>Created by Lucky Kiran. This development preview provides communication practice and learning prompts; it is not professional, legal, medical, or employment advice.</Copy>
+    <Heading eyebrow={`C2Coach · India · effective ${legalVersion}`}>Terms of Service & Privacy Policy</Heading>
+    <Copy>Please read these documents before creating an account. Creating an account requires your agreement to the Terms of Service and acknowledgement of the Privacy Policy. Returning users do not need to accept them again at sign-in.</Copy>
 
-    <Card tone="accent">
-      <Heading eyebrow="Before public release">Legal draft placeholders</Heading>
-      <Copy>These summaries are temporary product placeholders, not final legal terms. Replace them with reviewed Terms of Service and a Privacy Policy, including your organisation’s registered details, contact address, retention periods, subprocessors, and jurisdiction before publishing.</Copy>
+    <Card>
+      <Heading eyebrow="Terms of Service">Using C2Coach</Heading>
+      <Copy>C2Coach operates from India and provides educational communication practice. Exercises, scores, and AI-generated feedback are learning aids, not legal, medical, employment, financial, or other professional advice. You decide what to say or do in real situations.</Copy>
+      <Copy>Use an account you control, keep your sign-in credentials secure, and provide accurate registration details. Do not impersonate others, misuse the service, harass anyone, or submit material you lack permission to share.</Copy>
+      <Copy>Do not enter confidential employer or client information, passwords, payment details, or sensitive personal information into practice prompts. You retain responsibility for your responses; C2Coach may process them to provide practice, feedback, progress, and support.</Copy>
+      <Copy>Some features may be unavailable during testing. If paid plans are offered, the applicable app store will show the price, renewal period, and cancellation terms before purchase. Manage or cancel a store subscription in that store; deleting the app does not cancel it.</Copy>
+      <Copy>You can stop using the service and request account deletion in Settings. C2Coach may restrict access for misuse, security risks, or service changes. We may update these terms; a material change to the account-creation terms will require a new version and a separate review before release.</Copy>
     </Card>
 
     <Card>
-      <Heading eyebrow="Terms of service · draft">Using the practice preview</Heading>
-      <Copy>Use an account you control and provide accurate profile information. You are responsible for reviewing your practice responses before using them in real workplace conversations. Do not enter confidential, personal, or sensitive information into practice exercises.</Copy>
-      <Copy>Practice plans and displayed prices are illustrative in this preview. No payment is taken here. Features may change while the product is being tested.</Copy>
-      <Copy>Do not use the app to harass, impersonate, or unlawfully monitor another person. You may sign out or request account deletion from Settings. A final version must explain how requests are handled and how long data is retained.</Copy>
-    </Card>
-
-    <Card>
-      <Heading eyebrow="Privacy notice · draft">Your data and recordings</Heading>
-      <Copy>The service stores account details, your practice profile, written practice responses, and progress needed to operate the preview. Do not submit confidential employer or client information.</Copy>
-      <Copy>Microphone checks are local recordings in this preview. Live AI voice is not available until the provider and native transport are configured. If enabled later, the final privacy notice must clearly explain audio processing, recipients, retention, and controls before recording begins.</Copy>
-      <Copy>Privacy contact: {privacyContact}.</Copy>
-    </Card>
-
-    <Card>
-      <Heading eyebrow="Product owner">Lucky Kiran</Heading>
-      <Copy>Developer attribution is shown here as requested. Add the verified support and privacy contact details before release.</Copy>
-      {process.env.EXPO_PUBLIC_PRIVACY_URL ? <Action title="Open privacy policy" secondary onPress={() => void Linking.openURL(process.env.EXPO_PUBLIC_PRIVACY_URL as string)} /> : <Copy>Public privacy policy URL: to be added before store submission.</Copy>}
+      <Heading eyebrow="Privacy Policy">How your information is used</Heading>
+      <Copy>C2Coach processes your email and sign-in identity, practice profile, written responses, exercise history, progress, session records, and—when a paid plan is available—store purchase identifiers. These records operate the account, tailor practice, measure progress, protect the service, and provide support.</Copy>
+      <Copy>Google sign-in uses Google and Supabase Authentication. The app backend and account data use Vercel and Supabase. If you use AI assessment or live voice when enabled, the relevant practice text, transcript, or audio is sent to the configured AI provider to produce coaching. Store purchases are processed by Google Play or Apple; C2Coach does not receive your full card details.</Copy>
+      <Copy>The microphone check records only on your device for playback and is not uploaded. Live voice practice, when enabled, is a separate feature that may transmit audio and transcripts. Avoid sharing third-party or workplace secrets in either mode.</Copy>
+      <Copy>We keep account and practice data while your account is active, then delete application records when you use the account-deletion action, subject to records we must retain for security, transactions, or law. Google/Supabase authentication records require separate deletion handling; that process must be verified before public release.</Copy>
+      <Copy>We do not sell your practice responses for advertising. You can request an account export, sign out, or delete your account in Settings. The app may use service logs to diagnose failures and prevent abuse.</Copy>
+      {privacyEmail ? <Copy>Privacy and support contact: {privacyEmail}.</Copy>
+        : <Copy>Privacy and support contact is not configured in this test build; public release remains blocked until one is published.</Copy>}
+      {privacyUrl && <Action title="Open published Privacy Policy" secondary onPress={() => void Linking.openURL(privacyUrl)} />}
     </Card>
 
     <Action title="Back" secondary onPress={() => router.back()} />

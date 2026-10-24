@@ -6,6 +6,7 @@ import { request, type Catalog, type ProgressSnapshot } from "../src/api";
 import { useAuth } from "../src/auth";
 import { EmailVerificationBanner } from "../src/email-verification-banner";
 import { Action, Card, Copy, Heading, Icon, IconButton, ProgressBar, Screen, usePreferences, useTheme } from "../src/ui";
+import { SpringbokLogo } from "../src/springbok-logo";
 type RecentPractice = { conversation: { id: string; state: string; createdAt: string }; scenario: { title: string; module: "daily" | "management" | "leadership" } };
 export default function Home() {
   const auth = useAuth(); const theme = useTheme(); const { avatarUri } = usePreferences(); const [usage, setUsage] = useState<{ planId: string; planTitle: string; sessionsRemaining: number; sessionsAllowed: number; lifetimeFreeLimit: boolean; maxSessionSeconds: number; monthResetsAt: string } | null>(null); const [recent, setRecent] = useState<RecentPractice[]>([]); const [progress, setProgress] = useState<ProgressSnapshot | null>(null); const [catalog, setCatalog] = useState<Catalog | null>(null); const [error, setError] = useState("");
@@ -16,7 +17,14 @@ export default function Home() {
   if (!auth.me) return <Screen><Copy error>{auth.error || "Profile unavailable."}</Copy><Action title="Retry connection" onPress={() => auth.refresh().catch(failure => setError(failure.message))} /><Copy error>{error}</Copy></Screen>;
   if (!auth.me.profile) return <Redirect href="/onboarding" />;
   const profile = auth.me.profile;
-  return <Screen><View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>{avatarUri ? <Image accessibilityLabel="Your display picture" source={{ uri: avatarUri }} style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: theme.border }} /> : <Icon name="person" size={30} color={theme.accent} />}<View style={{ flex: 1 }}><Heading eyebrow={brand.name}>A clearer message starts here, {profile.displayName}.</Heading></View><IconButton name="settings" label="Open settings" onPress={() => router.push("/settings")} /></View>
+  return <Screen>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
+      {avatarUri
+        ? <Image accessibilityLabel="Your display picture" source={{ uri: avatarUri }} style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: theme.border }} />
+        : <SpringbokLogo size={58} />}
+      <View style={{ flex: 1 }}><Heading eyebrow={brand.name}>A clearer message starts here, {profile.displayName}.</Heading></View>
+      <IconButton name="settings" label="Open settings" onPress={() => router.push("/settings")} />
+    </View>
     <EmailVerificationBanner />
     <Card tone="accent"><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="spark" size={27} color={theme.ink} /><View style={{ flex: 1 }}><Heading eyebrow={`Level ${progress?.mastery.level ?? 1}`}>{progress?.mastery.title ?? "Getting started"}</Heading><Copy>Mastery grows through practice days, completed scenarios, independent retries, and saved-response evidence.</Copy></View></View><ProgressBar value={progress?.mastery.progressPercent ?? 0} color={theme.ink} /><Copy>{progress?.mastery.nextLevel ? `${progress.mastery.practiceDays} practice days · ${progress.mastery.successfulRetries} successful retries · next is Level ${progress.mastery.nextLevel}.` : "Top level reached. Keep your practice habit going."}</Copy><Action title="See my progress" secondary icon="progress" onPress={() => router.push("/progress")} /></Card>
     <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="person" size={24} color={theme.accent} /><Heading eyebrow="Your chosen focus">{profile.goal}</Heading></View><Copy>{profile.practiceMinutes} minutes at your pace · {profile.function} · {profile.planId} plan</Copy><Action title="Check my microphone" icon="mic" onPress={() => router.push("/voice")} /><Copy>Live voice coaching is not connected yet. This check records and plays back your voice locally.</Copy></Card>

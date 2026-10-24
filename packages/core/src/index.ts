@@ -4,6 +4,7 @@ import { coachingReviewSchema, priorityCoachingSchema, validateCoachingReview, t
 export { coachingAreas, coachingAreaLabels, coachingReviewSchema, coachingOverallScore } from "./coaching-review";
 export type { CoachingReview } from "./coaching-review";
 export { assessmentRubrics, assessmentInstructions } from "./rubrics";
+export { legalVersion } from "./legal";
 import scenarioData from "../content/scenarios.json" with { type: "json" };
 import hrManagerDrafts from "../content/hr-manager-pack.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";

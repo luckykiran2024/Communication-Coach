@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { buildApp } from "../src/app";
 import { productionConfigurationErrors } from "../src/config";
@@ -6,6 +7,25 @@ import { MemoryStore } from "./memory-store";
 import { randomUUID } from "node:crypto";
 const credentials = { email: "learner@example.com", password: "a-long-test-password" };
 const profile = { displayName: "Sam", function: "Engineering", jobTitle: "Engineer", careerLevel: "Experienced individual contributor", audience: "Product team", goal: "Present recommendations" };
+test("account creation requires current terms once and stores the acceptance receipt", async context => {
+  const store = new MemoryStore();
+  const now = new Date("2026-10-24T10:00:00.000Z");
+  const app = await buildApp(store, { now: () => now });
+  context.after(() => app.close());
+  for (const payload of [credentials, { ...credentials, legalAccepted: false, legalVersion: legalConsent.legalVersion },
+    { ...credentials, legalAccepted: true, legalVersion: "old-version" }]) {
+    const response = await app.inject({ method: "POST", url: "/v1/auth/register", payload });
+    assert.equal(response.statusCode, 428);
+  }
+  assert.equal(store.accounts.size, 0);
+  const created = await app.inject({ method: "POST", url: "/v1/auth/register",
+    payload: { ...credentials, ...legalConsent } });
+  assert.equal(created.statusCode, 201);
+  const account = await store.accountById(created.json().user.id);
+  assert.equal(account?.legalVersion, legalConsent.legalVersion);
+  assert.deepEqual(account?.legalAcceptedAt, now);
+  assert.equal((await app.inject({ method: "POST", url: "/v1/auth/login", payload: credentials })).statusCode, 200);
+});
 test("production configuration rejects unsafe storage, origins and provider settings", () => {
   const errors = productionConfigurationErrors({ nodeEnv: "production", devMemoryStore: true, corsOrigins: ["http://localhost:3000"], managerEmails: [], realtimeEnabled: true, realtimeApiKey: "", billingEnabled: true, billingWebhookSecret: "replace-with-a-secret", storeVerifierConfigured: false });
   assert.equal(errors.length, 11);
@@ -41,7 +61,7 @@ test("account, profile, scenario recommendations and revocable sessions", async 
   const store = new MemoryStore();
   const app = await buildApp(store); context.after(() => app.close());
   assert.equal((await app.inject({ url: "/v1/me" })).statusCode, 401);
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } });
   assert.equal(registration.statusCode, 201);
   const { token } = registration.json(); const headers = { authorization: "Bearer " + token };
   assert.equal(store.sessions.has(token), false);
@@ -56,8 +76,8 @@ test("account, profile, scenario recommendations and revocable sessions", async 
 });
 test("profiles cannot be read or overwritten across accounts", async context => {
   const app = await buildApp(new MemoryStore()); context.after(() => app.close());
-  const first = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials })).json();
-  const second = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, email: "second@example.com" } })).json();
+  const first = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } })).json();
+  const second = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, ...credentials, email: "second@example.com" } })).json();
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers: { authorization: "Bearer " + first.token }, payload: profile });
   const headers = { authorization: "Bearer " + second.token };
   assert.equal((await app.inject({ url: "/v1/me", headers })).json().profile, null);
@@ -66,7 +86,7 @@ test("profiles cannot be read or overwritten across accounts", async context => 
 test("expiry, invalid passwords and live-voice fail-closed behavior", async context => {
   let time = new Date("2026-09-24T00:00:00Z");
   const app = await buildApp(new MemoryStore(), { now: () => time }); context.after(() => app.close());
-  const registered = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials })).json();
+  const registered = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } })).json();
   const headers = { authorization: "Bearer " + registered.token };
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/login", payload: { ...credentials, password: "incorrect-password" } })).statusCode, 401);
   assert.equal((await app.inject({ method: "POST", url: "/v1/voice/sessions", headers })).statusCode, 503);
@@ -79,7 +99,7 @@ test("logout all revokes every session for the authenticated account", async con
   const store = new MemoryStore();
   const app = await buildApp(store);
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "logout-all@example.com", password: "correct horse battery staple" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "logout-all@example.com", password: "correct horse battery staple" } });
   const login = await app.inject({ method: "POST", url: "/v1/auth/login", payload: { email: "logout-all@example.com", password: "correct horse battery staple" } });
   const firstHeaders = { authorization: `Bearer ${registration.json().token}` };
   const secondHeaders = { authorization: `Bearer ${login.json().token}` };
@@ -92,7 +112,7 @@ test("account deletion cascades private data and revokes the current session", a
   const store = new MemoryStore();
   const app = await buildApp(store);
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "delete-me@example.com", password: "delete-account-password-123" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "delete-me@example.com", password: "delete-account-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: profile });
   assert.equal((await app.inject({ method: "DELETE", url: "/v1/me", headers })).statusCode, 204);
@@ -115,7 +135,7 @@ test("plan catalog exposes the confirmed INR prices and seven-minute monthly ses
 test("voice usage is calculated on the profile timezone and remains fail-closed", async context => {
   let time = new Date("2026-09-24T18:00:00Z");
   const app = await buildApp(new MemoryStore(), { now: () => time }); context.after(() => app.close());
-  const registered = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials })).json();
+  const registered = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } })).json();
   const headers = { authorization: "Bearer " + registered.token };
   const profile = { displayName: "Asha", function: "Engineering", jobTitle: "Engineer", careerLevel: "Experienced individual contributor", audience: "Team", goal: "Explain ideas clearly", timezone: "Asia/Kolkata" };
   assert.equal((await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: profile })).statusCode, 200);

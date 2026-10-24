@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { profileSchema, scenarios } from "@coach/core";
@@ -51,7 +52,7 @@ test("progress: measured settled seconds, not target length, drive minutes; text
     const now = new Date("2026-10-10T10:00:00Z");
     const app = await buildApp(store, { now: () => now, assessment: { enabled: false } });
     context.after(() => app.close());
-    const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+    const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
       email: "measured@example.com", password: "measured-voice-password",
     } })).json();
     const userId = registration.user.id;

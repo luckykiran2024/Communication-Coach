@@ -1,4 +1,5 @@
 import { test, type TestContext } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { createHash, randomUUID } from "node:crypto";
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "jose";
@@ -28,7 +29,7 @@ async function setup(context: TestContext) {
     },
   });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } });
   assert.equal(registration.statusCode, 201);
   const userId: string = registration.json().user.id;
   const headers = { authorization: `Bearer ${registration.json().token}` };
@@ -55,7 +56,7 @@ test("security: verification requires owner and password, then permits verified 
   assert.ok(store.emailTokens.has(hash(code)));
   assert.equal((await post("verify-email/confirm", { token: code, password: "wrong-password-12345" })).statusCode, 401);
   const other = await app.inject({
-    method: "POST", url: "/v1/auth/register", payload: { ...credentials, email: "other@example.com" },
+    method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, ...credentials, email: "other@example.com" },
   });
   const otherConfirm = await app.inject({
     method: "POST", url: "/v1/auth/verify-email/confirm",
@@ -79,7 +80,10 @@ test("security: new Google accounts are verified, but unverified provider emails
     }) },
   });
   context.after(() => app.close());
-  const payload = { provider: "google", accessToken: "valid-google-token-1234" };
+  const payload = { provider: "google", accessToken: "valid-google-token-1234", ...legalConsent };
+  assert.equal((await app.inject({ method: "POST", url: "/v1/auth/oauth",
+    payload: { provider: "google", accessToken: payload.accessToken } })).statusCode, 428);
+  assert.equal(store.accounts.size, 0);
   const first = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload });
   assert.equal(first.statusCode, 200);
   assert.ok(first.json().user.emailVerifiedAt);
@@ -207,7 +211,7 @@ test("security: Microsoft verifies JWT signature, audience, issuer, expiry and o
       .setIssuedAt(Math.floor(now.getTime() / 1000)).setExpirationTime(Math.floor(now.getTime() / 1000) + 600)
       .sign(key);
   }
-  const post = (idToken: string) => app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "microsoft", idToken } });
+  const post = (idToken: string) => app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "microsoft", idToken, ...legalConsent } });
   assert.equal((await post(await token({}, randomUUID()))).statusCode, 401);
   const wrongKey = await generateKeyPair("RS256");
   assert.equal((await post(await token({}, clientId, wrongKey.privateKey))).statusCode, 401);

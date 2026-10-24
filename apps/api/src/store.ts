@@ -13,7 +13,9 @@ export type AssessmentRun = {
 };
 export type Account = {
   id: string; email: string; passwordHash: string; role: "learner" | "manager"; emailVerifiedAt: Date | null;
+  legalVersion: string | null; legalAcceptedAt: Date | null;
 };
+export type LegalAcceptance = { version: string; acceptedAt: Date };
 export type EmailTokenPurpose = "verify_email" | "password_reset";
 export type EmailToken = {
   tokenHash: string; userId: string; purpose: EmailTokenPurpose; createdAt: Date; expiresAt: Date; usedAt: Date | null;
@@ -46,7 +48,7 @@ export interface Store {
   learningRecords(userId: string): Promise<LearningRecord[]>;
   measuredVoiceSessions(userId: string): Promise<MeasuredVoiceSession[]>;
   ready(): Promise<void>;
-  createAccount(email: string, passwordHash: string): Promise<Account>;
+  createAccount(email: string, passwordHash: string, legalAcceptance?: LegalAcceptance): Promise<Account>;
   accountByEmail(email: string): Promise<Account | null>;
   accountById(id: string): Promise<Account | null>;
   markEmailVerified(userId: string, now: Date): Promise<Account>;

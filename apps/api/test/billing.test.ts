@@ -1,4 +1,5 @@
 import { test, type TestContext } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { buildApp } from "../src/app";
 import { MemoryStore } from "../src/memory-store";
@@ -51,7 +52,7 @@ async function fixture(context: TestContext) {
   } });
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register",
-    payload: { email: "billing-fixture@example.com", password: "test-password-123" } });
+    payload: { ...legalConsent, email: "billing-fixture@example.com", password: "test-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   const account = (await store.accountByEmail("billing-fixture@example.com"))!;
   const intent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers,
@@ -107,7 +108,7 @@ test("billing HTTP: neither renewal IDs nor restore can transfer another account
   data.setProof(data.proof);
   await data.app.inject({ method: "POST", url: "/v1/billing/purchases/verify", headers: data.headers, payload: data.purchase });
   const second = await data.app.inject({ method: "POST", url: "/v1/auth/register",
-    payload: { email: "second-billing@example.com", password: "test-password-123" } });
+    payload: { ...legalConsent, email: "second-billing@example.com", password: "test-password-123" } });
   const headers = { authorization: `Bearer ${second.json().token}` };
   const intent = await data.app.inject({ method: "POST", url: "/v1/billing/intents", headers,
     payload: { provider: "google", productId: sku } });
@@ -158,7 +159,7 @@ test("billing HTTP: unconfigured stores stay disabled during Android-first testi
   } });
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register",
-    payload: { email: "android-only@example.com", password: "test-password-123" } });
+    payload: { ...legalConsent, email: "android-only@example.com", password: "test-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   assert.equal((await app.inject({ method: "POST", url: "/v1/billing/intents", headers,
     payload: { provider: "apple", productId: sku } })).statusCode, 503);

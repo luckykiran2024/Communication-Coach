@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
@@ -123,7 +124,7 @@ test("PostgreSQL profile persistence, concurrent timezone lock, and cascading de
     await db.$disconnect();
   });
   const email = randomUUID() + "@integration.example";
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email, password: "integration-test-password" } });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email, password: "integration-test-password" } });
   assert.equal(registration.statusCode, 201);
   const registeredUserId: string = registration.json().user.id;
   userId = registeredUserId;
@@ -238,7 +239,7 @@ test("PostgreSQL single-use email tokens, cross-instance rate limits and passwor
     await db.$disconnect();
   });
   const credentials = { email: `${randomUUID()}@security.integration.example`, password: "initial-integration-password" };
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: credentials });
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...credentials, ...legalConsent } });
   assert.equal(registration.statusCode, 201);
   userId = registration.json().user.id;
   const headers = { authorization: `Bearer ${registration.json().token}` };

@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { scenarios } from "@coach/core";
@@ -9,7 +10,7 @@ test("phase: advance requires a primary learner turn, ownership, an idle call an
   const store = new MemoryStore();
   const app = await buildApp(store, { assessment: { enabled: false } });
   context.after(() => app.close());
-  const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "phase@example.com", password: "long-phase-password",
   } })).json();
   const headers = { authorization: `Bearer ${registration.token}` };

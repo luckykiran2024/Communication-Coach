@@ -1,5 +1,30 @@
 # Implementation status
 
+## Account-creation legal consent — 2026-10-24
+
+- The app identifies C2Coach as the India-based operator in its Terms of Service and Privacy Policy. Registration,
+  including first-time Google/Microsoft sign-in, requires an explicit switch after a link to both documents; returning
+  sign-in does not.
+- The API enforces the current legal version for new accounts and stores its version and server timestamp. Existing accounts
+  remain sign-in eligible. The welcome/home legal shortcut is removed; Settings retains legal access for existing users.
+- Added a nullable database migration for the acceptance receipt. It has **not** been applied to hosted or production data,
+  and neither the API nor mobile app has been deployed/rebuilt. Deploy in order: review policy and privacy contact,
+  apply migration, deploy API, then release mobile. Do not ship this client against the old strict API schema.
+- This is a test-build policy draft, not legal sign-off. The operator country is India; a verified operator identity,
+  privacy/support email, public privacy URL, complete Supabase Auth deletion handling, and store disclosures still need
+  approval before public launch.
+- See TESTING_STATUS.md for automated and browser checks. No Git commit/push or APK update occurred for this change.
+
+## Supabase Google sign-in — 2026-10-24
+
+- Activated the existing PKCE Google flow in ignored local development configuration and the isolated Vercel test API.
+  Real Google sign-in through the local web app reached onboarding with an API session; the isolated hosted API now
+  rejects invalid Supabase tokens instead of reporting the provider disabled. Production remains gated.
+- Configured the public Supabase URL/key in Expo's preview environment and enabled the mobile button only for the
+  `test-preview` EAS profile. Existing APKs are unchanged. Native callback and hosted real-account QA are outstanding.
+- Full typecheck and current general/regression suites pass. See SUPABASE_OAUTH.md and TESTING_STATUS.md for limits,
+  remaining launch gates and evidence. No Git push or APK rebuild occurred in this continuation.
+
 ## Emerald Studio visual system — 2026-10-24
 
 - Added Emerald Studio as the recommended palette for new installs, with pale sage Light and charcoal/forest Dark modes.

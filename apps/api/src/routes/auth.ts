@@ -1,24 +1,38 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
-import { credentialsSchema, oauthSchema } from "@coach/core";
+import { credentialsSchema, legalVersion, oauthSchema } from "@coach/core";
 import { z } from "zod";
 import { ApiError } from "../lib/errors";
 import { authenticate, issueSession, verifiedOAuthIdentity } from "../lib/auth-context";
 import { hashPassword, verifyPassword } from "../password";
-import type { OAuthIdentity } from "../store";
+import type { LegalAcceptance, OAuthIdentity } from "../store";
 import type { RouteDependencies } from "./context";
 import { supabaseGoogleIdentity } from "../lib/supabase-oauth";
 
+const legalFields = { legalAccepted: z.boolean().optional(), legalVersion: z.string().max(30).optional() };
+const registerSchema = credentialsSchema.extend(legalFields);
+const socialSchema = z.discriminatedUnion("provider", [
+  oauthSchema.options[0].extend(legalFields), oauthSchema.options[1].extend(legalFields),
+]);
 const supabaseSchema = z.object({
   accessToken: z.string().trim().min(20).max(10000),
   password: z.string().min(12).max(128).optional(),
+  ...legalFields,
 }).strict();
+
+function acceptedLegalTerms(input: { legalAccepted?: boolean; legalVersion?: string }, now: Date): LegalAcceptance {
+  if (input.legalAccepted !== true || input.legalVersion !== legalVersion) {
+    throw new ApiError(428, "Accept the current Terms of Service and acknowledge the Privacy Policy to create an account.");
+  }
+  return { version: legalVersion, acceptedAt: now };
+}
 
 export function register(app: FastifyInstance, deps: RouteDependencies) {
   app.post("/v1/auth/register", { config: { rateLimit: { max: 5, timeWindow: "1 minute" } } }, async (request, reply) => {
-    const parsed = credentialsSchema.safeParse(request.body);
+    const parsed = registerSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Enter a valid email and a password of 12–128 characters.");
-    const user = await deps.store.createAccount(parsed.data.email, await hashPassword(parsed.data.password));
+    const acceptance = acceptedLegalTerms(parsed.data, deps.now());
+    const user = await deps.store.createAccount(parsed.data.email, await hashPassword(parsed.data.password), acceptance);
     return reply.code(201).send(await issueSession(user, deps));
   });
   app.post("/v1/auth/login", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, async request => {
@@ -30,17 +44,17 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     return issueSession(user, deps);
   });
   app.post("/v1/auth/oauth", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, async request => {
-    const parsed = oauthSchema.safeParse(request.body);
+    const parsed = socialSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Choose Google or Microsoft and try again.");
     const credential = parsed.data.provider === "google" ? parsed.data.accessToken : parsed.data.idToken;
     const identity = await verifiedOAuthIdentity(parsed.data.provider, credential, deps);
-    return signInWithIdentity(parsed.data.provider, identity, deps);
+    return signInWithIdentity(parsed.data.provider, identity, deps, undefined, parsed.data);
   });
   app.post("/v1/auth/supabase", { config: { rateLimit: { max: 5, timeWindow: "1 minute" } } }, async request => {
     const parsed = supabaseSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Enter valid Google sign-in credentials.");
     const identity = await supabaseGoogleIdentity(parsed.data.accessToken, deps.oauth?.supabase);
-    return signInWithIdentity("google", identity, deps, parsed.data.password);
+    return signInWithIdentity("google", identity, deps, parsed.data.password, parsed.data);
   });
   app.post("/v1/auth/logout", async (request, reply) => {
     const { tokenHash } = await authenticate(request, deps);
@@ -59,6 +73,7 @@ async function signInWithIdentity(
   identity: { email: string; subject: string; emailVerified: boolean },
   deps: RouteDependencies,
   password?: string,
+  legal?: { legalAccepted?: boolean; legalVersion?: string },
 ) {
   const linked = await deps.store.oauthIdentity(provider, identity.subject);
   const linkedUser = linked ? await deps.store.accountById(linked.userId) : null;
@@ -71,7 +86,9 @@ async function signInWithIdentity(
   if (!linked && existing && !identity.emailVerified) {
     throw new ApiError(409, "Microsoft cannot safely link accounts by email. Sign in using your existing account method.");
   }
-  const user = existing ?? await deps.store.createAccount(identity.email, await hashPassword(randomBytes(32).toString("hex")));
+  const acceptance = existing ? undefined : acceptedLegalTerms(legal ?? {}, deps.now());
+  const user = existing ?? await deps.store.createAccount(identity.email,
+    await hashPassword(randomBytes(32).toString("hex")), acceptance);
   if (identity.emailVerified && (!existing || (!linked && password && !existing.emailVerifiedAt))) {
     user.emailVerifiedAt = (await deps.store.markEmailVerified(user.id, deps.now())).emailVerifiedAt;
   }

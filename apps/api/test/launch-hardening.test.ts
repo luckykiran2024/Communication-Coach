@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { profileSchema, scenarios } from "@coach/core";
@@ -50,7 +51,7 @@ test("launch: unverified accounts cannot create paid voice calls or reserve free
     throw new Error("Must not call provider");
   } } });
   context.after(() => app.close());
-  const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const registration = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "unverified-voice@example.com", password: "unverified-voice-test-password",
   } })).json();
   const result = await app.inject({ method: "POST", url: "/v1/voice/sessions",
@@ -154,7 +155,7 @@ test("launch: public catalog excludes drafts and deprecated content; only verifi
   assert.ok(items.every(item => !item.reviewStatus || item.reviewStatus === "published"));
   assert.equal(items.some(item => item.id === "deprecated-launch-fixture"), false);
   assert.equal((await app.inject({ url: "/v1/manager/scenarios" })).statusCode, 401);
-  const manager = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const manager = (await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "content-manager@example.com", password: "content-manager-test-password",
   } })).json();
   const headers = { authorization: `Bearer ${manager.token}` };

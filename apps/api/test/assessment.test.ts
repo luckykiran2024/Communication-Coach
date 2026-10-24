@@ -1,4 +1,5 @@
 import { test, type TestContext } from "node:test";
+import { legalConsent } from "./legal-consent";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { assessmentRubrics, scenarios } from "@coach/core";
@@ -16,7 +17,7 @@ async function setup(context: TestContext, provider?: AssessmentProvider, enable
   const store = new MemoryStore();
   const app = await buildApp(store, { assessment: { enabled, provider, apiKey: "", model, timeoutMs } });
   context.after(() => app.close());
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "assessment-route@example.com", password: "assessment-password-123",
   } });
   const { token, user } = registration.json();
@@ -61,7 +62,7 @@ test("assessment: valid grounded feedback is owner-only, persistent and used for
   assert.equal(progress.successfulRetries, 1);
   assert.equal(progress.skillSignal, null);
   assert.equal(progress.evidenceSource, "ai_assessment");
-  const other = (await fixture.app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const other = (await fixture.app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "other-assessment@example.com", password: "assessment-password-123",
   } })).json();
   assert.equal((await fixture.app.inject({ url: `/v1/me/conversations/${fixture.id}/feedback`,
@@ -248,7 +249,7 @@ test("assessment: failed feedback can be retried explicitly, concurrent retries 
   assert.equal(calls, 2);
   const other = await fixture.store.createAccount("retry-other@example.com", "unused");
   assert.equal(await fixture.store.assessment(other.id, fixture.id), null);
-  const registration = (await fixture.app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const registration = (await fixture.app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "retry-route-other@example.com", password: "long-retry-owner-password",
   } })).json();
   assert.equal((await fixture.app.inject({ method: "POST", url: `/v1/me/conversations/${fixture.id}/feedback/retry`,
@@ -352,7 +353,7 @@ test("learner journey: onboarding, practice, feedback recovery, next exercise an
   });
   context.after(() => app.close());
   const password = "learner-journey-fixture-password";
-  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: {
+  const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent,
     email: "learner-journey@example.com", password,
   } });
   assert.equal(registration.statusCode, 201);
