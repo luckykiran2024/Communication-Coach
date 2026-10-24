@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   AccessibilityInfo, ActivityIndicator, Animated, KeyboardAvoidingView, Platform, Pressable,
-  ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps,
+  ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions, type TextInputProps,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SymbolView, type AndroidSymbol, type SFSymbol } from "expo-symbols";
-import { coachAccents, colorPalettes, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
+import { coachAccents, colorPalettes, normalizeColorTheme, type CoachAccent, type ColorTheme } from "@coach/core";
 import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
 import { radioSelection, wrappingTextStyle } from "./presentation";
+import { GradientWash } from "./gradient-wash";
 
 type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
@@ -39,7 +40,7 @@ async function writePreference(key: string, value: string | null) {
 }
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [themeMode, setThemeModeState] = useState<ThemeMode>("light");
-  const [colorTheme, setColorThemeState] = useState<ColorTheme>("sunrise");
+  const [colorTheme, setColorThemeState] = useState<ColorTheme>("emerald");
   const [avatarUri, setAvatarUriState] = useState("");
   const [voiceAccent, setVoiceAccentState] = useState<CoachAccent>("Indian English");
   const [reducedMotion, setReducedMotionState] = useState(false);
@@ -52,7 +53,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       const nextTheme = normalizeThemeMode(savedTheme);
       setThemeModeState(nextTheme);
       if (savedTheme !== nextTheme) void writePreference(preferenceKeys.theme, nextTheme);
-      if (colorThemes.includes(savedColorTheme as ColorTheme)) setColorThemeState(savedColorTheme as ColorTheme);
+      setColorThemeState(normalizeColorTheme(savedColorTheme));
       if (savedAvatar) setAvatarUriState(savedAvatar);
       if (coachAccents.includes(savedVoiceAccent as CoachAccent)) setVoiceAccentState(savedVoiceAccent as CoachAccent);
       setReducedMotionState(savedReducedMotion === "true" || systemReducedMotion === true);
@@ -84,15 +85,26 @@ export function IconButton({ name, label, onPress }: { name: IconName; label: st
 
 export function Screen({ children, topInset = false }: { children: ReactNode; topInset?: boolean }) {
   const theme = useTheme();
+  const { width } = useWindowDimensions();
   const edges = topInset ? ["top", "bottom", "left", "right"] as const : ["bottom", "left", "right"] as const;
   const behavior = Platform.OS === "ios" ? "padding" : Platform.OS === "android" ? "height" : undefined;
-  return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={edges}><KeyboardAvoidingView style={{ flex: 1 }} behavior={behavior} keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 0}><ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"} automaticallyAdjustKeyboardInsets contentContainerStyle={styles.page}>{children}</ScrollView></KeyboardAvoidingView></SafeAreaView>;
+  return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={edges}>
+    <View pointerEvents="none" accessible={false} style={[StyleSheet.absoluteFill, { height: 460, opacity: 0.55 }]}>
+      <GradientWash start={theme.accentSurface} end={theme.background} />
+    </View>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={behavior} keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 0}>
+      <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+        automaticallyAdjustKeyboardInsets contentContainerStyle={[styles.page, { paddingHorizontal: width < 380 ? 16 : 24 }]}>
+        {children}
+      </ScrollView>
+    </KeyboardAvoidingView>
+  </SafeAreaView>;
 }
 
 export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: string }) {
   const theme = useTheme();
   return <View style={{ gap: 10, ...wrappingTextStyle }}>
-    {eyebrow && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 2 }}>
+    {eyebrow && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 1.5 }}>
       {eyebrow.toUpperCase()}
     </Text>}
     <Text accessibilityRole="header"
@@ -104,23 +116,29 @@ export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: 
 
 export function Copy({ children, error = false }: { children: ReactNode; error?: boolean }) {
   const theme = useTheme();
-  return <Text accessibilityRole={error ? "alert" : undefined} style={{ color: error ? "#C44242" : theme.muted, fontFamily, fontSize: 16, lineHeight: 25 }}>{children}</Text>;
+  return <Text accessibilityRole={error ? "alert" : undefined}
+    style={{ color: error ? theme.error : theme.muted, fontFamily, fontSize: 16, lineHeight: 25 }}>{children}</Text>;
 }
 
 export function Card({ children, tone = "default" }: { children: ReactNode; tone?: "default" | "accent" }) {
   const theme = useTheme();
-  return <View style={{ padding: 22, borderRadius: 22, backgroundColor: tone === "accent" ? theme.accentSurface : theme.surface, borderColor: theme.border, borderWidth: 1, gap: 14 }}>{children}</View>;
+  return <View style={{ padding: 20, borderRadius: 24, backgroundColor: theme.surface,
+    borderColor: theme.border, borderWidth: 1, gap: 16, overflow: "hidden" }}>
+    {tone === "accent" && <GradientWash start={theme.accentSurface} end={theme.surface} />}
+    {children}
+  </View>;
 }
 
 export function Action({ title, onPress, secondary = false, disabled = false, busy = false, icon }: {
   title: string; onPress(): void; secondary?: boolean; disabled?: boolean; busy?: boolean; icon?: IconName;
 }) {
   const theme = useTheme();
-  const textColor = secondary ? theme.ink : theme.isDark ? "#13233F" : "#FFFFFF";
+  const textColor = secondary ? theme.ink : theme.onAccent;
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled: disabled || busy, busy }}
     disabled={disabled || busy} onPress={onPress} style={({ pressed }) => ({
       minHeight: 52, padding: 16, gap: 10, flexDirection: "row", alignItems: "center", justifyContent: "center",
-      borderRadius: 14, borderWidth: 1, borderColor: theme.border, backgroundColor: secondary ? theme.surface : theme.accent,
+      borderRadius: 16, borderWidth: 1, borderColor: secondary ? theme.controlBorder : theme.accent,
+      backgroundColor: secondary ? theme.surface : theme.accent,
       opacity: disabled || busy ? .55 : pressed ? .8 : 1,
     })}>
     {busy ? <ActivityIndicator color={textColor} /> : <>
@@ -134,7 +152,15 @@ export function Action({ title, onPress, secondary = false, disabled = false, bu
 
 export function Field({ label, ...props }: TextInputProps & { label: string }) {
   const theme = useTheme();
-  return <View style={{ gap: 8 }}><Text style={{ color: theme.ink, fontFamily, fontWeight: "600" }}>{label}</Text><TextInput {...props} accessibilityLabel={label} placeholderTextColor={theme.muted} style={[{ borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 14, minHeight: 52, color: theme.ink, backgroundColor: theme.surface, fontFamily, fontSize: 16 }, props.style]} /></View>;
+  const [focused, setFocused] = useState(false);
+  return <View style={{ gap: 8 }}>
+    <Text style={{ color: theme.ink, fontFamily, fontWeight: "600" }}>{label}</Text>
+    <TextInput {...props} accessibilityLabel={label} placeholderTextColor={theme.muted}
+      onFocus={event => { setFocused(true); props.onFocus?.(event); }}
+      onBlur={event => { setFocused(false); props.onBlur?.(event); }}
+      style={[{ borderWidth: 1, borderColor: focused ? theme.accent : theme.controlBorder, borderRadius: 14,
+        padding: 14, minHeight: 52, color: theme.ink, backgroundColor: theme.surface, fontFamily, fontSize: 16 }, props.style]} />
+  </View>;
 }
 
 export function Choices({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange(value: string): void }) {
@@ -144,7 +170,8 @@ export function Choices({ label, options, value, onChange }: { label: string; op
     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
       {options.map(option => <Pressable key={option} accessibilityRole="radio" {...radioSelection(option === value)}
         onPress={() => onChange(option)} style={{ minHeight: 46, justifyContent: "center", borderRadius: 12, padding: 12,
-          borderWidth: 1, borderColor: option === value ? theme.accent : theme.border, backgroundColor: theme.surface }}>
+          borderWidth: 1, borderColor: option === value ? theme.accent : theme.controlBorder,
+          backgroundColor: option === value ? theme.accentSurface : theme.surface }}>
         <Text style={{ color: option === value ? theme.accent : theme.ink, fontFamily,
           fontWeight: option === value ? "700" : "400" }}>{option}</Text>
       </Pressable>)}
@@ -168,7 +195,15 @@ export function VoiceWave({ active = false, color }: { active?: boolean; color?:
 
 export function MicButton({ active = false, label, onPress }: { active?: boolean; label?: string; onPress(): void }) {
   const theme = useTheme();
-  return <Pressable accessibilityRole="button" accessibilityLabel={label ?? (active ? "Stop voice prompt" : "Hear prompt")} accessibilityState={{ busy: active }} onPress={onPress} style={({ pressed }) => ({ width: 84, height: 84, borderRadius: 42, alignItems: "center", justifyContent: "center", alignSelf: "center", backgroundColor: active ? theme.positive : theme.accent, borderWidth: 8, borderColor: active ? `${theme.positive}33` : `${theme.accent}33`, transform: [{ scale: theme.reducedMotion ? 1 : pressed ? 0.95 : 1 }] })}><Icon name="mic" size={34} color={active ? "#FFFFFF" : theme.isDark ? "#13233F" : "#FFFFFF"} /></Pressable>;
+  return <Pressable accessibilityRole="button" accessibilityLabel={label ?? (active ? "Stop voice prompt" : "Hear prompt")}
+    accessibilityState={{ busy: active }} onPress={onPress} style={({ pressed }) => ({
+      width: 84, height: 84, borderRadius: 42, alignItems: "center", justifyContent: "center", alignSelf: "center",
+      backgroundColor: active ? theme.positive : theme.accent, borderWidth: 8,
+      borderColor: active ? `${theme.positive}33` : `${theme.accent}33`,
+      transform: [{ scale: theme.reducedMotion ? 1 : pressed ? 0.95 : 1 }],
+    })}>
+    <Icon name="mic" size={34} color={active ? theme.onPositive : theme.onAccent} />
+  </Pressable>;
 }
 
 export function ProgressBar({ value, color }: { value: number; color?: string }) {

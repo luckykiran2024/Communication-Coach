@@ -1,5 +1,11 @@
 # Known issues and limits
 
+## Emerald Studio presentation — 2026-10-24
+
+- The new palettes and gradient are verified in a 320 px Expo web export. Android/iOS native rendering, large text,
+  screen readers and reduced-motion behaviour on a physical phone remain to be checked before publication.
+- The previous APK still contains the older appearance. No OTA, APK rebuild or store submission was started for this change.
+
 ## Native billing / latest database checkpoint — 2026-10-24
 
 - Google Play and Apple billing source is prepared and regression-tested, not activated or store-validated. Play Console

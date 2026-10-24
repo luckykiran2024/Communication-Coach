@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Alert, Image, Linking, Switch, Text, View } from "react-native";
 import { Redirect, router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
-import { brand, coachAccents, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
+import { brand, coachAccents, colorThemeDetails, type CoachAccent } from "@coach/core";
 import { useAuth } from "../src/auth";
 import { request } from "../src/api";
 import { Action, Card, Choices, Copy, Field, Heading, Icon, Screen, usePreferences, useTheme } from "../src/ui";
-import { normalizeThemeMode, themeModes } from "../src/theme-preferences";
+import { AppearanceMode } from "../src/appearance-controls";
 
 const socialLinks = [
   { name: "Twitter", url: process.env.EXPO_PUBLIC_TWITTER_URL ?? "https://twitter.com/" },
@@ -14,12 +14,12 @@ const socialLinks = [
   { name: "Instagram", url: process.env.EXPO_PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/" },
   { name: "Reddit", url: process.env.EXPO_PUBLIC_REDDIT_URL ?? "https://www.reddit.com/" },
 ];
-const colorThemeLabels = { sunrise: "Sunrise energy", ocean: "Ocean clarity", berry: "Berry focus" } as const;
 
 export default function Settings() {
   const auth = useAuth();
   const theme = useTheme();
-  const { themeMode, setThemeMode, colorTheme, setColorTheme, avatarUri, setAvatarUri, voiceAccent, setVoiceAccent, reducedMotion, setReducedMotion } = usePreferences();
+  const { themeMode, colorTheme, avatarUri, setAvatarUri, voiceAccent, setVoiceAccent,
+    reducedMotion, setReducedMotion } = usePreferences();
   const [avatarDraft, setAvatarDraft] = useState(avatarUri);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -67,15 +67,10 @@ export default function Settings() {
 
     <Card>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="settings" size={23} color={theme.accent} /><Heading eyebrow="Appearance">Theme</Heading></View>
-      <Choices
-        label="Choose your theme"
-        options={themeModes}
-        value={themeMode}
-        onChange={value => { setThemeMode(normalizeThemeMode(value)); setMessage("Theme updated."); }}
-      />
+      <AppearanceMode />
       <Copy>{`The app is using ${themeMode} appearance, regardless of your phone setting.`}</Copy>
-      <Choices label="Choose your colour palette" options={colorThemes.map(item => colorThemeLabels[item])} value={colorThemeLabels[colorTheme]} onChange={value => { const next = (Object.keys(colorThemeLabels) as ColorTheme[]).find(item => colorThemeLabels[item] === value) ?? "sunrise"; setColorTheme(next); setMessage(`${value} palette selected.`); }} />
-      <Copy>Each palette keeps coral, teal, and neutral contrast in a different visual mood. This changes the app colours, not your practice data.</Copy>
+      <Copy>Current palette: {colorThemeDetails[colorTheme].title}</Copy>
+      <Action title="Explore colour palettes" secondary onPress={() => router.push("/appearance")} />
       <Choices label="Coach voice accent" options={coachAccents} value={voiceAccent} onChange={value => { setVoiceAccent(value as CoachAccent); setMessage(`Coach voice set to ${value}.`); }} />
       <Copy>Indian English is the default. Your device’s installed speech voice determines the final sound and pronunciation.</Copy>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}><Copy>Reduce motion</Copy><Switch accessibilityLabel="Reduce motion" value={reducedMotion} onValueChange={value => { setReducedMotion(value); setMessage(value ? "Nonessential motion reduced." : "Motion effects restored."); }} /></View>

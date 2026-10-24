@@ -8,23 +8,8 @@ import scenarioData from "../content/scenarios.json" with { type: "json" };
 import hrManagerDrafts from "../content/hr-manager-pack.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";
 export const brand = { name: "Communication Coach", tagline: "Speak with clarity. Lead with confidence." };
-export const palette = {
-  light: { background: "#FFF7EF", surface: "#FFFFFF", accentSurface: "#FFE6D8", ink: "#1B1D3A", muted: "rgba(27,29,58,0.68)", accent: "#FF5C4D", positive: "#08A889", border: "#FFE6D8" },
-  dark: { background: "#0D1124", surface: "#171D36", accentSurface: "#312341", ink: "#F8F5FF", muted: "rgba(248,245,255,0.72)", accent: "#FF806D", positive: "#22C6A4", border: "#312341" },
-};
-export const colorThemes = ["sunrise", "ocean", "berry"] as const;
-export type ColorTheme = typeof colorThemes[number];
-export const colorPalettes = {
-  sunrise: palette,
-  ocean: {
-    light: { background: "#F2FBFA", surface: "#FFFFFF", accentSurface: "#DDF6F2", ink: "#102B3A", muted: "rgba(16,43,58,0.68)", accent: "#007C91", positive: "#00A98F", border: "#DDF6F2" },
-    dark: { background: "#071A24", surface: "#102B3A", accentSurface: "#123D49", ink: "#F2FCFF", muted: "rgba(242,252,255,0.72)", accent: "#38C7D7", positive: "#22C6A4", border: "#123D49" },
-  },
-  berry: {
-    light: { background: "#FCF4FB", surface: "#FFFFFF", accentSurface: "#F5E4F4", ink: "#2A1837", muted: "rgba(42,24,55,0.68)", accent: "#B84CBF", positive: "#D45B7A", border: "#F5E4F4" },
-    dark: { background: "#1B1024", surface: "#291536", accentSurface: "#3A1C42", ink: "#FFF6FF", muted: "rgba(255,246,255,0.72)", accent: "#E783D4", positive: "#F58AA7", border: "#3A1C42" },
-  },
-} as const;
+export { palette, colorThemes, colorPalettes, colorThemeDetails, normalizeColorTheme } from "./themes";
+export type { ColorTheme, ColorMode, ThemePalette } from "./themes";
 export const functions = ["Human Resources", "Engineering", "Product Management", "Finance", "Sales", "Marketing", "Operations", "Procurement", "Customer Success", "General Management", "Entrepreneurship", "Other/custom"] as const;
 export const careerLevels = ["Early-career professional", "Experienced individual contributor", "First-time manager", "Experienced manager", "Senior leader", "Executive", "Founder/entrepreneur"] as const;
 export const goals = ["Start conversations", "Explain ideas clearly", "Give constructive feedback", "Present recommendations", "Handle challenging questions"] as const;

@@ -1,5 +1,18 @@
 # Testing status
 
+## Emerald Studio visual checks — 2026-10-24
+
+- `npm run typecheck`: PASS in all workspaces, exit 0.
+- `npm test`: PASS, 200/200, zero failed/skipped/cancelled/todo; exit 0; duration_ms 12283.2193.
+- `npm run test:regression`: PASS, 179/179, zero failed/skipped/cancelled/todo; exit 0; duration_ms 33731.9348.
+- Expo web export: PASS; the 1.2 KB bundled gradient asset was included. No native build was run.
+- Added three palette tests: saved-preference fallback, all palette/mode text and action contrast, and control-outline contrast.
+- Codex browser on the real exported app: all eight palette/mode combinations selected correctly at 320 px;
+  no document overflow. Dark persisted on reload, sign-in reached Home, and Settings opened the appearance screen.
+- Screenshots: ignored local `artifacts/emerald-light.png` and `artifacts/emerald-dark.png`.
+- Preview uses the existing disposable memory fixture and simulated providers. No APK, store purchase, physical-phone or
+  production appearance verification was performed. Logs: ignored local `artifacts/emerald-*.log`.
+
 ## Native billing preparation — 2026-10-24 (latest checkpoint)
 
 - npm run typecheck: PASS, all four workspaces, exit 0.

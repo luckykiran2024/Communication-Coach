@@ -1,5 +1,16 @@
 # Implementation status
 
+## Emerald Studio visual system — 2026-10-24
+
+- Added Emerald Studio as the recommended palette for new installs, with pale sage Light and charcoal/forest Dark modes.
+- Existing saved Sunrise, Ocean and Berry choices remain valid. The system-based appearance option remains absent.
+- The palette now supplies foreground colours for primary buttons, microphone controls and errors as well as card,
+  background, border and input colours. All four palettes meet the automated 4.5:1 text contrast check.
+- A 1.2 KB bundled gradient mask gives pages and feature cards a soft colour transition without an added native package.
+- Settings links to a live Colour & appearance screen. Changes apply across the app and persist on the device.
+- This is a source and local-browser change. The installed APK, hosted app, GitHub and production remain unchanged.
+  Native appearance and enlarged-text device checks are still required before a release.
+
 ## Native billing preparation — 2026-10-24 (latest checkpoint)
 
 - Adopted Google Play Billing / Apple IAP, Android first; Razorpay is not added. Fixed monthly offer/account binding,
