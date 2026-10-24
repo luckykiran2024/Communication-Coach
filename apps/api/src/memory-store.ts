@@ -4,8 +4,9 @@ import type { Profile, Scenario, SessionState } from "@coach/core";
 import { elapsedSeconds } from "./lib/time";
 import type { EmailToken, EmailTokenPurpose } from "./store";
 import { safeEqual } from "./lib/safe-equal";
-import type { Assessment, AssessmentUsage } from "./store";
+import type { Assessment, AssessmentRun, AssessmentUsage } from "./store";
 import { checkedAssessment, checkedAssessmentUsage } from "./lib/assessment-record";
+import { assessmentLeaseMs, newAssessmentRun } from "./lib/assessment-run";
 
 export class MemoryStore implements Store {
   readonly rateLimitStorage = "memory" as const;
@@ -48,6 +49,7 @@ export class MemoryStore implements Store {
   turns = new Map<string, ConversationTurn[]>();
   assessmentRows = new Map<string, Assessment>();
   assessmentUsageRows = new Map<string, AssessmentUsage>();
+  assessmentRunRows = new Map<string, AssessmentRun>();
   scenarioRows = new Map<string, Scenario>();
   scenarioRevisionRows = new Map<string, ScenarioRevision[]>();
   entitlements = new Map<string, Entitlement>();
@@ -130,6 +132,7 @@ export class MemoryStore implements Store {
     this.accounts.delete(userId);
     for (const [hash, token] of this.emailTokens) if (token.userId === userId) this.emailTokens.delete(hash);
     this.profiles.delete(userId);
+    for (const [id, run] of this.assessmentRunRows) if (run.userId === userId) this.assessmentRunRows.delete(id);
     for (const [key, identity] of this.oauthIdentities) if (identity.userId === userId) this.oauthIdentities.delete(key);
     for (const [hash, session] of this.sessions) if (session.userId === userId) this.sessions.delete(hash);
     for (const [id, reservation] of this.reservations) if (reservation.userId === userId) this.reservations.delete(id);
@@ -260,12 +263,92 @@ export class MemoryStore implements Store {
       if (this.conversationRows.get(record.conversationId)?.userId !== userId) {
         throw new Error("Conversation not found");
       }
-      const key = `${record.conversationId}:${record.attempt}`;
+      if (record.runId) {
+        const run = this.assessmentRunRows.get(record.runId);
+        if (run?.userId !== userId || run.conversationId !== record.conversationId
+          || run.status !== "running" || run.expiresAt <= record.createdAt) {
+          throw new ConflictError("Assessment run is not active.");
+        }
+      }
+      const key = `${record.conversationId}:${record.runId ?? "legacy"}:${record.attempt}`;
       if (this.assessmentUsageRows.has(key)
         || [...this.assessmentUsageRows.values()].some(existing => existing.id === record.id)) {
         throw new ConflictError("Assessment attempt usage already exists.");
       }
       this.assessmentUsageRows.set(key, record);
+    });
+  }
+  async claimAssessmentRun(userId: string, conversationId: string, now: Date, dailyLimit: number) {
+    return this.withUsageLock(`account:${userId}`, () => this.withUsageLock(`conversation:${conversationId}`, async () => {
+      const run = newAssessmentRun(this.accounts.get(userId) ?? null, this.conversationRows.get(conversationId) ?? null,
+        [...this.assessmentRunRows.values()], now, dailyLimit);
+      const row = this.conversationRows.get(conversationId)!;
+      this.assessmentRunRows.set(run.id, structuredClone(run));
+      row.state = "ASSESSING";
+      row.updatedAt = now;
+      return structuredClone(run);
+    }));
+  }
+  async finishAssessmentRun(userId: string, runId: string, assessment: Assessment | null, now: Date) {
+    const candidate = this.assessmentRunRows.get(runId);
+    if (candidate?.userId !== userId) return false;
+    const checked = assessment ? checkedAssessment(assessment) : null;
+    return this.withUsageLock(`conversation:${candidate.conversationId}`, async () => {
+      const run = this.assessmentRunRows.get(runId);
+      const row = this.conversationRows.get(candidate.conversationId);
+      if (!run || run.status !== "running" || row?.userId !== userId) return false;
+      if (checked && checked.conversationId !== row.id) throw new Error("Assessment conversation mismatch");
+      const accepted = Boolean(checked && run.expiresAt > now && row.state === "ASSESSING");
+      if (accepted) {
+        if (this.assessmentRows.has(row.id)
+          || [...this.assessmentRows.values()].some(existing => existing.id === checked!.id)) {
+          throw new ConflictError("Assessment already exists.");
+        }
+        this.assessmentRows.set(row.id, checked!);
+      }
+      run.status = accepted ? "succeeded" : "failed";
+      run.finishedAt = now;
+      if (row.state === "ASSESSING") {
+        row.state = accepted ? "FEEDBACK_READY" : "FAILED";
+        row.updatedAt = now;
+      }
+      return checked ? accepted : true;
+    });
+  }
+  async expireAssessmentRuns(now: Date) {
+    let expired = 0;
+    for (const run of this.assessmentRunRows.values()) {
+      if (run.status === "running" && run.expiresAt <= now) {
+        if (await this.finishAssessmentRun(run.userId, run.id, null, now)) expired += 1;
+      }
+    }
+    for (const row of this.conversationRows.values()) {
+      await this.withUsageLock(`conversation:${row.id}`, async () => {
+        const hasRun = [...this.assessmentRunRows.values()].some(run => run.conversationId === row.id);
+        const saved = this.assessmentRows.has(row.id);
+        if (row.state === "FAILED" && !hasRun && saved) {
+          row.state = "FEEDBACK_READY";
+          row.updatedAt = now;
+          expired += 1;
+        }
+        if (row.state === "ASSESSING" && !hasRun && row.updatedAt.getTime() <= now.getTime() - assessmentLeaseMs) {
+          row.state = saved ? "FEEDBACK_READY" : "FAILED";
+          row.updatedAt = now;
+          expired += 1;
+        }
+      });
+    }
+    return expired;
+  }
+  async settleAssessmentUsage(userId: string, usage: AssessmentUsage) {
+    const record = checkedAssessmentUsage(usage);
+    await this.withUsageLock(`conversation:${record.conversationId}`, async () => {
+      const key = `${record.conversationId}:${record.runId ?? "legacy"}:${record.attempt}`;
+      const existing = this.assessmentUsageRows.get(key);
+      if (this.conversationRows.get(record.conversationId)?.userId !== userId || existing?.id !== record.id
+        || existing.modelVersion !== record.modelVersion) throw new Error("Assessment usage not found");
+      if (existing.inputTokens !== null) return;
+      this.assessmentUsageRows.set(key, { ...record, createdAt: existing.createdAt });
     });
   }
   async addConversationTurn(turn: ConversationTurn) { this.turns.set(turn.sessionId, [...(this.turns.get(turn.sessionId) ?? []), turn]); }

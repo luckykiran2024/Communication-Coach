@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
+import { practiceNavigation } from "../../src/presentation";
 
 export default function PracticeLayout() {
-  return <Stack><Stack.Screen name="[id]" options={{ title: "Practice session" }} /></Stack>;
+  return <Stack screenOptions={practiceNavigation.nested}><Stack.Screen name="[id]" /></Stack>;
 }

@@ -8,6 +8,7 @@ import { learnerScenarioProgress } from "./progress";
 import type { BuildAppOptions, RouteDependencies } from "../routes/context";
 import { createEmailSender } from "../email-sender";
 import { OpenAIAssessmentProvider } from "../assessment-provider";
+import { billingProvidersSchema } from "../billing-configuration";
 
 function billingProductMap(value: string | undefined) {
   if (!value) return {} as Record<string, string>;
@@ -66,12 +67,19 @@ export async function createRouteDependencies(store: Store, options: BuildAppOpt
     return plans.find(item => productId.endsWith(`.${item.id}.monthly`) || productId.endsWith(`.${item.id}`));
   }
   async function activePlan(userId: string) {
-    if (!billingEnabled) return plans.find(plan => plan.id === (options.devPlanId ?? process.env.DEV_PLAN_ID ?? "executive")) ?? plans.find(plan => plan.id === "executive")!;
+    if (!billingEnabled) {
+      const isolatedTest = process.env.COACH_TEST_BACKEND === "true"
+        && process.env.VERCEL_PROJECT_ID === "prj_3z5Lh2bWudlu3aPtmHaSRs4YMiBf" && !assessmentEnabled && !realtimeEnabled;
+      if ((process.env.NODE_ENV === "production" || process.env.VERCEL === "1") && !isolatedTest) return freePlan;
+      const devPlanId = options.devPlanId ?? process.env.DEV_PLAN_ID ?? "executive";
+      return plans.find(plan => plan.id === devPlanId) ?? freePlan;
+    }
     const entitlement = await store.entitlement(userId);
     if (!entitlement || entitlement.status !== "active" || (entitlement.expiresAt && entitlement.expiresAt <= now())) return freePlan;
     return planForProduct(entitlement.productId) ?? freePlan;
   }
   async function reapVoiceSessions() {
+    await store.expireAssessmentRuns(now());
     await store.expireVoiceSessions(now());
     if (!realtimeProvider) return;
     const pending = await store.pendingVoiceProviderCalls();
@@ -99,6 +107,7 @@ export async function createRouteDependencies(store: Store, options: BuildAppOpt
     oauth: options.oauth,
     billing: options.billing,
     billingEnabled,
+    billingProviders: options.billing?.providers ?? billingProvidersSchema.parse(process.env.BILLING_PROVIDERS),
     billingWebhookSecret,
     googleNotificationSecret,
     billingProductMap: configuredBillingProductMap,
@@ -107,6 +116,7 @@ export async function createRouteDependencies(store: Store, options: BuildAppOpt
     realtimeModel,
     assessmentEnabled, assessmentProvider, assessmentModel,
     assessmentTimeoutMs: Math.min(30000, Math.max(1, options.assessment?.timeoutMs ?? 30000)),
+    assessmentDailyLimit: options.assessment?.dailyLimit ?? Number(process.env.ASSESSMENT_DAILY_LIMIT ?? 10),
     reapVoiceSessions,
     activePlan,
     planForProduct,

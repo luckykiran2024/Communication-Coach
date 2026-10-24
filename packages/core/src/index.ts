@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { z as assessmentZod } from "zod/v4";
+import { coachingReviewSchema, priorityCoachingSchema, validateCoachingReview, type CoachingTurn } from "./coaching-review";
+export { coachingAreas, coachingAreaLabels, coachingReviewSchema, coachingOverallScore } from "./coaching-review";
+export type { CoachingReview } from "./coaching-review";
 export { assessmentRubrics, assessmentInstructions } from "./rubrics";
 import scenarioData from "../content/scenarios.json" with { type: "json" };
 import hrManagerDrafts from "../content/hr-manager-pack.json" with { type: "json" };
@@ -160,27 +163,33 @@ export function voiceTransportStatus(input: Pick<VoiceTransportStatus, "platform
   const code = input.platform === "web" ? "WEB_PREVIEW_ONLY" : !input.nativeModuleAvailable || !input.developmentBuild ? "DEV_CLIENT_REQUIRED" : !input.providerConfigured ? "PROVIDER_NOT_CONFIGURED" : "READY";
   return { ...input, transport: "react-native-webrtc", liveVoiceAvailable, code };
 }
+export const assessmentPrioritySchema = assessmentZod.object({
+  observation: assessmentZod.string().min(1).max(1200), quote: assessmentZod.string().trim().min(1).max(2000),
+  turnId: assessmentZod.string().min(1), nextExercise: assessmentZod.string().min(1).max(1200),
+  confidence: assessmentZod.enum(["low", "medium", "high"]), coaching: priorityCoachingSchema.optional(),
+}).strict();
 export const assessmentSchema = assessmentZod.object({
   rubricVersion: assessmentZod.string().min(1), modelVersion: assessmentZod.string().min(1),
-  priorities: assessmentZod.array(assessmentZod.object({
-    observation: assessmentZod.string().min(1).max(1200), quote: assessmentZod.string().trim().min(1).max(2000),
-    turnId: assessmentZod.string().min(1), nextExercise: assessmentZod.string().min(1).max(1200),
-    confidence: assessmentZod.enum(["low", "medium", "high"]),
-  }).strict()).max(2),
-  audioAssessed: assessmentZod.literal(false),
+  priorities: assessmentZod.array(assessmentPrioritySchema).max(2),
+  audioAssessed: assessmentZod.literal(false), coachingReview: coachingReviewSchema.nullish(),
 }).strict();
 export const feedbackAssessmentSchema = assessmentSchema.extend({
   transferResult: assessmentZod.enum(["demonstrated", "partial", "not_yet"]),
 });
 export type FeedbackAssessment = assessmentZod.infer<typeof feedbackAssessmentSchema>;
-export const assessmentJsonSchema = assessmentZod.toJSONSchema(feedbackAssessmentSchema);
-export function validateAssessment(value: unknown, turns: { id: string; role: string; text: string }[]) {
+export const coachedAssessmentSchema = feedbackAssessmentSchema.extend({
+  coachingReview: coachingReviewSchema,
+  priorities: assessmentZod.array(assessmentPrioritySchema.extend({ coaching: priorityCoachingSchema })).max(2),
+});
+export const assessmentJsonSchema = assessmentZod.toJSONSchema(coachedAssessmentSchema);
+export function validateAssessment(value: unknown, turns: CoachingTurn[]) {
   const assessment = assessmentSchema.parse(value);
   for (const evidence of assessment.priorities) {
     if (!turns.some(turn => turn.id === evidence.turnId && turn.role === "user" && turn.text.includes(evidence.quote))) {
       throw new Error("Evidence must quote a learner turn");
     }
   }
+  if (assessment.coachingReview) validateCoachingReview(assessment.coachingReview, turns);
   return assessment;
 }
 export type CommunicationEvidence = { score: number; passed: boolean; primarySubstantive: boolean; retrySubstantive: boolean; retryIndependent: boolean; structuredMessage: boolean; actionableMessage: boolean };

@@ -4,6 +4,7 @@ import { buildApp } from "./app";
 import { prismaStore } from "./prisma-store";
 import { MemoryStore } from "./memory-store";
 import { productionConfigurationErrors } from "./config";
+import { storeCredentialsConfigured } from "./billing-configuration";
 import { createEmailSender } from "./email-sender";
 import { supabaseOAuthConfigured } from "./lib/supabase-oauth";
 import {
@@ -15,12 +16,7 @@ const env = runtimeEnvironmentSchema.parse(process.env);
 if (!env.DEV_MEMORY_STORE && !env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required unless DEV_MEMORY_STORE=true");
 }
-const appleAppIdConfigured = process.env.APPLE_ENVIRONMENT === "sandbox" || Boolean(process.env.APPLE_APPLE_ID);
-const storeVerifierConfigured = Boolean(
-  env.APPLE_PRIVATE_KEY && env.APPLE_KEY_ID && env.APPLE_ISSUER_ID && env.APPLE_BUNDLE_ID &&
-  env.APPLE_ROOT_CERT_PATHS && appleAppIdConfigured && env.GOOGLE_PLAY_PACKAGE_NAME &&
-  env.GOOGLE_SERVICE_ACCOUNT_EMAIL && env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
-);
+const storeVerifierConfigured = storeCredentialsConfigured(process.env, env.BILLING_PROVIDERS);
 const splitList = (value: string) => value.split(",").map(item => item.trim()).filter(Boolean);
 const googleClientIds = splitList(env.GOOGLE_OAUTH_CLIENT_IDS);
 const microsoftClientIds = splitList(env.MICROSOFT_OAUTH_CLIENT_IDS);
@@ -40,7 +36,9 @@ const productionErrors = productionConfigurationErrors({
   googleClientIds, microsoftClientIds, emailSenderConfigured: emailSender !== null,
   emailLinkBaseUrl: process.env.ACCOUNT_EMAIL_LINK_BASE_URL,
   realtimeEnabled: env.OPENAI_REALTIME_ENABLED, realtimeApiKey: env.OPENAI_API_KEY,
+  assessmentEnabled: env.ASSESSMENT_ENABLED, assessmentApiKey: env.OPENAI_API_KEY,
   billingEnabled: env.BILLING_ENABLED, billingWebhookSecret: env.BILLING_WEBHOOK_SECRET,
+  billingProviders: env.BILLING_PROVIDERS,
   googleNotificationAudience: env.GOOGLE_PUBSUB_AUDIENCE, billingProductMap: env.BILLING_PRODUCT_MAP,
   storeVerifierConfigured,
 });
@@ -56,6 +54,7 @@ export const app = await buildApp(store, {
   runtime: env.RUNTIME, cronSecret: env.CRON_SECRET,
   assessment: {
     enabled: env.ASSESSMENT_ENABLED, apiKey: env.OPENAI_API_KEY, model: env.ASSESSMENT_MODEL,
+    dailyLimit: env.ASSESSMENT_DAILY_LIMIT,
     inputMicrosPerMillion: env.ASSESSMENT_INPUT_MICROS_PER_MILLION,
     outputMicrosPerMillion: env.ASSESSMENT_OUTPUT_MICROS_PER_MILLION,
   },
@@ -63,6 +62,7 @@ export const app = await buildApp(store, {
   oauth: { googleClientIds, microsoftClientIds, supabase: supabaseOAuth }, email: { sender: emailSender },
   billing: {
     enabled: env.BILLING_ENABLED, webhookSecret: env.BILLING_WEBHOOK_SECRET,
+    providers: env.BILLING_PROVIDERS,
     googleNotificationSecret: env.GOOGLE_PUBSUB_WEBHOOK_SECRET,
     verifyGoogleNotificationRequest: googlePubSubAuthenticator,
     verifyPurchase: storePurchaseVerifier, verifyAppleNotification: appleNotificationVerifier,

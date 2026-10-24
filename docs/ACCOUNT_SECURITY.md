@@ -1,5 +1,24 @@
 # Phase 5 account security
 
+## Paid-feature eligibility — 2026-10-10
+
+AI feedback and live voice now require a verified account email before any provider request or voice allowance reservation.
+OAuth-confirmed email ownership and the existing password-protected email verification flow satisfy this requirement;
+editing a profile does not. Ordinary local/text practice remains available without paid-provider access.
+AI reviews additionally use durable per-account UTC-day quotas and per-conversation retry limits. Production billing-off
+defaults to Free, not a development paid plan. See PUBLIC_LAUNCH_READINESS.md for guarantees and unresolved release gates.
+These changes do not establish real email delivery, native OAuth, provider quality or phone QA; no hosted activation occurred.
+
+## Public Data API containment — 2026-10-10
+
+The previously unverified public grants were confirmed exposed, then restricted after explicit founder approval.
+All 13 existing public tables now have RLS enabled and no effective anon/authenticated table/column read/write access.
+The public/anon-key zero-row User probe changed from HTTP 200 to HTTP 401/42501; owner access remains available.
+Only migration 202610101500_public_data_api_lockdown was applied directly as security containment, not a full feature deploy.
+Restricted test schemas, Supabase Auth/storage, APK and paid/production feature gates were left unchanged.
+See SUPABASE_ACCESS_AUDIT.md for five live read-only checks, migration/rehearsal evidence, unchanged platform-owned defaults,
+limits of production-role verification and unresolved follow-up issues. This does not establish absence of historical compromise.
+
 Supabase Google OAuth extension (2026-10-10): see SUPABASE_OAUTH.md for the live provider setup, PKCE client flow,
 `POST /v1/auth/supabase` server verification and activation gates. It supplements, not replaces, password login.
 An unverified existing account requires its correct password plus a verified Google identity before linking;
@@ -94,8 +113,9 @@ The old account-linking logic treated email equality as ownership; Microsoft Gra
 Missing recovery tokens/session revocation prevented safe mailbox-owner recovery. Manager allowlisting had the same unverified
 email trust problem. The new proof boundaries and transaction locks address these paths.
 
-Not fixed here: existing public Supabase Data API/RLS grants, upstream dependency advisories, retention cleanup and device/session
-listing. Existing runtime z.coerce.boolean parsing treats nonempty strings such as "false" as true; review and repair that
-pre-existing deployment configuration issue before production. No final APK, production deployment, commit or push occurred.
+The original Phase 5 increment did not fix public Supabase Data API/RLS grants; the later containment above addresses
+the confirmed existing-table exposure. Upstream dependency advisories, retention cleanup and device/session listing remain.
+Runtime boolean parsing was subsequently repaired in source; deployment is required before hosted runtimes use that fix.
+No final APK, production feature deployment, commit or push occurred during this security containment.
 Founder inputs still needed before release: a verified sender/domain, Resend credential in private configuration, HTTPS link
 destination and Microsoft app registration if Microsoft login is wanted. No secrets should be pasted into chat.

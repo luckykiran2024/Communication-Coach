@@ -22,7 +22,7 @@ export async function learnerScenarioProgress(store: Store, userId: string, prof
   const completed = completedRecords.map(record => record.conversation);
   const evidenceRows = completedRecords.map(record => recordEvidence(record, assessmentEnabled));
   const assessments = evidenceRows.filter(assessment => assessment !== null);
-  const practiceDays = new Set(completed.map(conversation => dayKey(conversation.createdAt, profile.timezone))).size;
+  const practiceDays = new Set(learnerActivityDates(completedRecords).map(date => dayKey(date, profile.timezone))).size;
   const completedScenarioIds = [...new Set(completed.map(conversation => conversation.scenarioId))];
   return {
     mastery: getMasteryLevel({
@@ -33,6 +33,11 @@ export async function learnerScenarioProgress(store: Store, userId: string, prof
     }),
     completedScenarioIds,
   };
+}
+
+export function learnerActivityDates(records: LearningRecord[], now?: Date) {
+  return records.flatMap(record => record.turns.filter(turn => turn.role === "user"
+    && turn.text.trim().length > 0 && (!now || turn.createdAt <= now)).map(turn => turn.createdAt));
 }
 
 export function recordEvidence(record: LearningRecord, assessmentEnabled: boolean) {

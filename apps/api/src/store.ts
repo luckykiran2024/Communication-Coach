@@ -4,7 +4,12 @@ export type Assessment = FeedbackAssessment & {
 };
 export type AssessmentUsage = {
   id: string; conversationId: string; attempt: number; modelVersion: string;
+  runId?: string | null; providerRequestId?: string | null; providerResponseId?: string | null;
   inputTokens: number | null; outputTokens: number | null; costMicros: number | null; createdAt: Date;
+};
+export type AssessmentRun = {
+  id: string; userId: string; conversationId: string; dayKey: string;
+  status: "running" | "succeeded" | "failed"; createdAt: Date; expiresAt: Date; finishedAt: Date | null;
 };
 export type Account = {
   id: string; email: string; passwordHash: string; role: "learner" | "manager"; emailVerifiedAt: Date | null;
@@ -76,6 +81,10 @@ export interface Store {
   assessment(userId: string, conversationId: string): Promise<Assessment | null>;
   saveAssessment(userId: string, assessment: Assessment): Promise<void>;
   recordAssessmentUsage(userId: string, usage: AssessmentUsage): Promise<void>;
+  claimAssessmentRun(userId: string, conversationId: string, now: Date, dailyLimit: number): Promise<AssessmentRun>;
+  finishAssessmentRun(userId: string, runId: string, assessment: Assessment | null, now: Date): Promise<boolean>;
+  expireAssessmentRuns(now: Date): Promise<number>;
+  settleAssessmentUsage(userId: string, usage: AssessmentUsage): Promise<void>;
   addConversationTurn(turn: ConversationTurn): Promise<void>;
   conversationTurns(userId: string, sessionId: string): Promise<ConversationTurn[]>;
   customScenarios(): Promise<Scenario[]>;

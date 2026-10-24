@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { states } from "@coach/core";
 import { ConflictError, type Assessment, type AssessmentUsage, type Store } from "../src/store";
+import { coachingReviewFixture, priorityCoachingFixture } from "../../../packages/core/test/coaching-review.fixture";
 
 type StoreFixture = { store: Store; close?: () => Promise<void> };
 
@@ -41,6 +42,115 @@ export function registerAssessmentStoreTests(name: string, setup: (context: Test
     };
     return { store, owner, other, conversationId, assessment, usage };
   }
+
+  test(`${name}: detailed and legacy reviews persist with owner isolation and immutable nested evidence`, async context => {
+    const { store, owner, other, conversationId, assessment } = await fixture(context);
+    const detail = coachingReviewFixture(assessment.priorities[0].turnId, assessment.priorities[0].quote);
+    const record = { ...assessment, coachingReview: detail,
+      priorities: [{ ...assessment.priorities[0], coaching: priorityCoachingFixture }] };
+    await store.markEmailVerified(owner.id, assessment.createdAt);
+    const run = await store.claimAssessmentRun(owner.id, conversationId, assessment.createdAt, 10);
+    assert.equal(await store.finishAssessmentRun(owner.id, run.id, record, assessment.createdAt), true);
+    const saved = (await store.assessment(owner.id, conversationId))!;
+    assert.deepEqual(saved.coachingReview, detail);
+    assert.deepEqual(saved.priorities[0].coaching, priorityCoachingFixture);
+    saved.coachingReview!.scores[0].rationale = "Mutated by caller";
+    assert.deepEqual((await store.assessment(owner.id, conversationId))?.coachingReview, detail);
+    assert.equal(await store.assessment(other.id, conversationId), null);
+    const exported = await store.learningRecords(owner.id);
+    assert.deepEqual(exported[0].assessment?.coachingReview, detail);
+  });
+
+  test(`${name}: direct assessment saves preserve detailed review JSON`, async context => {
+    const { store, owner, conversationId, assessment } = await fixture(context);
+    const report = coachingReviewFixture(assessment.priorities[0].turnId, assessment.priorities[0].quote);
+    await store.saveAssessment(owner.id, { ...assessment, coachingReview: report });
+    assert.deepEqual((await store.assessment(owner.id, conversationId))?.coachingReview, report);
+  });
+
+  test(`${name}: assessment claims require verified ownership and enforce a concurrent account-wide daily limit`, async context => {
+    const { store, owner, other, conversationId, usage } = await fixture(context);
+    const now = usage.createdAt;
+    await assert.rejects(() => store.claimAssessmentRun(owner.id, conversationId, now, 2), /Verify your email/);
+    await store.markEmailVerified(owner.id, now);
+    await assert.rejects(() => store.claimAssessmentRun(other.id, conversationId, now, 2), /Conversation not found/);
+    const ids = Array.from({ length: 6 }, () => randomUUID());
+    for (const id of ids) await store.createConversation({ id, userId: owner.id, scenarioId: "engineering-delay",
+      state: "CREATED", createdAt: now, updatedAt: now });
+    const claims = await Promise.allSettled(ids.map(id => store.claimAssessmentRun(owner.id, id, now, 2)));
+    assert.equal(claims.filter(result => result.status === "fulfilled").length, 2);
+    assert.equal(claims.filter(result => result.status === "rejected" && /limit/.test(result.reason.message)).length, 4);
+    const tomorrow = new Date(now.getTime() + 86400000);
+    assert.ok(await store.claimAssessmentRun(owner.id, conversationId, tomorrow, 2));
+  });
+
+  test(`${name}: expired leases recover once, fence late feedback and preserve unknown cost until reconciliation`, async context => {
+    const { store, owner, other, conversationId, assessment, usage } = await fixture(context);
+    const now = usage.createdAt;
+    await store.markEmailVerified(owner.id, now);
+    const run = await store.claimAssessmentRun(owner.id, conversationId, now, 10);
+    const attempt = { ...usage, runId: run.id };
+    await store.recordAssessmentUsage(owner.id, attempt);
+    await assert.rejects(() => store.claimAssessmentRun(owner.id, conversationId, now, 10));
+    assert.equal(await store.finishAssessmentRun(other.id, run.id, assessment, now), false);
+    const later = new Date(run.expiresAt.getTime() + 1);
+    assert.equal(await store.expireAssessmentRuns(later), 1);
+    assert.equal(await store.expireAssessmentRuns(later), 0);
+    assert.equal((await store.conversation(owner.id, conversationId))?.state, "FAILED");
+    const next = await store.claimAssessmentRun(owner.id, conversationId, later, 10);
+    assert.equal(await store.finishAssessmentRun(owner.id, run.id, assessment, later), false);
+    assert.equal((await store.conversation(owner.id, conversationId))?.state, "ASSESSING");
+    await assert.rejects(() => store.settleAssessmentUsage(other.id, { ...attempt, inputTokens: 7 }), /not found/);
+    await store.settleAssessmentUsage(owner.id, { ...attempt, inputTokens: 7, outputTokens: 3, costMicros: 12 });
+    await store.settleAssessmentUsage(owner.id, { ...attempt, inputTokens: 7, outputTokens: 3, costMicros: 12 });
+    assert.equal(await store.finishAssessmentRun(owner.id, next.id, assessment, later), true);
+    assert.equal((await store.conversation(owner.id, conversationId))?.state, "FEEDBACK_READY");
+    assert.equal(await store.finishAssessmentRun(owner.id, next.id, null, later), false);
+    assert.equal((await store.assessment(owner.id, conversationId))?.id, assessment.id);
+  });
+
+  test(`${name}: feedback commit is atomic, concurrent-safe and cannot succeed after its lease`, async context => {
+    const { store, owner, conversationId, usage, assessment } = await fixture(context);
+    const now = usage.createdAt;
+    await store.markEmailVerified(owner.id, now);
+    const first = await store.claimAssessmentRun(owner.id, conversationId, now, 10);
+    assert.equal(await store.finishAssessmentRun(owner.id, first.id, assessment, first.expiresAt), false);
+    assert.equal(await store.assessment(owner.id, conversationId), null);
+    const next = await store.claimAssessmentRun(owner.id, conversationId, first.expiresAt, 10);
+    const results = await Promise.all(Array.from({ length: 6 }, () =>
+      store.finishAssessmentRun(owner.id, next.id, { ...assessment, id: randomUUID() }, first.expiresAt)));
+    assert.equal(results.filter(Boolean).length, 1);
+    assert.equal((await store.conversation(owner.id, conversationId))?.state, "FEEDBACK_READY");
+    assert.ok(await store.assessment(owner.id, conversationId));
+    await store.deleteAccount(owner.id);
+    assert.equal(await store.finishAssessmentRun(owner.id, next.id, null, now), false);
+  });
+
+  test(`${name}: legacy interrupted feedback reuses a saved verified assessment rather than billing again`, async context => {
+    const { store, owner, conversationId, assessment } = await fixture(context);
+    await store.saveAssessment(owner.id, assessment);
+    for (const state of ["ASSESSING", "FAILED"] as const) {
+      await store.updateConversationState(owner.id, conversationId, state);
+      assert.equal(await store.expireAssessmentRuns(new Date(Date.now() + 120000)), 1);
+      assert.equal((await store.conversation(owner.id, conversationId))?.state, "FEEDBACK_READY");
+      assert.equal((await store.assessment(owner.id, conversationId))?.id, assessment.id);
+    }
+  });
+
+  test(`${name}: manual recovery cannot exceed three runs and legacy stuck reviews are recoverable`, async context => {
+    const { store, owner, conversationId, usage } = await fixture(context);
+    const now = usage.createdAt;
+    await store.markEmailVerified(owner.id, now);
+    await store.updateConversationState(owner.id, conversationId, "ASSESSING");
+    const later = new Date(Date.now() + 120000);
+    assert.equal(await store.expireAssessmentRuns(later), 1);
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const run = await store.claimAssessmentRun(owner.id, conversationId, later, 10);
+      await store.recordAssessmentUsage(owner.id, { ...usage, id: randomUUID(), runId: run.id });
+      assert.equal(await store.finishAssessmentRun(owner.id, run.id, null, later), true);
+    }
+    await assert.rejects(() => store.claimAssessmentRun(owner.id, conversationId, later, 10), /retry limit/);
+  });
 
   test(`${name}: completion is owned and exactly one concurrent claimant wins`, async context => {
     const { store, owner, other, conversationId } = await fixture(context);

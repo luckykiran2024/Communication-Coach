@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SymbolView, type AndroidSymbol, type SFSymbol } from "expo-symbols";
 import { coachAccents, colorPalettes, colorThemes, type CoachAccent, type ColorTheme } from "@coach/core";
 import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
+import { radioSelection, wrappingTextStyle } from "./presentation";
 
 type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
@@ -90,7 +91,15 @@ export function Screen({ children, topInset = false }: { children: ReactNode; to
 
 export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: string }) {
   const theme = useTheme();
-  return <View style={{ gap: 10 }}>{eyebrow && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 2 }}>{eyebrow.toUpperCase()}</Text>}<Text accessibilityRole="header" style={{ color: theme.ink, fontFamily, fontSize: 32, fontWeight: "700", lineHeight: 39, letterSpacing: -0.4 }}>{children}</Text></View>;
+  return <View style={{ gap: 10, ...wrappingTextStyle }}>
+    {eyebrow && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 2 }}>
+      {eyebrow.toUpperCase()}
+    </Text>}
+    <Text accessibilityRole="header"
+      style={{ color: theme.ink, fontFamily, fontSize: 32, fontWeight: "700", lineHeight: 39, letterSpacing: -0.4 }}>
+      {children}
+    </Text>
+  </View>;
 }
 
 export function Copy({ children, error = false }: { children: ReactNode; error?: boolean }) {
@@ -103,10 +112,24 @@ export function Card({ children, tone = "default" }: { children: ReactNode; tone
   return <View style={{ padding: 22, borderRadius: 22, backgroundColor: tone === "accent" ? theme.accentSurface : theme.surface, borderColor: theme.border, borderWidth: 1, gap: 14 }}>{children}</View>;
 }
 
-export function Action({ title, onPress, secondary = false, disabled = false, busy = false, icon }: { title: string; onPress(): void; secondary?: boolean; disabled?: boolean; busy?: boolean; icon?: IconName }) {
+export function Action({ title, onPress, secondary = false, disabled = false, busy = false, icon }: {
+  title: string; onPress(): void; secondary?: boolean; disabled?: boolean; busy?: boolean; icon?: IconName;
+}) {
   const theme = useTheme();
   const textColor = secondary ? theme.ink : theme.isDark ? "#13233F" : "#FFFFFF";
-  return <Pressable accessibilityRole="button" accessibilityState={{ disabled: disabled || busy, busy }} disabled={disabled || busy} onPress={onPress} style={({ pressed }) => ({ minHeight: 52, padding: 16, gap: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", borderRadius: 14, borderWidth: 1, borderColor: theme.border, backgroundColor: secondary ? theme.surface : theme.accent, opacity: disabled || busy ? .55 : pressed ? .8 : 1 })}>{busy ? <ActivityIndicator color={textColor} /> : <>{icon && <Icon name={icon} size={19} color={textColor} />}<Text style={{ color: textColor, fontFamily, fontWeight: "700", fontSize: 16 }}>{title}</Text></>}</Pressable>;
+  return <Pressable accessibilityRole="button" accessibilityState={{ disabled: disabled || busy, busy }}
+    disabled={disabled || busy} onPress={onPress} style={({ pressed }) => ({
+      minHeight: 52, padding: 16, gap: 10, flexDirection: "row", alignItems: "center", justifyContent: "center",
+      borderRadius: 14, borderWidth: 1, borderColor: theme.border, backgroundColor: secondary ? theme.surface : theme.accent,
+      opacity: disabled || busy ? .55 : pressed ? .8 : 1,
+    })}>
+    {busy ? <ActivityIndicator color={textColor} /> : <>
+      {icon && <Icon name={icon} size={19} color={textColor} />}
+      <Text style={{ color: textColor, fontFamily, fontWeight: "700", fontSize: 16, textAlign: "center", ...wrappingTextStyle }}>
+        {title}
+      </Text>
+    </>}
+  </Pressable>;
 }
 
 export function Field({ label, ...props }: TextInputProps & { label: string }) {
@@ -116,7 +139,17 @@ export function Field({ label, ...props }: TextInputProps & { label: string }) {
 
 export function Choices({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange(value: string): void }) {
   const theme = useTheme();
-  return <View style={{ gap: 10 }}><Text style={{ color: theme.ink, fontFamily, fontWeight: "600" }}>{label}</Text><View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>{options.map(option => <Pressable key={option} accessibilityRole="radio" accessibilityState={{ checked: option === value }} onPress={() => onChange(option)} style={{ minHeight: 46, justifyContent: "center", borderRadius: 12, padding: 12, borderWidth: 1, borderColor: option === value ? theme.accent : theme.border, backgroundColor: theme.surface }}><Text style={{ color: option === value ? theme.accent : theme.ink, fontFamily, fontWeight: option === value ? "700" : "400" }}>{option}</Text></Pressable>)}</View></View>;
+  return <View style={{ gap: 10 }}>
+    <Text style={{ color: theme.ink, fontFamily, fontWeight: "600" }}>{label}</Text>
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+      {options.map(option => <Pressable key={option} accessibilityRole="radio" {...radioSelection(option === value)}
+        onPress={() => onChange(option)} style={{ minHeight: 46, justifyContent: "center", borderRadius: 12, padding: 12,
+          borderWidth: 1, borderColor: option === value ? theme.accent : theme.border, backgroundColor: theme.surface }}>
+        <Text style={{ color: option === value ? theme.accent : theme.ink, fontFamily,
+          fontWeight: option === value ? "700" : "400" }}>{option}</Text>
+      </Pressable>)}
+    </View>
+  </View>;
 }
 
 export function VoiceWave({ active = false, color }: { active?: boolean; color?: string }) {

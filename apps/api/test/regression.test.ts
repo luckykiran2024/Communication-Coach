@@ -152,8 +152,12 @@ test("regression: manager scenarios require a key and become library content", a
   const initialRevisionId = initialRevisions.json().revisions[0].id as string;
   const library = await app.inject({ url: "/v1/scenarios/library" });
   assert.equal(library.statusCode, 200);
-  assert.ok(library.json().count >= 127);
-  assert.equal(library.json().scenarios.some((item: { id: string }) => item.id === scenario.id), true);
+  assert.ok(library.json().count >= 100);
+  assert.equal(library.json().scenarios.some((item: { id: string }) => item.id === scenario.id), false);
+  const managerLibrary = await app.inject({ url: "/v1/manager/scenarios",
+    headers: { "x-manager-key": "development-manager-key" } });
+  assert.equal(managerLibrary.statusCode, 200);
+  assert.equal(managerLibrary.json().scenarios.some((item: { id: string }) => item.id === scenario.id), true);
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers: { authorization: `Bearer ${token}` }, payload: validProfile });
   const recommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
   assert.equal(recommendations.statusCode, 200);
@@ -161,6 +165,8 @@ test("regression: manager scenarios require a key and become library content", a
   const published = await app.inject({ method: "POST", url: `/v1/manager/scenarios/${scenario.id}/review`, headers: { "x-manager-key": "development-manager-key" }, payload: { status: "published" } });
   assert.equal(published.statusCode, 200);
   assert.equal(published.json().scenario.reviewStatus, "published");
+  assert.equal((await app.inject({ url: "/v1/scenarios/library" })).json().scenarios
+    .some((item: { id: string }) => item.id === scenario.id), true);
   const publishedRevisions = await app.inject({ method: "GET", url: `/v1/manager/scenarios/${scenario.id}/revisions`, headers: { "x-manager-key": "development-manager-key" } });
   assert.equal(publishedRevisions.json().revisions.length, 2);
   const publishedRecommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
@@ -175,6 +181,8 @@ test("regression: manager scenarios require a key and become library content", a
   const rolledBack = await app.inject({ method: "POST", url: `/v1/manager/scenarios/${scenario.id}/rollback`, headers: { "x-manager-key": "development-manager-key" }, payload: { revisionId: initialRevisionId } });
   assert.equal(rolledBack.statusCode, 200);
   assert.equal(rolledBack.json().scenario.reviewStatus, "draft");
+  assert.equal((await app.inject({ url: "/v1/scenarios/library" })).json().scenarios
+    .some((item: { id: string }) => item.id === scenario.id), false);
   const afterRollbackRecommendations = await app.inject({ url: "/v1/me/scenarios", headers: { authorization: `Bearer ${token}` } });
   assert.equal(afterRollbackRecommendations.json().scenarios.some((item: { id: string }) => item.id === scenario.id), false);
 });
@@ -252,7 +260,14 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
 
 test("regression: verified mobile store purchases grant only matched entitlements", async context => {
   const store = new MemoryStore();
-  const app = await buildApp(store, { billing: { enabled: true, webhookSecret: "billing-secret", verifyPurchase: async input => ({ productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.transactionId, purchaseToken: input.purchaseToken, status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z") }) } });
+  const app = await buildApp(store, { billing: {
+    enabled: true, webhookSecret: "billing-secret", verifyPurchase: async input => ({
+      productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.transactionId,
+      purchaseToken: input.purchaseToken, status: "active", environment: "sandbox",
+      expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"),
+      accountToken: (await store.accountByEmail("store-purchase@example.com"))!.id,
+    }),
+  } });
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "store-purchase@example.com", password: "store-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
@@ -425,6 +440,7 @@ test("regression: free tier allows exactly two lifetime seven-minute voice sessi
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: validCredentials });
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
+  await store.markEmailVerified(registration.json().user.id, time);
   for (let index = 0; index < 2; index++) {
     const practice = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "daily-opening" } });
     assert.equal(practice.statusCode, 201);
@@ -614,6 +630,7 @@ test("regression: configured realtime voice creates a reserved provider session 
   });
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { email: "voice-provider@example.com", password: "voice-provider-password-123" } });
+  await store.markEmailVerified(registration.json().user.id, time);
   const headers = { authorization: `Bearer ${registration.json().token}` };
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: validProfile });
   const conversation = await app.inject({ method: "POST", url: "/v1/me/conversations", headers, payload: { scenarioId: "engineering-delay" } });

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { billingProvidersSchema } from "./billing-configuration";
 
 const environmentBoolean = z.enum(["true", "false"]).default("false").transform(value => value === "true");
 
@@ -15,6 +16,7 @@ export const runtimeEnvironmentSchema = z.object({
   MICROSOFT_OAUTH_CLIENT_IDS: z.string().default(""),
   SUPABASE_OAUTH_ENABLED: environmentBoolean,
   ASSESSMENT_ENABLED: environmentBoolean,
+  ASSESSMENT_DAILY_LIMIT: z.coerce.number().int().min(1).max(100).default(10),
   ASSESSMENT_MODEL: z.string().trim().min(1).default("gpt-5-mini"),
   ASSESSMENT_INPUT_MICROS_PER_MILLION: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().nonnegative()).optional(),
   ASSESSMENT_OUTPUT_MICROS_PER_MILLION: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().nonnegative()).optional(),
@@ -23,6 +25,7 @@ export const runtimeEnvironmentSchema = z.object({
   OPENAI_REALTIME_ENABLED: environmentBoolean,
   OPENAI_API_KEY: z.string().optional(),
   BILLING_ENABLED: environmentBoolean,
+  BILLING_PROVIDERS: billingProvidersSchema,
   BILLING_WEBHOOK_SECRET: z.string().optional(),
   GOOGLE_PUBSUB_WEBHOOK_SECRET: z.string().optional(),
   GOOGLE_PUBSUB_AUDIENCE: z.string().url().optional(),

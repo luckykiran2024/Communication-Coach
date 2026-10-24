@@ -5,9 +5,11 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const tests = [
   "packages/core/test/*.test.ts",
   "apps/api/test/regression.test.ts",
+  "apps/api/test/billing.test.ts",
   "apps/api/test/account-security.test.ts",
   "apps/api/test/assessment-store.test.ts",
   "apps/api/test/assessment.test.ts",
+  "apps/api/test/launch-hardening.test.ts",
   "apps/api/test/conversation-phase.test.ts",
   "apps/api/test/serverless.test.ts",
   "apps/api/test/release-gates.test.ts",
@@ -19,6 +21,9 @@ const tests = [
   "scripts/cost-summary.test.ts",
   "scripts/realtime-events.test.ts",
   "scripts/theme-preferences.test.ts",
+  "scripts/functional-preview-config.test.ts",
+  "scripts/mobile-presentation.test.ts",
+  "scripts/purchase-flow.test.ts",
 ];
 const result = spawnSync(process.execPath, [
   "--require=./scripts/node-os-compat.cjs", "./node_modules/tsx/dist/cli.mjs", "--test", ...tests,

@@ -1,5 +1,89 @@
 # Known issues and limits
 
+## Native billing / latest database checkpoint — 2026-10-24
+
+- Google Play and Apple billing source is prepared and regression-tested, not activated or store-validated. Play Console
+  still reports identity/contact-phone verification required and Create app disabled; Apple enrollment/iPhone unavailable.
+- Explicit BILLING_PROVIDERS=google supports Android-first credential setup without enabling Apple. No local/hosted billing
+  flag was changed. Sandbox build profile needs confirmed final identifiers, real products, licensed testers and staging API.
+- Native purchase blocks overlapping subscriptions rather than implementing seamless plan replacement/proration.
+  Upgrade/downgrade semantics and sandbox lifecycle acceptance remain release gates, not completed features.
+- Supabase now connects and the earlier coaching-review migration plus 16/16 persistence tests pass in coach_verification.
+  Historical connection-failure notes below are superseded. Production and coach_apk_test remain unchanged.
+- Browser verification uses simulated payment/AI/email and an Executive development grant; choosing a plan there is not
+  a paid entitlement test. ADB still lists only an offline emulator. No new test APK or iOS device evidence exists.
+- Email, scheduler, live AI/voice/OAuth, native store lifecycle, legal/content approval and public-release gates remain open.
+  No charge, paid provider request, deployment, source push, cloud build or store submission occurred.
+  See STORE_BILLING_TEST_PLAN.md for before/after, exact results and ordered next steps.
+
+## Functional verification limits — 2026-10-24
+
+- Browser learner-flow checks now have actual UI/API evidence, not only a component screenshot. Provider/email/payment
+  fixtures and memory persistence are labelled; they do not establish live service quality or production database readiness.
+- Duplicate practice headers, misleading enabled-feedback text, 320px home overflow and missing web checked/expanded state
+  were fixed and retested. The broader long-home-page redesign is still a separate UX task.
+- Native QA is blocked by the emulator acceleration failure and offline software instance; no physical phone is currently
+  listed. Android/iOS voice, recording, interruptions, font scaling and store purchases remain unverified.
+- Supabase isolated connection still returns tenant/user not found. Pending migration/database verification must precede
+  deployment. Email/domain, scheduler, live OAuth/AI, store sandbox and final legal/content approval remain release gates.
+  Its dashboard requires human GitHub sign-in before project status can be inspected; a paused-project diagnosis is not confirmed.
+- Current code builds and automated checks pass, but public-launch sign-off is NOT granted. Existing APK/production are
+  unchanged; see FUNCTIONAL_TEST_REPORT.md for the actual browser test matrix and external blockers.
+
+## Detailed coaching review limits — 2026-10-24
+
+- The requested report format is implemented in source, not delivered to the existing APK or hosted backend.
+- Scores are transcript-based model estimates, not measured/certified ability scores. Structural quote/schema checks do not
+  establish narrative correctness, domain advice, calibration or actual learning outcomes; real-provider review is pending.
+- The isolated Supabase connection currently returns tenant/user not found. New migration/database persistence verification
+  is blocked; check project/connection status privately before deploying or rerunning the guarded integration tests.
+- Earlier assessments have no detailed report; they retain the original view without fabricated retrospective scoring.
+- Browser fixture layouts pass narrow-width/enlarged-text checks, but Android/iOS accessibility, native font scaling and
+  a full signed-in feedback journey remain unverified. No provider flag or release gate was relaxed.
+- The long home-page redesign and Phase 10 role-aware personalisation are not included in this report-format change.
+- See COACHING_REVIEW.md and TESTING_STATUS.md for current evidence; older checkpoints below are historical.
+
+## Launch hardening checkpoint — 2026-10-10
+
+- Fixed in source: failed/stuck assessment recovery, stale-worker fencing, verified-email gates and daily review quotas,
+  production billing-off Executive fallback, answer-date progress/streak grouping and unpublished public-library entries.
+- Pending release: real-provider feedback quality/cancellation/billing verification, unlocked Android voice/transcript/retry QA,
+  separate iOS QA, verified email delivery/recovery, native OAuth, every-minute scheduling and store sandbox purchases.
+- No local OpenAI key is present; the approved US$3 assessment-test cap is unused. No public release, APK/OTA update,
+  source commit or push occurred in this increment. Hosted production/test services are unchanged.
+- An aborted/killed worker can still leave provider charges unknown. Unknown ledger entries remain null and retain client
+  request IDs; late known usage reconciles only while processing survives. Provider invoice reconciliation is operational,
+  not automatic; verified email and per-account caps do not eliminate multi-account abuse or replace project spend limits.
+- Public-schema ACL containment is the previously approved audit, not proof of a full production authenticated journey.
+  New feature migrations were applied only to coach_verification; existing-data migration/rollback and backend-role review
+  remain required. See PUBLIC_LAUNCH_READINESS.md for current gates and before/after details.
+
+## Live database exposure — contained 2026-10-10
+
+- The original 13-table public exposure is contained after approval: RLS is enabled and effective anon/authenticated
+  table/column privileges are zero. The public-key User probe now returns HTTP 401/42501. No customer rows were fetched.
+- The isolated coach schemas retain their existing denied API-role schema access and functional backend access.
+  Postgres migration defaults are restricted; platform-owned supabase_admin defaults remain uneditable by this operator.
+  Review future alternate-creator objects and possible historical exposure. See SUPABASE_ACCESS_AUDIT.md.
+- Those feedback/quota/development-plan source gaps are fixed in the latest launch-hardening checkpoint above;
+  they have not been deployed to the installed APK or production backend.
+- No inference of actual compromise or verified unit economics is made. Production feature/deployment gates remain in place.
+
+## Role personalization gap
+
+- Phase 10 in CODEX_PLAN.md specifies every-function/every-career-stage personalization; it is not implemented yet.
+- Current function tags do not guarantee distinct professional contexts. Career level/designation are not yet used for
+  role-aware recommendations or assessment. The new context packs, career lenses and voice/feedback snapshots remain planned.
+- The installed d66eca5b test APK has not gained these features from this documentation update.
+
+## Current test release
+
+- Refreshed test APK d66eca5b-8d55-4f71-aeca-79210ef5056d finished, passed artifact checks and installed successfully.
+  The app process starts without sampled startup errors; phone lock prevents interactive theme/full native QA.
+- Its isolated backend is refreshed and passes 31 hosted HTTP checks; latest local checks pass 138 general/117 regression tests.
+- Live AI voice/assessment, OAuth, email delivery and purchases remain disabled. Executive test grants expose all workshops;
+  this is not a paid-plan entitlement test. Production remains gated and unchanged. See TEST_APK.md.
+
 ## Release blockers
 
 - The founder explicitly kept production gated during the Git publication request. Main Git deployments and automatic
@@ -14,8 +98,8 @@
   API bundles and web export pass. Release preflight still exits 1 with configuration/manual acceptance gates.
 - Legacy conversations without a snapshot can lose their catalog scenario. AI completion now rejects that case before
   claiming completion or calling the provider, preserving the learner's editable responses; restoring missing content is manual.
-- Found, not fixed: practice-day/streak grouping still dates completed conversations by their creation day rather than
-  every answer's activity day. Measured voice minutes do not use that inferred date or duration.
+- The latest source groups practice/streak activity by learner answer timestamps rather than conversation creation.
+  This correction is not yet in the installed APK/hosted backend; measured voice minutes remain separately recorded.
 - Supabase Google OAuth is configured at the provider and implemented in source, not activated in the installed APK or hosted API.
   Google consent is still Testing; only the approved test account is registered. Native callback and real-account sign-in remain unverified.
 - Supabase Auth user records are separate from custom application accounts. Existing app deletion does not delete that external
@@ -30,7 +114,8 @@
 - Native recording/playback code is untested on actual Android/iOS devices.
 - Docker's daemon remains unavailable. Hosted Supabase verification uses strict TLS in coach_verification;
   twenty migrations are applied there. Public and coach_apk_test were not migrated in this continuation.
-- The Supabase dashboard reports disabled RLS on existing public application tables, including User and AuthSession. Effective anonymous/authenticated Data API grants were not verified. Review and restrict that access before using real customer data; this diagnosis did not change existing tables or permissions.
+- Supabase public access was confirmed and then contained through the approved public-only migration. The original
+  read-only audit did not change permissions; the subsequent containment did. See SUPABASE_ACCESS_AUDIT.md.
 - Email verification and password recovery are implemented and tested with mocked delivery and isolated PostgreSQL. Real sender credentials/domain, HTTPS recovery-link routing and native-device sign-off are still missing; production startup intentionally rejects absent delivery configuration. Retention jobs and session/device listing remain missing. Do not expose the preview as a public service.
 - Microsoft now accepts signed ID tokens only, with configured audience allowlisting. It never trusts an email claim for automatic linking. Existing email collisions are refused; recovering a previously unverified Microsoft account removes its provider link, so use password login afterwards. Explicit authenticated linking and legacy Graph identity migration remain unsupported.
 - Phase 5 web export passes, but Codex in-app browser requests to the local preview were refused/timed out. Screenshots and interactive UI verification were not obtained; temporary preview servers were stopped. A React Native DevTools fallback warning also occurred during Metro startup.

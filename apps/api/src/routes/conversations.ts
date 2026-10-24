@@ -85,8 +85,12 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     const { user } = await authenticate(request, deps);
     const id = (request.params as { id?: string }).id;
     if (!id) throw new ApiError(400, "A conversation id is required.");
-    const conversation = await deps.store.conversation(user.id, id);
+    let conversation = await deps.store.conversation(user.id, id);
     if (!conversation) return reply.code(404).send({ error: "Conversation not found." });
+    if (["ASSESSING", "FAILED"].includes(conversation.state)) {
+      await deps.store.expireAssessmentRuns(deps.now());
+      conversation = (await deps.store.conversation(user.id, id))!;
+    }
     const profile = await deps.store.profile(user.id);
     const scenario = conversation.scenarioSnapshot ?? (profile ? (await deps.availableScenarios()).find(item => item.id === conversation.scenarioId) : undefined);
     if (!scenario) return reply.code(404).send({ error: "Conversation scenario is no longer available." });
@@ -96,6 +100,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
       turns: await deps.store.conversationTurns(user.id, id),
       liveVoiceAvailable: deps.realtimeConfigured,
       assessmentEnabled: deps.assessmentEnabled,
+      feedbackRetryAvailable: deps.assessmentEnabled && conversation.state === "FAILED",
     };
   });
   app.post("/v1/me/conversations/:id/turns", async (request, reply) => {
@@ -151,14 +156,15 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
       ? conversation.scenarioSnapshot ?? (await deps.availableScenarios()).find(item => item.id === conversation.scenarioId)
       : undefined;
     if (deps.assessmentEnabled && !assessmentScenario) throw new ApiError(404, "Practice scenario not found.");
-    if (!await deps.store.claimConversationCompletion(user.id, id)) throw new ApiError(409, "Practice is already closed.");
     if (deps.assessmentEnabled && deps.assessmentProvider && assessmentScenario) {
       const feedback = await assessConversation({
         store: deps.store, userId: user.id, conversationId: id, scenario: assessmentScenario, turns,
         provider: deps.assessmentProvider, model: deps.assessmentModel, now: deps.now, timeoutMs: deps.assessmentTimeoutMs,
+        dailyLimit: deps.assessmentDailyLimit,
       });
       return { conversation: { id, state: "FEEDBACK_READY" }, feedback, evidenceSource: "ai_assessment" };
     }
+    if (!await deps.store.claimConversationCompletion(user.id, id)) throw new ApiError(409, "Practice is already closed.");
     const primary = turns.find(turn => turn.role === "user" && turn.phase === "primary");
     const retry = [...turns].reverse().find(turn => turn.role === "user" && turn.phase === "independent_retry");
     const evidence = primary && retry ? assessCommunicationEvidence({ primary: primary.text, retry: retry.text }) : null;
@@ -171,6 +177,35 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
         ? "Practice completed. Your independent retry met the local evidence checks."
         : "Practice completed. More evidence is needed before this retry counts as successful.",
     };
+  });
+  app.post("/v1/me/conversations/:id/feedback/retry", async request => {
+    const { user } = await authenticate(request, deps);
+    const id = (request.params as { id: string }).id;
+    let conversation = await deps.store.conversation(user.id, id);
+    if (!conversation) throw new ApiError(404, "Conversation not found.");
+    if (["ASSESSING", "FAILED"].includes(conversation.state)) {
+      await deps.store.expireAssessmentRuns(deps.now());
+      conversation = (await deps.store.conversation(user.id, id))!;
+    }
+    if (conversation.state === "FEEDBACK_READY") {
+      const feedback = await deps.store.assessment(user.id, id);
+      if (!feedback) throw new ApiError(409, "Verified AI feedback is not ready.");
+      return { conversation: { id, state: "FEEDBACK_READY" }, feedback, evidenceSource: "ai_assessment" };
+    }
+    if (conversation.state !== "FAILED") throw new ApiError(409, "Feedback is running or this practice cannot be retried.");
+    if (!deps.assessmentEnabled || !deps.assessmentProvider) throw new ApiError(503, "AI feedback is not configured.");
+    const scenario = conversation.scenarioSnapshot
+      ?? (await deps.availableScenarios()).find(item => item.id === conversation.scenarioId);
+    if (!scenario) throw new ApiError(404, "Practice scenario not found.");
+    const turns = await deps.store.conversationTurns(user.id, id);
+    if (!["primary", "independent_retry"].every(phase => turns.some(turn => turn.role === "user" && turn.phase === phase))) {
+      throw new ApiError(409, "Both learner responses are required for feedback.");
+    }
+    const feedback = await assessConversation({
+      store: deps.store, userId: user.id, conversationId: id, scenario, turns, provider: deps.assessmentProvider,
+      model: deps.assessmentModel, now: deps.now, timeoutMs: deps.assessmentTimeoutMs, dailyLimit: deps.assessmentDailyLimit,
+    });
+    return { conversation: { id, state: "FEEDBACK_READY" }, feedback, evidenceSource: "ai_assessment" };
   });
   app.get("/v1/me/conversations/:id/feedback", async request => {
     const { user } = await authenticate(request, deps);
@@ -185,6 +220,8 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     const catalog = (await deps.availableScenarios()).filter(item => isPublishedScenario(item) && modules.includes(item.module));
     const next = profile ? recommendScenarios(profile, catalog, progress.mastery.level, progress.completedScenarioIds)
       .find(item => item.id !== conversation.scenarioId) : undefined;
-    return { feedback, evidenceSource: "ai_assessment", nextScenarioId: next?.id ?? null };
+    const scenario = conversation.scenarioSnapshot ?? catalog.find(item => item.id === conversation.scenarioId);
+    return { feedback, evidenceSource: "ai_assessment", nextScenarioId: next?.id ?? null,
+      scenario: scenario ? { title: scenario.title } : null };
   });
 }

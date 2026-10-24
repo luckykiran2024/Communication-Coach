@@ -9,6 +9,7 @@ import { safeEqual } from "./lib/safe-equal";
 import { checkedAssessment, checkedAssessmentUsage } from "./lib/assessment-record";
 import type { Assessment } from "./store";
 import type { MeasuredVoiceSession } from "./store";
+import { prismaAssessmentRuns } from "./lib/prisma-assessment-runs";
 const currentPhase = (phase: string): ConversationTurn["phase"] =>
   phase === "independent_retry" ? "independent_retry" : "primary";
 type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null };
@@ -19,6 +20,7 @@ const accountFromRow = (row: AccountRow): Account => ({
 const accountFromNullableRow = (row: AccountRow | null): Account | null => row ? accountFromRow(row) : null;
 export function prismaStore(db: PrismaClient): Store {
   return {
+    ...prismaAssessmentRuns(db),
     rateLimitStorage: "postgres",
     async incrementRateLimit(keyHash, windowMs, now) {
       const resetAt = new Date(now.getTime() + windowMs);
@@ -299,6 +301,7 @@ export function prismaStore(db: PrismaClient): Store {
             id: record.id, conversation: { connect: { id: record.conversationId, userId } },
             rubricVersion: record.rubricVersion, modelVersion: record.modelVersion,
             priorities: record.priorities, transferResult: record.transferResult,
+            coachingReview: record.coachingReview ?? Prisma.DbNull,
             inputTokens: record.inputTokens, outputTokens: record.outputTokens,
             costMicros: record.costMicros, createdAt: record.createdAt,
           },
@@ -313,10 +316,17 @@ export function prismaStore(db: PrismaClient): Store {
     },
     async recordAssessmentUsage(userId, usage) {
       const record = checkedAssessmentUsage(usage);
-      const { conversationId, ...data } = record;
+      const { conversationId, runId, ...data } = record;
       try {
-        await db.assessmentUsage.create({
-          data: { ...data, conversation: { connect: { id: conversationId, userId } } },
+        await db.$transaction(async transaction => {
+          await transaction.$queryRaw`SELECT "id" FROM "Conversation" WHERE "id" = ${conversationId}::uuid FOR UPDATE`;
+          if (runId && !await transaction.assessmentRun.findFirst({ where: {
+            id: runId, userId, conversationId, status: "running", expiresAt: { gt: record.createdAt },
+          } })) throw new ConflictError("Assessment run is not active.");
+          await transaction.assessmentUsage.create({
+            data: { ...data, conversation: { connect: { id: conversationId, userId } },
+              ...(runId ? { run: { connect: { id: runId } } } : {}) },
+          });
         });
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {

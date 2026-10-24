@@ -6,7 +6,7 @@ import type { RouteDependencies } from "./context";
 
 export function register(app: FastifyInstance, deps: RouteDependencies) {
   app.get("/v1/scenarios/library", async () => {
-    const catalog = await deps.availableScenarios();
+    const catalog = (await deps.availableScenarios()).filter(isPublishedScenario);
     return { scenarios: catalog, count: catalog.length };
   });
   app.get("/v1/me/scenarios", async request => {

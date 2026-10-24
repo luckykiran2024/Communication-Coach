@@ -8,7 +8,7 @@ function nonNegativeInteger(value: number | null) {
 export function checkedAssessment(record: Assessment): Assessment {
   const feedback = feedbackAssessmentSchema.parse({
     rubricVersion: record.rubricVersion, modelVersion: record.modelVersion, priorities: record.priorities,
-    transferResult: record.transferResult, audioAssessed: record.audioAssessed,
+    transferResult: record.transferResult, audioAssessed: record.audioAssessed, coachingReview: record.coachingReview,
   });
   if (record.inputTokens === null || record.outputTokens === null
     || ![record.inputTokens, record.outputTokens, record.costMicros].every(nonNegativeInteger)) {
@@ -19,6 +19,7 @@ export function checkedAssessment(record: Assessment): Assessment {
 
 export function checkedAssessmentUsage(record: AssessmentUsage): AssessmentUsage {
   if (![1, 2].includes(record.attempt) || !record.modelVersion.trim()
+    || [record.providerRequestId, record.providerResponseId].some(value => value != null && value.length > 256)
     || ![record.inputTokens, record.outputTokens, record.costMicros].every(nonNegativeInteger)) {
     throw new Error("Invalid assessment attempt usage");
   }

@@ -1,4 +1,122 @@
-# Implementation status — first development increment
+# Implementation status
+
+## Native billing preparation — 2026-10-24 (latest checkpoint)
+
+- Adopted Google Play Billing / Apple IAP, Android first; Razorpay is not added. Fixed monthly offer/account binding,
+  pending/restore handling, provider-owned order/expiry validation, truthful confirmation and Android-only credential isolation.
+- Added a gated store-sandbox AAB profile; final identifier, HTTPS staging API and store configuration are still required.
+  Twenty-one new tests pass; typecheck PASS; general 197/197 and regression 176/176 PASS; API/web builds PASS.
+- Supabase connectivity is restored. Applied the earlier coaching-review migration only to coach_verification;
+  23 migrations present and guarded PostgreSQL suite 16/16 PASS. No billing migration added or production upgrade performed.
+- Browser package preview/confirmation checked with explicit simulation. Real sandbox purchases remain NOT RUN.
+- Play Console still reports identity/phone Action required with Create app disabled; Apple enrollment/iPhone unavailable.
+  Emulator remains offline, no physical Android listed. Seamless subscription replacement/proration remains outstanding.
+- No real charges, paid AI call, billing activation, cloud build, APK/OTA update, deployment, Git push or store submission.
+  Release preflight remains BLOCKED; STORE_BILLING_TEST_PLAN.md contains the ordered owner/setup/test matrix and evidence.
+  Older checkpoints below describe historical states, including the now-resolved Supabase connection blocker.
+
+## Browser functional verification — 2026-10-24 (previous checkpoint)
+
+- Exercised the real exported Expo app in the in-app browser through registration, onboarding, test email verification,
+  package preview, all three workshops, primary/independent responses, interrupted assessment recovery, detailed feedback,
+  follow-up practice, progress, themes, plan review, legal navigation, login/logout and recovery request.
+- Fixed four reproduced defects: duplicate practice headers, stale no-feedback copy, small-screen row overflow and
+  missing web accessibility selection/disclosure attributes. Retested the affected screens after rebuilding.
+- Added a guarded loopback-only functional harness with disposable memory data and labelled injected AI/email fixtures.
+  It refuses hosted/production execution; real voice/purchases stay off. The production API bundle contains no fixture marker.
+- Typecheck PASS; 176/176 general and 155/155 regression tests PASS; API bundle and actual mobile web export PASS.
+- Native testing remains BLOCKED: emulator acceleration check fails; software instance stays offline; no phone is listed.
+  Supabase still rejects the isolated connection. Production email, scheduler, billing, OAuth, provider QA and legal/content
+  sign-off remain outstanding; release preflight correctly exits 1.
+- No production/hosted test deployment, paid request, migration, APK/OTA update, commit/push or store submission.
+  See FUNCTIONAL_TEST_REPORT.md for actual cases, RCA, evidence and limitations. Earlier checkpoints below are historical.
+
+## Detailed coaching reviews — 2026-10-24 (previous checkpoint)
+
+- Implemented the founder's requested narrative feedback format: summary, quoted opening, seven-area scorecard,
+  evidence-linked strengths, at most two practical improvement priorities and a clearly labelled illustrative rewrite.
+- Versioned module rubrics to version 2 and require the detailed contract for new AI output. Every assessed area needs
+  exact independent-retry evidence; unassessable areas remain null. Overall estimates are calculated, not invented metrics.
+- Preserved older saved reviews without fabricating missing details, owner isolation, transfer/mastery rules,
+  feedback recovery, quotas, usage tracking and provider-disabled behavior.
+- Added nullable JSONB migration `202610241200_coaching_review`; Prisma Client generation passed.
+  Isolated migration/database verification is BLOCKED by Supabase tenant/user lookup failure, not marked as passing.
+- Narrow-screen authored layout fixtures passed overflow/score-expansion checks. Full mobile web export passed.
+  This is not live AI quality, native-phone acceptance or delivery to the installed APK.
+- Typecheck PASS; 171/171 general and 150/150 regression tests PASS. No live paid requests, production/hosted test deployment,
+  APK/OTA update, Git commit/push or store submission. Existing uncommitted work was preserved.
+- Full before/after behavior, score limitations, migration boundary and remaining checks: COACHING_REVIEW.md.
+
+## Launch hardening — 2026-10-10 (previous checkpoint)
+
+- Implemented explicit feedback recovery with durable AssessmentRun leases and an owner-only retry endpoint.
+  Both stores atomically commit verified feedback/state and fence expired workers; legacy partial commits reuse saved feedback.
+- Added verified-email gates before paid feedback/voice, a default 10-run/account/UTC-day cap, three runs/conversation,
+  run-scoped attempt uniqueness and pre-request nullable usage records. Ambiguous failures consume quota, not free retries.
+- Foreground timeout reaches provider fetch; network failures are not automatically retried. Request IDs and unresolved-cost
+  reporting support investigation; remote cancellation and provider billing reconciliation are not claimed as verified.
+- Production/Vercel billing-off now resolves Free, not the development Executive grant. The dedicated isolated test exception
+  requires paid assessment and voice disabled. Vercel runtime rejects non-production NODE_ENV.
+- Learner answer timestamps now drive streaks, practice days and weekly activity. Voice minutes remain measured separately.
+- Public scenario-library responses now exclude drafts/deprecated content; verified managers retain a full-catalog endpoint.
+  Source content in this public repository is not confidential; this is a learner-publication boundary, not source secrecy.
+- Mobile practice offers saved-response feedback retry and status refresh. Web export and API bundles compile;
+  interactive browser/device acceptance is still pending. Installed APK and hosted services have not received these changes.
+- Added migration `202610101600_assessment_recovery`; generated Prisma Client successfully and applied pending migrations
+  only to `coach_verification` over strict TLS. The prior public-only ACL migration is a no-op there. No production upgrade.
+- Added automated coverage for quotas/races, stale leases, legacy recovery, late usage, abort propagation, cached retries,
+  production plan isolation and an HTTP learner journey using injected email/AI test doubles.
+- Public release remains **BLOCKED**. The founder approved at most US$3 for assessment tests, but the local key is absent;
+  no paid calls were made. Email domain and scheduler are not ready; Android is connected but locked; iOS is unavailable.
+- See TESTING_STATUS.md for final measured results and PUBLIC_LAUNCH_READINESS.md for the before/after RCA and gate matrix.
+  Older dated checkpoints below are historical, not a claim that their outstanding items describe the latest source.
+- Final checks: typecheck PASS; 158/158 general, 137/137 regression and 14/14 isolated PostgreSQL tests PASS.
+  Both API bundles and mobile web export PASS. Release preflight correctly exits 1 with outstanding configuration/manual gates.
+
+## Approved Supabase public-access containment — 2026-10-10
+
+- Applied only the new public-schema access migration at 09:40:08 UTC after explicit founder approval, with atomic rollback
+  rehearsal, inventory/owner guards, lock timeouts, idempotence checks and no customer-data mutation.
+- RLS now enabled on all 13 existing public tables; anon/authenticated table/column privileges are zero. Public-key User read
+  changed from HTTP 200 to HTTP 401/42501. Owner zero-row read/write succeeds; actual postgres future-table defaults deny access.
+- Added five separately invoked read-only live integration checks. Restricted test schemas are unchanged; 31 hosted
+  test-backend smoke requests pass. Both API health endpoints retain HTTP 200; full authenticated production QA is not claimed.
+- Only direct containment SQL ran; no unrelated feature migrations or manually inserted migration-ledger entries.
+- Platform-owned supabase_admin defaults cannot be edited by postgres. Future alternate-creator objects require review;
+  current postgres-created application table/sequence defaults are hardened. See SUPABASE_ACCESS_AUDIT.md.
+- Feedback recovery, paid-call abuse limits and production development-plan isolation remain found, not fixed.
+- No commit/push, APK/OTA, deployment, production email/scheduler activation or paid-provider call occurred.
+
+## Live Supabase security audit — 2026-10-10
+
+- Confirmed critical public Data API exposure: all 13 existing public tables have disabled RLS and effective read/write
+  privileges for anon/authenticated. A public-key-only, zero-row User request returned HTTP 200.
+- The two isolated coach schemas deny schema access to those roles. No customer records were fetched or live settings changed.
+- Root cause, role/default-grant cautions and remaining source gaps are recorded in SUPABASE_ACCESS_AUDIT.md.
+- At this audit checkpoint remediation awaited approval; the later approved containment is recorded above.
+  Existing green unit tests alone do not verify live ACLs.
+- No application code, migrations, paid-provider activation, commit/push, production deployment or APK changes in this audit.
+
+## Phase 10 planning — 2026-10-10
+
+- Added the role-aware, every-function/every-career-stage specification to CODEX_PLAN.md; HR is not the whole product.
+- Defines 12 context packs, seven career lenses, reviewed offline drafts, role snapshots, counterpart-aware voice and contextual feedback.
+- Keeps career seniority separate from the existing five communication-mastery levels and preserves all release/provider gates.
+- Specification only: no Phase 10 application code, migrations, content generation/publication, Git push or APK/deployment change.
+- Verification of the unchanged application: typecheck PASS, general tests 138/138, regression tests 117/117.
+  These results do not verify planned Phase 10 functionality; no new behavior tests were added for this documentation increment.
+
+## Isolated test APK refresh — 2026-10-10
+
+- Approved new test APK d66eca5b-8d55-4f71-aeca-79210ef5056d finished from the GitHub-published theme source.
+- Refreshed only communication-coach-test-api and applied all 20 migrations in coach_apk_test, preserving its existing account.
+- Hosted smoke checks pass 31/31, including explicit independent-retry advancement and measured text/voice progress.
+- Repeated actual local checks: typecheck PASS, general tests 138/138, regression tests 117/117.
+- APK download/CRC, embedded test API and Android package/channel checks pass. adb install -r reports Success;
+  launch returns Status: ok and the app process remains running without sampled startup error matches.
+- Phone lock prevents interactive theme verification; that and full native QA remain pending. Real provider/billing
+  features remain disabled and production is unchanged.
+  See TEST_APK.md for exact release identifiers, scope and limitations.
 
 ## Light/Dark-only appearance — 2026-10-10
 

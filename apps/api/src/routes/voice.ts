@@ -79,6 +79,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     if (!deps.realtimeProvider) {
       return reply.code(503).send({ error: "Live voice is disabled pending provider configuration and native transport verification." });
     }
+    if (!user.emailVerifiedAt) throw new ApiError(403, "Verify your email before starting AI live voice.");
     const parsed = voiceSessionSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Choose a valid conversation and scenario.");
     const profile = await deps.store.profile(user.id);

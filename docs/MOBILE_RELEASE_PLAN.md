@@ -78,6 +78,16 @@ eas submit --platform ios --profile production
 
 ## Store billing development path
 
-The mobile app includes `expo-iap` for subscription purchase and restore flows. Development configuration keeps `EXPO_PUBLIC_PAYMENT_PREVIEW=true`; set it to `false` only in a native development/release build after configuring real product IDs and a server-side Apple/Google purchase verifier. The app deliberately leaves store transactions unfinished until the API verifies them, so a missing verifier fails closed instead of granting access.
+The mobile app uses `expo-iap` for Google Play / Apple subscription purchase and restoration, not Razorpay.
+Development previews keep `EXPO_PUBLIC_PAYMENT_PREVIEW=true` and never grant paid access from simulated confirmation.
+The `store-sandbox` EAS profile disables simulation, uses a separate update channel and produces an Android AAB;
+it requires explicit final identifiers, staging HTTPS API and real store products/credentials before it can be used.
+`BILLING_PROVIDERS=google` supports Android-first setup without enabling unconfigured Apple billing; the default remains both.
+Android selects the configured monthly base-plan offer (`EXPO_PUBLIC_GOOGLE_BASE_PLAN_ID`, default `monthly`).
+Purchases carry a server-owned account token, and access requires server verification before transaction finalization.
+Pending transactions do not grant access. Store account verification, licensed test users and real-device lifecycle tests
+are still required; source tests and preview screenshots do not establish working store payments.
+Seamless upgrades/downgrades and proration remain outstanding; duplicate subscription creation is blocked rather than guessed.
+See `STORE_BILLING_TEST_PLAN.md` for current results, exact setup order, owner tasks and sandbox acceptance matrix.
 
 The repository retains Expo web tooling for development and automated bundle checks only. The customer release is Android/iOS; no web app is part of the product launch plan.

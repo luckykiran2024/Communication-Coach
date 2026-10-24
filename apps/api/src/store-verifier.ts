@@ -1,9 +1,14 @@
 import { readFileSync } from "node:fs";
 import { AppStoreServerAPIClient, Environment, SignedDataVerifier } from "@apple/app-store-server-library";
 import { GoogleAuth, OAuth2Client } from "google-auth-library";
+import { billingProvidersSchema } from "./billing-configuration";
 
 export type StorePurchaseInput = { provider: "apple" | "google"; productId: string; transactionId: string; purchaseToken: string };
-export type VerifiedStorePurchase = { productId: string; transactionId: string; originalTransactionId: string | null; purchaseToken: string; status: "active" | "expired" | "revoked"; environment: "sandbox" | "production"; expiresAt: Date | null; providerEventDate: Date | null };
+export type VerifiedStorePurchase = {
+  productId: string; transactionId: string; originalTransactionId: string | null; purchaseToken: string;
+  status: "active" | "expired" | "revoked"; environment: "sandbox" | "production";
+  expiresAt: Date | null; providerEventDate: Date | null; accountToken?: string | null;
+};
 export type VerifiedAppleNotification = { notificationId: string; notificationType: string; productId: string; transactionId: string; originalTransactionId: string; status: "active" | "expired" | "revoked"; environment: "sandbox" | "production"; expiresAt: Date | null; providerEventDate: Date | null };
 type AppleVerifierConfig = { privateKey: string; keyId: string; issuerId: string; bundleId: string; rootCertificates: Buffer[]; appAppleId?: number; environment: "sandbox" | "production" };
 type GoogleVerifierConfig = { packageName: string; serviceAccountEmail: string; privateKey: string };
@@ -72,27 +77,54 @@ export function createStorePurchaseVerifier(config: { apple?: AppleVerifierConfi
       const transaction = await appleVerifier.verifyAndDecodeTransaction(response.signedTransactionInfo);
       if (transaction.transactionId !== input.transactionId || transaction.productId !== input.productId || transaction.bundleId !== config.apple?.bundleId) return null;
       const expiresAt = dateFromMilliseconds(transaction.expiresDate);
-      return { productId: transaction.productId, transactionId: transaction.transactionId, originalTransactionId: transaction.originalTransactionId ?? null, purchaseToken: input.purchaseToken, status: entitlementStatus(expiresAt, transaction.revocationDate !== undefined, now()), environment: transaction.environment === Environment.SANDBOX ? "sandbox" : "production", expiresAt, providerEventDate: dateFromMilliseconds(transaction.signedDate) };
+      if (!expiresAt || !Number.isFinite(expiresAt.getTime())) return null;
+      return {
+        productId: transaction.productId, transactionId: transaction.transactionId,
+        originalTransactionId: transaction.originalTransactionId ?? null, purchaseToken: input.purchaseToken,
+        status: entitlementStatus(expiresAt, transaction.revocationDate !== undefined, now()),
+        environment: transaction.environment === Environment.SANDBOX ? "sandbox" : "production",
+        expiresAt, providerEventDate: dateFromMilliseconds(transaction.signedDate), accountToken: transaction.appAccountToken ?? null,
+      };
     }
     if (!googleAuth || !config.google) return null;
     const client = await googleAuth.getClient();
     const endpoint = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(config.google.packageName)}/purchases/subscriptionsv2/tokens/${encodeURIComponent(input.purchaseToken)}`;
     const response = await fetch(endpoint, { headers: await client.getRequestHeaders(endpoint) });
     if (!response.ok) return null;
-    const purchase = await response.json() as { subscriptionState?: string; testPurchase?: unknown; lineItems?: Array<{ productId?: string; expiryTime?: string }> };
-    const lineItem = purchase.lineItems?.find(item => item.productId === input.productId);
-    if (!lineItem?.productId) return null;
-    const expiresAt = lineItem.expiryTime ? new Date(lineItem.expiryTime) : null;
-    const state = purchase.subscriptionState ?? "";
-    const activeState = state === "SUBSCRIPTION_STATE_ACTIVE" || state === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD" || state === "SUBSCRIPTION_STATE_CANCELED";
-    const status = activeState ? entitlementStatus(expiresAt, false, now()) : "revoked";
-    return { productId: lineItem.productId, transactionId: input.transactionId, originalTransactionId: input.purchaseToken, purchaseToken: input.purchaseToken, status, environment: purchase.testPurchase ? "sandbox" : "production", expiresAt, providerEventDate: null };
+    return verifiedGoogleSubscription(await response.json(), input, now());
+  };
+}
+
+type GoogleSubscription = {
+  subscriptionState?: string; testPurchase?: unknown;
+  externalAccountIdentifiers?: { obfuscatedExternalAccountId?: string };
+  lineItems?: Array<{ productId?: string; expiryTime?: string; latestSuccessfulOrderId?: string }>;
+};
+
+export function verifiedGoogleSubscription(
+  purchase: GoogleSubscription, input: StorePurchaseInput, now: Date,
+): VerifiedStorePurchase | null {
+  const lineItem = purchase.lineItems?.find(item => item.productId === input.productId);
+  if (!lineItem?.productId || !lineItem.expiryTime || !lineItem.latestSuccessfulOrderId) return null;
+  const expiresAt = new Date(lineItem.expiryTime);
+  if (!Number.isFinite(expiresAt.getTime())) return null;
+  const state = purchase.subscriptionState;
+  if (!state || state === "SUBSCRIPTION_STATE_PENDING" || state === "SUBSCRIPTION_STATE_PENDING_PURCHASE_CANCELED") return null;
+  const activeStates = ["SUBSCRIPTION_STATE_ACTIVE", "SUBSCRIPTION_STATE_IN_GRACE_PERIOD", "SUBSCRIPTION_STATE_CANCELED"];
+  const status = activeStates.includes(state) ? entitlementStatus(expiresAt, false, now) : "revoked";
+  return {
+    productId: lineItem.productId, transactionId: lineItem.latestSuccessfulOrderId,
+    originalTransactionId: input.purchaseToken, purchaseToken: input.purchaseToken, status,
+    environment: purchase.testPurchase ? "sandbox" : "production", expiresAt, providerEventDate: null,
+    accountToken: purchase.externalAccountIdentifiers?.obfuscatedExternalAccountId ?? null,
   };
 }
 
 export function createStorePurchaseVerifierFromEnv(env: NodeJS.ProcessEnv) {
-  const apple = appleConfigFromEnv(env);
-  const googleConfigured = env.GOOGLE_PLAY_PACKAGE_NAME && env.GOOGLE_SERVICE_ACCOUNT_EMAIL && env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+  const providers = billingProvidersSchema.parse(env.BILLING_PROVIDERS);
+  const apple = providers.includes("apple") ? appleConfigFromEnv(env) : undefined;
+  const googleConfigured = providers.includes("google") && env.GOOGLE_PLAY_PACKAGE_NAME
+    && env.GOOGLE_SERVICE_ACCOUNT_EMAIL && env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
   if (!apple && !googleConfigured) return undefined;
   return createStorePurchaseVerifier({
     apple,
@@ -101,6 +133,7 @@ export function createStorePurchaseVerifierFromEnv(env: NodeJS.ProcessEnv) {
 }
 
 export function createAppleNotificationVerifierFromEnv(env: NodeJS.ProcessEnv) {
+  if (!billingProvidersSchema.parse(env.BILLING_PROVIDERS).includes("apple")) return undefined;
   const apple = appleConfigFromEnv(env);
   return apple ? createAppleNotificationVerifier(apple) : undefined;
 }

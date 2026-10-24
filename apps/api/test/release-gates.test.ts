@@ -14,3 +14,16 @@ test("release gates: mobile updates require a separate manual workflow dispatch"
   assert.match(workflow, /^  workflow_dispatch:/m);
   assert.doesNotMatch(workflow, /^  push:/m);
 });
+
+test("release gates: store sandbox uses real native billing without silently inheriting the preview package or API", () => {
+  const config = JSON.parse(readFileSync(new URL("../../mobile/eas.json", import.meta.url), "utf8"));
+  const sandbox = config.build["store-sandbox"];
+  assert.equal(sandbox.extends, "production");
+  assert.equal(sandbox.environment, "preview");
+  assert.equal(sandbox.channel, "store-sandbox");
+  assert.equal(sandbox.android.buildType, "app-bundle");
+  assert.equal(sandbox.env.APP_VARIANT, "production");
+  assert.equal(sandbox.env.EXPO_PUBLIC_PAYMENT_PREVIEW, "false");
+  assert.equal(sandbox.env.EXPO_PUBLIC_API_URL, undefined);
+  assert.equal(config.submit["store-sandbox"], undefined);
+});

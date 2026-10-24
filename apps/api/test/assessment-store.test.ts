@@ -28,5 +28,5 @@ test("Memory assessment store: account deletion removes assessment and usage row
   assert.equal(store.assessmentRows.size, 1);
   assert.equal(store.assessmentUsageRows.size, 1);
   assert.ok(store.assessmentRows.has(other.id));
-  assert.ok(store.assessmentUsageRows.has(`${other.id}:1`));
+  assert.ok(store.assessmentUsageRows.has(`${other.id}:legacy:1`));
 });

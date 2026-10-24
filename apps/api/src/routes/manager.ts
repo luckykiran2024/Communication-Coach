@@ -9,6 +9,11 @@ const reviewScenarioSchema = z.object({ status: z.enum(["draft", "published", "d
 const rollbackScenarioSchema = z.object({ revisionId: z.string().uuid() }).strict();
 
 export function register(app: FastifyInstance, deps: RouteDependencies) {
+  app.get("/v1/manager/scenarios", async request => {
+    await requireManager(request, deps);
+    const catalog = await deps.availableScenarios();
+    return { scenarios: catalog, count: catalog.length };
+  });
   app.post("/v1/manager/scenarios", async (request, reply) => {
     const manager = await requireManager(request, deps);
     const parsed = scenarioSchema.safeParse(request.body);

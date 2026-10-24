@@ -13,7 +13,10 @@ export type ProductionConfiguration = {
   emailLinkBaseUrl?: string;
   realtimeEnabled: boolean;
   realtimeApiKey?: string;
+  assessmentEnabled?: boolean;
+  assessmentApiKey?: string;
   billingEnabled: boolean;
+  billingProviders?: ("apple" | "google")[];
   billingWebhookSecret?: string;
   googleNotificationAudience?: string;
   billingProductMap?: string;
@@ -21,6 +24,7 @@ export type ProductionConfiguration = {
 };
 
 export function productionConfigurationErrors(config: ProductionConfiguration) {
+  if (config.vercel && config.nodeEnv !== "production") return ["Vercel deployments must use NODE_ENV=production."];
   if (config.nodeEnv !== "production") return [];
   const errors: string[] = [];
   if (config.vercel && config.rateLimitStorage !== "postgres") {
@@ -44,11 +48,21 @@ export function productionConfigurationErrors(config: ProductionConfiguration) {
   if (config.managerEmails.some(email => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /(^|\.)example\.(com|org|net)$/i.test(email.split("@")[1] ?? ""))) errors.push("MANAGER_EMAILS must contain valid manager email addresses.");
   if (config.googleClientIds?.some(id => !id.trim() || id.startsWith("replace-with-") || ["android-client-id", "ios-client-id", "web-client-id"].includes(id))) errors.push("GOOGLE_OAUTH_CLIENT_IDS must contain valid production Google client IDs when Google sign-in is enabled.");
   if (config.realtimeEnabled && !config.realtimeApiKey) errors.push("OPENAI_API_KEY is required when OPENAI_REALTIME_ENABLED=true.");
+  if (config.assessmentEnabled && !config.assessmentApiKey) {
+    errors.push("OPENAI_API_KEY is required when ASSESSMENT_ENABLED=true.");
+  }
   if (config.billingEnabled) {
     if (!config.billingWebhookSecret || config.billingWebhookSecret.startsWith("replace-with-")) errors.push("BILLING_WEBHOOK_SECRET must be configured when BILLING_ENABLED=true.");
-    if (!config.googleNotificationAudience || config.googleNotificationAudience.startsWith("replace-with-") || documentationPlaceholder.test(config.googleNotificationAudience)) errors.push("GOOGLE_PUBSUB_AUDIENCE must be configured for verified Google Pub/Sub pushes.");
+    if ((config.billingProviders ?? ["apple", "google"]).includes("google")
+      && (!config.googleNotificationAudience || !/^https:\/\//.test(config.googleNotificationAudience)
+        || config.googleNotificationAudience.startsWith("replace-with-")
+        || documentationPlaceholder.test(config.googleNotificationAudience))) {
+      errors.push("GOOGLE_PUBSUB_AUDIENCE must be configured for verified Google Pub/Sub pushes.");
+    }
     if (!config.billingProductMap) errors.push("BILLING_PRODUCT_MAP must be configured when BILLING_ENABLED=true.");
-    if (!config.storeVerifierConfigured) errors.push("Apple and Google store verifier credentials must be configured when BILLING_ENABLED=true.");
+    if (!config.storeVerifierConfigured) {
+      errors.push("Store verifier credentials for every enabled BILLING_PROVIDERS entry must be configured.");
+    }
   }
   return errors;
 }

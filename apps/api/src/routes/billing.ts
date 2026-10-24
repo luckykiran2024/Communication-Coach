@@ -50,6 +50,9 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     if (!deps.billingEnabled || !deps.billingWebhookSecret) throw new ApiError(503, "Billing provider is not configured.");
     const parsed = purchaseIntentSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Choose a valid Apple or Google product.");
+    if (!deps.billingProviders.includes(parsed.data.provider)) throw new ApiError(503, "This store is not enabled yet.");
+    const plan = deps.planForProduct(parsed.data.productId);
+    if (!plan || plan.id === "free") throw new ApiError(400, "Choose a configured paid subscription product.");
     const timestamp = deps.now();
     const intent: PurchaseIntent = {
       id: randomUUID(),
@@ -68,16 +71,18 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
         provider: intent.provider,
         productId: intent.productId,
         nonce: intent.nonce,
+        accountToken: user.id,
         status: intent.status,
         expiresAt: intent.expiresAt.toISOString(),
       },
-      message: "Purchase intent created. Include the nonce in the store purchase and send only verified store events to the webhook.",
+      message: "Use accountToken as the Apple appAccountToken or Google obfuscatedAccountId. The server verifies store ownership.",
     });
   });
   app.post("/v1/billing/webhooks/:provider", async (request, reply) => {
     if (!deps.billingEnabled || !deps.billingWebhookSecret) throw new ApiError(503, "Billing provider is not configured.");
     const provider = (request.params as { provider?: string }).provider;
     if (provider !== "apple" && provider !== "google") throw new ApiError(400, "Choose Apple or Google as the billing provider.");
+    if (!deps.billingProviders.includes(provider)) throw new ApiError(503, "This store is not enabled yet.");
     if (!safeEqual(request.headers["x-billing-webhook-secret"], deps.billingWebhookSecret)) {
       throw new ApiError(401, "Billing webhook authentication failed.");
     }
@@ -122,6 +127,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     }
     const parsed = billingPurchaseSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, "Provide the store purchase details for verification.");
+    if (!deps.billingProviders.includes(parsed.data.provider)) throw new ApiError(503, "This store is not enabled yet.");
     const intent = await deps.store.purchaseIntent(parsed.data.purchaseIntentId);
     if (!intent || intent.userId !== user.id || intent.status === "cancelled" || (intent.status === "pending" && intent.expiresAt <= deps.now())) {
       throw new ApiError(409, "The purchase intent is missing or expired.");
@@ -140,11 +146,23 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     } catch {
       throw new ApiError(503, "The store verification service is temporarily unavailable.");
     }
-    if (!verified || verified.productId !== intent.productId || verified.transactionId !== parsed.data.transactionId) {
+    if (!verified || verified.productId !== intent.productId
+      || (parsed.data.provider === "apple" && verified.transactionId !== parsed.data.transactionId)
+      || !deps.planForProduct(verified.productId) || !verified.expiresAt
+      || !Number.isFinite(verified.expiresAt.getTime())) {
       throw new ApiError(402, "The store purchase could not be verified.");
     }
     const existing = await deps.store.entitlementByTransactionId(verified.transactionId);
-    if (existing && existing.userId !== user.id) throw new ApiError(409, "The transaction is already linked to another account.");
+    const byOriginal = verified.originalTransactionId
+      ? await deps.store.entitlementByOriginalTransactionId(parsed.data.provider, verified.originalTransactionId) : null;
+    const byToken = await deps.store.entitlementByPurchaseToken(parsed.data.provider, verified.purchaseToken);
+    const bindings = [existing, byOriginal, byToken].filter(item => item !== null);
+    if (bindings.some(item => item.userId !== user.id || item.provider !== parsed.data.provider)) {
+      throw new ApiError(409, "The store purchase is already linked to another account.");
+    }
+    if ((verified.accountToken && verified.accountToken !== user.id) || (!verified.accountToken && !bindings.length)) {
+      throw new ApiError(402, "This purchase does not prove ownership of the signed-in app account.");
+    }
     const timestamp = deps.now();
     const entitlement: Entitlement = {
       id: existing?.id ?? randomUUID(),
@@ -163,10 +181,11 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     };
     await deps.store.saveEntitlement(entitlement);
     await deps.store.completePurchaseIntent(intent.id);
-    return reply.code(existing ? 200 : 201).send({ entitlement, verified: true });
+    const accessGranted = entitlement.status === "active" && entitlement.expiresAt! > timestamp;
+    return reply.code(existing ? 200 : 201).send({ entitlement, verified: true, accessGranted });
   });
   app.post("/v1/billing/notifications/apple", async (request, reply) => {
-    if (!deps.billingEnabled || !deps.billing?.verifyAppleNotification) {
+    if (!deps.billingEnabled || !deps.billingProviders.includes("apple") || !deps.billing?.verifyAppleNotification) {
       throw new ApiError(503, "Apple notification verification is not configured.");
     }
     const parsed = appleNotificationSchema.safeParse(request.body);
@@ -208,7 +227,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     return reply.send({ received: true, matched: true, idempotent: false, entitlement });
   });
   app.post("/v1/billing/notifications/google", async (request, reply) => {
-    if (!deps.billingEnabled || !deps.billing?.verifyPurchase) {
+    if (!deps.billingEnabled || !deps.billingProviders.includes("google") || !deps.billing?.verifyPurchase) {
       throw new ApiError(503, "Google notification verification is not configured.");
     }
     const oidcAuthenticated = deps.billing.verifyGoogleNotificationRequest

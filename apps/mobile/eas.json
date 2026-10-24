@@ -39,6 +39,16 @@
         "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api"
       }
     },
+    "store-sandbox": {
+      "extends": "production",
+      "channel": "store-sandbox",
+      "environment": "preview",
+      "android": { "buildType": "app-bundle" },
+      "env": {
+        "APP_VARIANT": "production",
+        "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
+      }
+    },
     "production": {
       "channel": "production",
       "environment": "production",

@@ -4,6 +4,8 @@ import { contentCatalogReady, loadContentReviewEvidence } from "./content-releas
 import { loadNativeQaEvidence } from "./native-qa";
 import { supabaseOAuthConfigured } from "../apps/api/src/lib/supabase-oauth";
 import { supabaseGoogleConfigured } from "../apps/mobile/src/supabase-config";
+import { createEmailSender } from "../apps/api/src/email-sender";
+import { billingProvidersSchema } from "../apps/api/src/billing-configuration";
 
 type CheckStatus = "PASS" | "BLOCKED" | "MANUAL";
 type Check = { name: string; status: CheckStatus; detail: string };
@@ -56,7 +58,16 @@ function validAppleRootCertificates() {
 
 function validBillingConfiguration() {
   if (process.env.BILLING_ENABLED !== "true") return false;
-  return productionValue("BILLING_WEBHOOK_SECRET") && productionValue("GOOGLE_PUBSUB_AUDIENCE") && /^https:\/\//.test(process.env.GOOGLE_PUBSUB_AUDIENCE ?? "") && validBillingProductMap() && productionValue("APPLE_PRIVATE_KEY") && productionValue("APPLE_KEY_ID") && productionValue("APPLE_ISSUER_ID") && productionValue("APPLE_BUNDLE_ID") && validAppleRootCertificates() && (process.env.APPLE_ENVIRONMENT === "sandbox" || productionValue("APPLE_APPLE_ID")) && productionValue("GOOGLE_PLAY_PACKAGE_NAME") && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? "") && productionValue("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY");
+  const providers = billingProvidersSchema.safeParse(process.env.BILLING_PROVIDERS);
+  if (!providers.success) return false;
+  const google = productionValue("GOOGLE_PUBSUB_AUDIENCE") && /^https:\/\//.test(process.env.GOOGLE_PUBSUB_AUDIENCE ?? "")
+    && productionValue("GOOGLE_PLAY_PACKAGE_NAME") && productionValue("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY")
+    && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? "");
+  const apple = productionValue("APPLE_PRIVATE_KEY") && productionValue("APPLE_KEY_ID")
+    && productionValue("APPLE_ISSUER_ID") && productionValue("APPLE_BUNDLE_ID") && validAppleRootCertificates()
+    && (process.env.APPLE_ENVIRONMENT === "sandbox" || productionValue("APPLE_APPLE_ID"));
+  return productionValue("BILLING_WEBHOOK_SECRET") && validBillingProductMap()
+    && providers.data.every(provider => provider === "google" ? google : apple);
 }
 
 function check(name: string, status: CheckStatus, detail: string): Check {
@@ -64,6 +75,10 @@ function check(name: string, status: CheckStatus, detail: string): Check {
 }
 
 const checks: Check[] = [
+  check("Account email", process.env.EMAIL_PROVIDER === "resend" && createEmailSender()
+    && /^https:\/\//.test(process.env.ACCOUNT_EMAIL_LINK_BASE_URL ?? "")
+    ? "MANUAL" : "BLOCKED",
+  "Configure a verified sending domain and HTTPS recovery links, then verify delivery and account recovery on a real device."),
   check("AI assessment", process.env.ASSESSMENT_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED",
     "Enable ASSESSMENT_ENABLED and configure the provider only after controlled quality and cost verification."),
   check("Serverless scheduler", process.env.RUNTIME === "server" ? "PASS"
@@ -71,7 +86,8 @@ const checks: Check[] = [
     "Serverless requires a verified every-minute scheduler and a private CRON_SECRET; Vercel Hobby is daily-only."),
   check("PostgreSQL", productionValue("DATABASE_URL") && /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "") ? "PASS" : "BLOCKED", productionValue("DATABASE_URL") ? "DATABASE_URL is configured; run migrations and the isolated database test." : "Set DATABASE_URL to an isolated PostgreSQL database."),
   check("Voice provider", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "Server provider credentials are configured." : "Set OPENAI_REALTIME_ENABLED=true and OPENAI_API_KEY."),
-  check("Store billing", validBillingConfiguration() ? "PASS" : "BLOCKED", process.env.BILLING_ENABLED === "true" ? "Billing configuration is incomplete or contains placeholders; verify product mapping, Apple roots, and Google credentials." : "Enable billing and configure the webhook secret, Pub/Sub audience, product map, Apple roots/app ID, and Google verifier credentials."),
+  check("Store billing", validBillingConfiguration() ? "PASS" : "BLOCKED",
+    "Configure BILLING_PROVIDERS and credentials for every enabled store, products and notifications; verify real sandbox purchases."),
   check("OAuth", validGoogleOAuthConfiguration() ? "PASS" : "BLOCKED",
     "Configure matching Supabase Google OAuth settings, or direct Google native clients and server audiences. " +
     "Verify live sign-in separately."),

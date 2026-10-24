@@ -220,6 +220,131 @@ Tasks:
 
 ---
 
+## Phase 10: Role-aware practice for every function and career stage
+
+**Status:** specification only. This section does not authorize paid generation, content publication, deployment or an APK update.
+The product is not HR-only. HR content remains alongside other functions, subject to the same quality/review gates.
+
+**Problem verified in source:** onboarding stores function, job title, career level, audience, industry and challenges.
+Recommendations currently use function, goal, mastery and completion history, but not career level or designation.
+The 24 situation templates produce 120 skill-level variants; many contexts are generic despite broad function tags.
+Assessment inputs contain the scenario and learner turns, not a versioned learner-role context.
+Function tags alone are not function-specific content. Do not equate structural coverage with authentic role rendering.
+
+### 10.1 Shared contracts and compatibility
+
+1. Preserve the existing 12 function values and seven career-level values in packages/core; use stable data identifiers.
+   Engineering is the existing identifier for Engineering/IT. Other/custom must retain a supported neutral fallback.
+2. Keep two independent axes: scenario.level is communication mastery (1–5), while careerLevel is professional stage (seven values).
+   An Executive starting at Clarity foundation must still get an executive context, not an entry-level counterpart.
+3. Retain the 24 situation templates and their communication objectives, module, framework and independent-transfer structure.
+   Add versioned role metadata without changing existing IDs or silently rewriting previously saved scenario snapshots.
+4. Add validated contracts for function packs, career lenses, composed scenario provenance and a minimal learner-role context.
+   Role context includes function, career level, job title and audience; optional industry/goal refine relevance.
+   Do not send display names, account email, employer identifiers or unrelated profile fields to the model.
+5. Capture the role context and applicable pack/lens/rubric versions when a conversation is created, using its authenticated owner.
+   Profile edits affect new practice, not the standards or counterpart of an in-progress/historical conversation.
+   Legacy conversations use a documented neutral fallback; never invent their historical designation or role context.
+6. Any persistence changes require new additive migrations and Store methods implemented in Prisma and memory stores.
+   Keep authenticated ownership, profile validation, timezone rules and existing API clients compatible.
+
+### 10.2 Twelve function context packs and seven level lenses
+
+1. Add 12 short, schema-validated data files under packages/core/content/function-contexts/ matching the existing functions:
+   Human Resources, Engineering, Product Management, Finance, Sales, Marketing, Operations, Procurement,
+   Customer Success, General Management, Entrepreneurship and Other/custom.
+2. Each versioned pack contains stakeholder roles, everyday terms, artifacts/documents, plausible fictional number ranges,
+   common tensions and constraints. Numbers declare units/currency/time periods; do not present them as industry benchmarks.
+   Packs provide contextual material, not technical, financial, employment-law or medical advice.
+3. Add seven versioned career lenses under packages/core/content/career-lenses/ for the existing career levels:
+   - Early-career professional: ask for clarity, own a task and communicate concerns to a manager or colleague.
+   - Experienced individual contributor: explain evidence, coordinate peers and recommend within a defined remit.
+   - First-time manager: delegate, give feedback to former peers and establish expectations respectfully.
+   - Experienced manager: align teams, negotiate dependencies and make resource/operating trade-offs explicit.
+   - Senior leader: align functions, handle ambiguity and frame consequential choices for executive stakeholders.
+   - Executive: communicate strategic choices, enterprise risk and accountability to CXOs/boards/external stakeholders.
+   - Founder/entrepreneur: explain priorities, uncertainty and commitments to customers, investors, partners or employees.
+4. Every lens defines counterpart/direction (up, down, sideways or outside), stakes, authority boundaries and observable success.
+   Career stage changes expectations, not assumed intelligence, personality, accent, language ability or subscription access.
+5. Use the supplied delivery-slip examples as review fixtures, not automatically published content:
+   - Procurement executive to plant manager: vendor PO delay of 10 days; alternate supplier costs 4% more.
+   - Engineering lead to product head: release slips one week because two integration tests fail.
+   - Senior Finance controller to CFO: close slips two days; subsidiary reconciliation differs by INR 38 lakh.
+   - Operations first-time manager to former shift peers: cancelled overtime following a changed despatch target.
+   Give each a genuinely different independent-transfer situation, rather than rewording the primary answer.
+
+### 10.3 Offline generation and human review
+
+1. Build an offline generator under scripts/ that composes a template, a function pack and a career lens into concrete drafts.
+   No learner request, login or practice start may trigger live scenario generation.
+2. Default to dry-run: validate inputs and print a generation/coverage manifest without calling an AI provider.
+   Actual provider generation needs separate explicit approval of model, bounded record count, token/cost budget and batch scope.
+   Support resumable batches, stable IDs, deduplication, request deadlines and measured usage; never overwrite reviewed content.
+3. Save every generated record with reviewStatus=draft, no reviewer approval, source template ID and all input/model versions.
+   Validate schema, role/level/module metadata, number consistency, concrete primary prompt and independent-transfer difference.
+   Invalid generations remain failed/unpublished with a reason; no fallback may invent approved AI output.
+4. Extend the existing draft → human review → publish process, reusing manager authorization and content-release hash evidence.
+   Generation success, structural checks and a manager opening a record do not constitute approval.
+   A content change invalidates its prior sign-off. Published/deprecated revisions remain auditable and conversations keep snapshots.
+5. Review for realistic stakeholders, role authority, credible stakes, premium natural language and specific coaching opportunities.
+   Do not claim generated figures/events are real, diagnose personality or require confidential workplace details.
+6. Initial depth: Engineering/IT, Operations, Finance, Sales and HR across all seven career stages.
+   Proposed launch coverage is eight distinct situation families per function/stage: 35 cells and at least 280 reviewed variants.
+   Track mastery/module coverage separately; do not claim every combination is covered by duplicating one generic prompt.
+   Report draft, approved/published, rejected and missing counts per cell. Missing review coverage blocks the launch claim.
+7. Next content wave: Procurement, Customer Success and Marketing; then deepen the remaining functions and custom fallback.
+   All 12 packs exist in the foundation, but this is not a claim that all 12 have equally deep published catalogs at launch.
+
+### 10.4 Recommendations, voice and assessment
+
+1. Update recommendScenarios and server-side conversation creation to prefer published exact function/career matches.
+   Preserve selected communication goal, mastery eligibility, unseen-first ordering and server-owned plan-module permissions.
+   Never infer or override career stage from job title, and never use a role field to grant entitlements.
+2. If no reviewed match exists, offer an explicitly labelled general communication exercise from the eligible existing catalog.
+   Do not silently pass another function's context off as personalized, expose drafts or leave existing learners without practice.
+3. Use the saved role context, reviewed scenario and current primary/retry phase when constructing voice instructions.
+   The coach plays the relevant counterpart: vendor account manager, plant head, product head, CFO or other reviewed role.
+   Job title/audience refine that counterpart without changing permissions, introducing domain facts or leaking private profile data.
+   Preserve Indian-English preference, question-only read-aloud, turn-taking, seven-minute limits and independent retries.
+4. Extend AssessmentProvider inputs and versioned rubrics to include the same saved role context and career-lens expectations.
+   Retain common communication standards, at most two priorities, exact quote/turn ownership checks and transfer validation.
+   Early-career clarity and executive trade-off framing can have different expectations; neither gets invented evidence or scores.
+   Never assess accent/grammar unless it blocks meaning; do not grade unverified technical/domain correctness as communication skill.
+5. Treat all free-text profile/scenario fields as bounded, untrusted data, never as system instructions.
+   Test prompt-injection strings in job title, audience, industry and challenges; do not interpolate them into privileged instructions.
+6. Mobile onboarding/profile editing must make these inputs meaningful and show the chosen function/stage/counterpart in practice.
+   Explain generic fallbacks and preserve workshop → one exercise → independent retry → progress/practice-more navigation.
+   Do not replace the existing three workshops, program selection, Light/Dark preferences or measured progress.
+7. Keep all provider flags disabled unless separately approved. Mock-provider tests validate contracts, not live AI quality or native voice.
+
+### 10.5 Required acceptance tests and evidence
+
+- Core: exactly 12 unique function packs and seven distinct career lenses; valid versions, units and template references.
+- Core: distinguish career stage from mastery; compare the delivery-slip fixtures across functions and across career stages.
+- Core/API: exact-match ordering, generic fallback labels, missing/legacy role data, unseen-first behavior and draft exclusion.
+- API: ownership and paid-plan module restrictions survive profile changes, role spoofing and custom job-title input.
+- API/store: conversation role snapshots persist in memory and PostgreSQL; later profile edits do not alter existing sessions.
+- Voice: mock provider receives the correct counterpart, career stakes and saved context in both primary and independent-retry phases.
+- Assessment: mock reviewer receives that same context while exact quotes, two-priority limit, model/rubric versions and failure gates hold.
+- Security/privacy: exclude account identifiers; malicious profile text cannot override instructions or access another learner's context.
+- Generator/review: dry-run makes zero paid requests; generated/invalid drafts never publish; hash changes invalidate prior approval.
+- Coverage: generation/review reports expose missing cells and do not count generic fallback scenarios as exact role coverage.
+- Regression: existing 24 templates, legacy conversations, onboarding, plan enforcement, workshop flow and Light/Dark remain compatible.
+- Run npm run typecheck, npm test and npm run test:regression; report actual command results and new counts in status documentation.
+  Add guarded PostgreSQL integration tests for persistence changes. Native/provider QA and human content review are separate evidence.
+- Provide before/after screens for onboarding, role-specific practice, fallback, counterpart and feedback in an isolated test preview.
+  Do not claim mock feedback, exported bundles or screenshots establish real AI quality or full mobile acceptance.
+
+**Implementation done when:** contracts, packs/lenses, offline tooling, review controls, role-aware runtime and tests are implemented,
+with honest coverage reports and before/after evidence. Human-approved catalog depth and live provider quality are separate launch gates.
+Do not fabricate approval to make Phase 10 appear complete. Pricing, usage allowances, existing data and production gates remain unchanged.
+No paid generation, live provider activation, Git push, production migration/deployment or APK/OTA update occurs without explicit approval.
+
+**Later, not Phase 10:** "Rehearse my real conversation" using learner-supplied upcoming situations.
+That needs a separate scope, privacy/retention policy and content-safety review; do not add it silently to this phase.
+
+---
+
 ## Out of scope for this plan
 Enterprise tenant administration, multilingual support, cloud audio storage and marketing site changes. Do not start these.
 
@@ -230,3 +355,5 @@ The later pricing decision supersedes historical prices in this plan: Free 2 lif
 Essential INR 299/15, Professional INR 399/20, Executive INR 699/40, Extended INR 799/60 monthly sessions.
 Each paid voice call is capped at seven minutes. No APK update or production deployment is authorized by implementation alone.
 See docs/REMAINING_PHASES.md for implementation evidence and external release gates.
+Phase 10 was added after the founder clarified the every-function/every-career-stage positioning.
+It is currently a specification, not implemented functionality or approved content. The existing test APK is unchanged.

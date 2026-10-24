@@ -1,5 +1,183 @@
 # Testing status
 
+## Native billing preparation — 2026-10-24 (latest checkpoint)
+
+- npm run typecheck: PASS, all four workspaces, exit 0.
+- npm test: PASS 197/197, zero failed/skipped/cancelled/todo, exit 0; duration_ms 16689.7718.
+- npm run test:regression: PASS 176/176, exit 0; duration_ms 11410.5597.
+- Twenty-one added tests cover provider-selected monthly offers and account binding, pending/verification/finish ordering,
+  restore product selection, inactive access, canonical Google orders, HTTP ownership/replay, Android-only configuration,
+  disabled Apple routes, native SDK base-offer normalization and a non-simulated sandbox build profile.
+  They use fixtures, not live store transactions.
+- API bundle and actual mobile web export PASS. First export failed with generated-asset EPERM; scoped write grant and
+  rerun succeeded. Whitespace and added-source line checks PASS.
+- Guarded strict-TLS migration deployment in coach_verification PASS: 202610241200_coaching_review applied, 23 migrations total.
+  Existing PostgreSQL integration suite PASS 16/16, zero skipped/failed, exit 0; duration_ms 195226.4584.
+  This closes the previous isolated DB blocker, not production migration, billing-provider QA or public-access re-audit.
+- Browser Essential preview/explicit simulation confirmation PASS. New view returns to practice without claiming paid access.
+  It retains the labelled Executive memory-fixture grant and is not a store entitlement test.
+- Live Google/Apple sandbox testing BLOCKED: Play Console identity/phone tasks still required, Create app disabled;
+  no Apple enrollment/iPhone, no physical Android listed and emulator offline. Upgrade/downgrade/proration not completed.
+- Release preflight expected BLOCKED, exit 1. No provider activation, real charge, new APK/OTA, hosted deployment or Git push.
+  See STORE_BILLING_TEST_PLAN.md for exact evidence, lifecycle matrix and owner prerequisites.
+
+## Browser functional verification — 2026-10-24 (previous checkpoint)
+
+- Real Expo app + real Fastify routes exercised in the in-app browser, with a disposable memory store and clearly labelled
+  injected email/assessment fixtures. This is not the previous component-only preview, PostgreSQL durability or live AI quality.
+- Browser journey and corrected cases PASS: registration/profile validation, onboarding/package preview, email proof,
+  distinct workshops/programme restrictions/examples, primary/independent retry, saved-answer failure recovery, detailed
+  feedback and follow-up practice, truthful text/voice progress, themes, pricing/package review, account access and legal pages.
+- Four fixes were reproduced/retested: one practice header, capability-aware feedback copy, zero home overflow at 320px,
+  and explicit radio/disclosure web state. Feedback also has zero overflow at 320/360px; no System theme option is present.
+- `npm run typecheck`: PASS, exit 0 across API/mobile/portal/core.
+- `npm test`: PASS 176/176, zero failed/skipped/cancelled/todo, exit 0; duration_ms 14987.1481.
+- `npm run test:regression`: PASS 155/155, zero failed/skipped/cancelled/todo, exit 0; duration_ms 9009.617.
+- Standalone harness typecheck, API production bundle and real mobile web export: PASS, exit 0.
+  The API bundle does not contain the injected functional-provider marker. Whitespace/140-character added-line audit PASS.
+- `npm run release:preflight`: EXPECTED BLOCKED, exit 1. The database URL check means configured, not connected.
+- ADB runs, but emulator acceleration reports code 6; software launch remains offline and sys.boot_completed is unavailable.
+  No emulator APK install/launch or native microphone/voice/billing acceptance pass is claimed; no physical phone/iOS listed.
+- Guarded Supabase probe again returns tenant/user not found; no new migration or PostgreSQL integration run completed.
+- Two test-provider calls exercise deliberate failure then success; reopening feedback does not increase the count.
+  Two test emails are captured locally. No real email, provider request, purchase or microphone recording was performed.
+- Evidence and full case matrix: FUNCTIONAL_TEST_REPORT.md; local traces/screenshots under artifacts/functional-* (ignored).
+  No APK/OTA, production/hosted test deployment, Git push or public launch. Prior dated counts below are historical.
+
+## Detailed coaching reviews — 2026-10-24 (previous checkpoint)
+
+- `npm run db:generate`: PASS, exit 0; Prisma Client 6.19.2 includes the nullable coaching report field.
+- `npm run typecheck`: PASS across API, mobile, portal and core, exit 0 after correcting literal types in a new legacy fixture.
+- `npm test`: PASS, 171/171, zero failed/skipped/cancelled/todo, exit 0; duration_ms 10404.4973.
+- `npm run test:regression`: PASS, 150/150, zero failed/skipped/cancelled/todo, exit 0; duration_ms 8412.2545.
+- Whitespace audit: PASS using `git -c core.whitespace=cr-at-eol diff --check`; no new/changed source line exceeds 140 characters.
+- New tests cover score/area constraints, explicit unassessable areas, deterministic overall, strict provider schema,
+  exact retry-only report evidence, actual opening position, no invented legacy scores and owner-scoped HTTP delivery.
+  Shared store tests cover nested report persistence, atomic completion, caller mutation isolation and account exports.
+- Isolated migration attempt: BLOCKED, exit 1; Prisma reports a schema-engine error. Read-only Prisma connection probe
+  returns `FATAL: (ENOTFOUND) tenant/user postgres.nrrmhftccqsofjvoaffm not found`. No migration applied by this run.
+  Guarded PostgreSQL tests did not run; historical 14/14 results below do not validate the new JSONB field.
+- `npm run build:vercel -w @coach/api`: PASS, exit 0. Expo mobile web export: PASS, exit 0, artifacts/coaching-web.
+- Browser fixture checks: real feedback component at 320px Light, 360px Dark and 320px enlarged text; zero horizontally
+  overflowing elements in all three frames. Expanding a score row exposed the expected rationale and exact quote.
+  This is a manually authored fixture with unused native-import stubs, not paid model output or a full app/device test.
+- Local evidence: artifacts/coaching-{typecheck,tests,regression,migration,api-build,web-export}.log;
+  artifacts/coaching-review-preview.jpg and artifacts/coaching-review-light.jpg. These local files are ignored by Git.
+- No paid AI call, production data write/migration, hosted test deployment, APK/OTA change, Git push or store submission.
+- See COACHING_REVIEW.md for format, compatibility, score calibration limitations and deployment prerequisites.
+
+## Launch hardening — 2026-10-10 (previous checkpoint)
+
+- `npm run db:generate`: PASS after a scoped node_modules filesystem permission resolved an initial Prisma EPERM.
+- Isolated migration deployment: PASS, exit 0; 22 migrations now recorded in coach_verification. Applied the public-only ACL
+  no-op and `202610101600_assessment_recovery` there with strict TLS. No production/hosted-APK schema migration occurred.
+- `npm run typecheck`: PASS across API, mobile, portal and core; exit 0.
+- `npm test`: PASS, 158/158; zero failed/skipped/cancelled/todo; exit 0; duration_ms 9108.774.
+- `npm run test:regression`: PASS, 137/137; zero failed/skipped/cancelled/todo; exit 0; duration_ms 7365.6225.
+- `npm run test:database`: PASS, 14/14; zero failed/skipped/cancelled/todo; exit 0; duration_ms 200399.1046.
+  Includes actual PostgreSQL lease recovery, account-wide quota races, atomic completion, legacy partial commits,
+  ownership, attempt uniqueness, persistence and cleanup. All test accounts are deleted by fixture cleanup.
+- Public-library regression now rejects drafts before publication and after rollback; a verified-manager catalog preserves
+  review access. General/regression counts increased from 138/117 to 158/137; isolated database counts from 9 to 14.
+- Whitespace validation: PASS using `git -c core.whitespace=cr-at-eol diff --check` to preserve the existing CRLF mobile file.
+  Added/changed TypeScript source-line audit: zero added lines over 140 characters.
+- Assessment-only HTTP suite: 16/16 PASS at that checkpoint, including the full learner journey with injected email and AI;
+  subsequent required suites additionally include fetch-abort propagation and legacy partial-commit recovery.
+- API production/test bundles: PASS, exit 0 for both. Mobile web export: PASS, exit 0, saved to artifacts/launch-web.
+  These are build checks, not interactive browser or real-device acceptance.
+- `npm run release:preflight`: EXPECTED BLOCKED, exit 1. Account email, assessment, scheduler, voice, billing, OAuth and
+  manager configuration remain blocked; device QA and content/release are manual. A configured database URL is not live-product proof.
+- Paid-provider checks: NOT RUN; no local OPENAI_API_KEY is configured. US$0 spent of the founder-approved US$3 cap.
+- Android: ADB recognizes the authorized Samsung SM-S908E, Android 16, but dumpsys reports an active lock screen.
+  No interactive microphone, interruption, transcript/retry, purchase or app journey testing was performed. No iOS device.
+- No source commit/push, APK/OTA update, deployment, public launch or store submission was performed.
+
+Evidence (local, ignored): artifacts/launch-hardening-typecheck.log, artifacts/launch-hardening-tests.log,
+artifacts/launch-hardening-regression.log, artifacts/launch-hardening-migration.log,
+artifacts/launch-hardening-database-final.log, artifacts/launch-hardening-api-build.log,
+artifacts/launch-hardening-production-build.log, artifacts/launch-hardening-web-export.log,
+artifacts/launch-hardening-preflight.log. Do not claim these local logs were published in a source archive.
+
+See PUBLIC_LAUNCH_READINESS.md for the before/after RCA, timeout/billing limits and remaining release gates.
+Older dated results below are historical snapshots, not substitutes for live-provider/device acceptance.
+
+## Approved public-access lockdown verification — 2026-10-10
+
+- Live containment committed at 09:40:08 UTC: all 13 public tables have RLS, no effective API-role table/column privileges.
+  Public-key zero-row User request now returns HTTP 401/42501, formerly HTTP 200; no customer rows were fetched.
+- Rollback rehearsal: PASS, idempotent SQL, owner zero-row read/write and denied default grants on a new probe table.
+  Probe/rehearsal rolled back. Commit applied only the approved security SQL, not pending feature migrations.
+- `$env:DATABASE_ACCESS_AUDIT_CONFIRMED='true'; npm run test:database-access`: PASS, 5/5;
+  zero failed/skipped/cancelled/todo; exit 0; duration_ms 31754.8909. Verifies all table ACL/RLS flags, 26 actual denied
+  role/table zero-row reads, owner read/default grants and public-only migration no-op in both isolated schemas.
+- Restricted test-backend hosted smoke: PASS, 31/31 expected HTTP responses; two disposable accounts cleaned up.
+  Both production/test health endpoints remain HTTP 200. No full authenticated production QA or paid-provider QA claimed.
+- `npm run typecheck`: PASS across all workspaces; exit 0. No Prisma model change/regeneration required for this ACL migration.
+- `npm test`: PASS, 138/138; zero failed/skipped/cancelled/todo; exit 0; duration_ms 10556.0484.
+- `npm run test:regression`: PASS, 117/117; zero failed/skipped/cancelled/todo; exit 0; duration_ms 12357.9518.
+- The five live security checks are deliberately separate from ordinary unit/regression suites and require explicit opt-in.
+- Residual: platform-owned supabase_admin defaults remain; alternate-creator objects need review. Existing public functions
+  were not changed; no executable SECURITY DEFINER functions were found. Incident review and other source gaps remain open.
+
+Evidence: artifacts/supabase-lockdown-receipt.json, artifacts/supabase-lockdown-tests.log,
+artifacts/supabase-lockdown-hosted-smoke.log and artifacts/supabase-lockdown-{typecheck,tests,regression}.log.
+See SUPABASE_ACCESS_AUDIT.md for before/after metadata, migration identity/hash, limitations and reproduction steps.
+
+## Live Supabase access audit — 2026-10-10
+
+- Read-only catalog audit confirmed 13 public tables with RLS disabled and effective read/write privileges for both
+  anon and authenticated. Both isolated coach schemas deny schema USAGE to these roles.
+- Public/anon-key GET /rest/v1/User?select=id&limit=0 returned HTTP 200 and an empty array. No customer rows requested.
+- No live writes, ACL changes, incident-log review or post-remediation denial check was performed. Hardening remains pending approval.
+- `npm run typecheck`: PASS across all workspaces; exit 0. Prisma client regeneration was not attempted in this audit.
+- `npm test`: PASS, 138/138; zero failed/skipped/cancelled/todo; exit 0; duration_ms 10085.2923.
+- `npm run test:regression`: PASS, 117/117; zero failed/skipped/cancelled/todo; exit 0; duration_ms 7414.5588.
+- No application behavior, tests or migrations changed; these green suites do not certify the exposed database as secure.
+
+Evidence: artifacts/supabase-access-audit.json, artifacts/supabase-rest-audit.json and
+artifacts/security-audit-{typecheck,tests,regression}.log. See SUPABASE_ACCESS_AUDIT.md for the confirmed scope and source findings.
+
+## Phase 10 specification checkpoint — 2026-10-10
+
+Documentation only: CODEX_PLAN.md now defines role-aware scenarios, 12 function packs, seven career lenses, offline
+draft generation/review, saved role context and voice/assessment acceptance criteria. No Phase 10 runtime behavior exists yet.
+No application code, tests, migrations, generated content, provider activation, deployment or APK was changed in this increment.
+
+- `npm run typecheck`: PASS, all workspaces; exit 0.
+- `npm test`: PASS, 138/138, zero failed/skipped/cancelled/todo; exit 0; duration_ms 9742.544.
+- `npm run test:regression`: PASS, 117/117, zero failed/skipped/cancelled/todo; exit 0; duration_ms 7012.2791.
+- `git -c core.whitespace=cr-at-eol diff --check`: PASS; exit 0; line-ending warnings only.
+- These are existing application checks, not evidence that the planned role personalization is implemented or reviewed.
+
+Logs: artifacts/phase10-plan-typecheck.log, artifacts/phase10-plan-tests.log and artifacts/phase10-plan-regression.log.
+
+## Isolated APK refresh verification — 2026-10-10
+
+- `npm run typecheck`: PASS across all workspaces; exit 0.
+- `npm test`: PASS, 138/138, zero failed/skipped/cancelled/todo; exit 0; duration_ms 14523.4812.
+- `npm run test:regression`: PASS, 117/117, zero failed/skipped/cancelled/todo; exit 0; duration_ms 6841.7216.
+- Test-schema migration deploy: PASS, 20 finished migrations in coach_apk_test; one existing account preserved.
+  Restricted login has zero accessible public tables and no Supabase anon/authenticated schema exposure.
+- Local Prisma regeneration failed with EPERM on node_modules/@prisma/client; the existing generated client already has
+  Assessment and RateLimitBucket. Local test API bundling passed and the hosted deployment is READY; no false regenerate PASS claimed.
+- Hosted API smoke: PASS, 31 expected HTTP responses, both disposable accounts deleted. Includes registration/login,
+  catalog/prices, all workshops, owner isolation, primary/advance/retry/completion, measured progress, export and logout.
+  Missing AI/email/billing providers fail closed; they were not exercised as working live services.
+- EAS initial Git archive upload failed because the sandboxed shallow Git clone returned 128. Retried with the supported
+  no-VCS client pinned to this repository; existing gitignore rules exclude environment files/artifacts. Upload succeeded.
+- EAS build d66eca5b-8d55-4f71-aeca-79210ef5056d FINISHED successfully; the APK was downloaded (151,089,531 bytes).
+  ZIP/CRC, embedded isolated API, absent production API and absent legacy System-theme explanation checks pass.
+  Android package/version, SDK 24/36 and test-preview update channel are verified; checksum is recorded in TEST_APK.md.
+- Physical Samsung SM-S908E: adb install -r reports Success without clearing app data. Launch and Settings deep link
+  return Status: ok. Process 27488 remains running; sampled PID-specific startup log has zero fatal/React Native error matches.
+  The phone is locked; screenshots show its lock/charging screen, not the app. Theme switching and full native QA are NOT passed.
+- The test-preview update channel has no OTA update groups. No OTA publication or production deployment/migration occurred.
+
+Logs: artifacts/test-apk-typecheck.log, test-apk-tests.log, test-apk-regression.log, test-apk-refresh-migrations.log,
+theme-apk-hosted-smoke.log, hosted-test-report.json, eas-theme-build-start.log, eas-theme-build-current.json,
+theme-apk-receipt.json, theme-apk-integrity.json, theme-apk-badging.txt, theme-apk-manifest.txt,
+theme-apk-install.log, theme-apk-launch.log and theme-apk-startup.log.
+
 ## Light/Dark-only appearance — 2026-10-10
 
 - Targeted `scripts/theme-preferences.test.ts`: PASS, 3/3; choices, saved selections and legacy/default migration.

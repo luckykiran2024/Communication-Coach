@@ -6,12 +6,15 @@ import { modules, practicePrograms, type CoachAccent, type Scenario } from "@coa
 import { request } from "../../src/api";
 import { useAuth } from "../../src/auth";
 import { connectRealtimeCall, type RealtimeCall } from "../../src/realtime";
+import { textPracticeDescription } from "../../src/presentation";
 import { Action, Card, Copy, Heading, Icon, MicButton, Screen, usePreferences, useTheme, VoiceWave } from "../../src/ui";
 
 type Practice = {
   conversation: { id: string; scenarioId: string; state: string; createdAt: string; currentPhase: string };
   scenario: Scenario; turns: { role: string; phase?: "primary" | "independent_retry"; text: string }[];
   liveVoiceAvailable: boolean;
+  assessmentEnabled?: boolean;
+  feedbackRetryAvailable?: boolean;
 };
 type PromptState = "idle" | "speaking" | "ready";
 
@@ -123,18 +126,29 @@ export default function PracticeDetail() {
     finally { setSaving(false); }
   }
 
-  async function finishPractice() {
+  async function refreshPractice() {
+    if (!auth.token || !id) return;
+    const latest = await request<Practice>(`/v1/me/conversations/${id}`, auth.token);
+    setPractice(latest);
+    if (latest.conversation.state === "FEEDBACK_READY") router.replace(`/feedback/${id}`);
+  }
+
+  async function finishPractice(retryFeedback = false) {
     if (!auth.token || !id || !practice || practice.turns.length === 0) return;
     setFinishing(true); setError("");
     try {
       const result = await request<{ conversation: { state: string }; message?: string }>(
-        `/v1/me/conversations/${id}/complete`, auth.token, "POST", undefined, 60000,
+        `/v1/me/conversations/${id}/${retryFeedback ? "feedback/retry" : "complete"}`,
+        auth.token, "POST", undefined, 60000,
       );
       setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
       setSavedMessage(result.message ?? "Your evidence-linked feedback is ready.");
       if (result.conversation.state === "FEEDBACK_READY") { router.replace(`/feedback/${id}`); return; }
       router.replace(`/workshop/${practice.scenario.module}?programLevel=${practice.scenario.level}&completedScenarioId=${encodeURIComponent(practice.scenario.id)}`);
-    } catch (failure) { setError((failure as Error).message); } finally { setFinishing(false); }
+    } catch (failure) {
+      setError((failure as Error).message);
+      await refreshPractice().catch(() => undefined);
+    } finally { setFinishing(false); }
   }
 
   async function startLiveVoice() {
@@ -201,6 +215,16 @@ export default function PracticeDetail() {
     <Copy>Session status: {practice.conversation.state} · Created {new Date(practice.conversation.createdAt).toLocaleString()}</Copy>
     {practice.conversation.state === "FEEDBACK_READY" &&
       <Action title="Review your feedback" onPress={() => router.push(`/feedback/${id}`)} />}
+    {practice.feedbackRetryAvailable && <Card>
+      <Heading eyebrow="Responses saved">Try feedback again</Heading>
+      <Copy>The review was interrupted or could not be verified. Retrying uses your daily feedback allowance.</Copy>
+      <Action title="Try feedback again" busy={finishing} disabled={finishing}
+        onPress={() => void finishPractice(true)} />
+    </Card>}
+    {practice.conversation.state === "ASSESSING" && <Card>
+      <Copy>Your feedback is being reviewed. Check again shortly; you do not need to resubmit your responses.</Copy>
+      <Action title="Check feedback status" onPress={() => void refreshPractice().catch(failure => setError(failure.message))} />
+    </Card>}
     {primaryResponse && !retryStarted && ["CREATED", "INTERRUPTED"].includes(practice.conversation.state) &&
       <Action title="Ready for the new situation" disabled={liveBusy || Boolean(liveCall) || saving}
         busy={saving} onPress={() => void advancePractice()} />}
@@ -223,7 +247,30 @@ export default function PracticeDetail() {
       {Boolean(liveMessage) && <Copy>{liveMessage}</Copy>}
     </Card>
     <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="client" size={22} color={theme.accent} /><Heading eyebrow="Your turn">Make it conversational</Heading></View><Copy>Answer out loud as if a real colleague were in front of you. Use the local audio check to record and play back your response while live AI voice is being connected.</Copy><Action title="Open microphone check" icon="recording" onPress={() => router.push("/voice")} /></Card>
-    <Card><Heading eyebrow={retryStarted ? "Independent retry" : "Text fallback"}>{retryStarted ? "Try the situation again." : "Write your response"}</Heading><Copy>{retryStarted ? "Use the new situation to show what you can apply independently. Your response is checked for substantive, structured and actionable evidence." : "This optional text path saves your primary response for a future assessment. It does not generate AI feedback."}</Copy>{["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && !retryCompleted && <><TextInput accessibilityLabel={retryStarted ? "Your independent retry" : "Your practice response"} placeholder={retryStarted ? "Answer the new situation in your own words…" : "Type what you would say…"} value={draft} onChangeText={setDraft} multiline maxLength={10000} textAlignVertical="top" style={{ minHeight: 120, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.ink, backgroundColor: theme.surface }} /><Action title={retryStarted ? "Save independent retry" : "Save primary response"} disabled={!draft.trim()} busy={saving} onPress={() => void saveResponse()} /></>}{["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && retryStarted && !retryCompleted && <Copy>Complete the independent retry before finishing this practice.</Copy>}{["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && retryCompleted && <Action title="Finish practice" secondary disabled={finishing} busy={finishing} onPress={() => void finishPractice()} />}{Boolean(savedMessage) && <Copy>{savedMessage}</Copy>}{Boolean(error) && <Copy error>{error}</Copy>}{practice.turns.length > 0 && <Copy>{practice.turns.length} response{practice.turns.length === 1 ? "" : "s"} saved. No assistant turns have been added.</Copy>}</Card>
+    <Card>
+      <Heading eyebrow={retryStarted ? "Independent retry" : "Text fallback"}>
+        {retryStarted ? "Try the situation again." : "Write your response"}
+      </Heading>
+      <Copy>{textPracticeDescription(practice.assessmentEnabled, retryStarted)}</Copy>
+      {["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && !retryCompleted && <>
+        <TextInput accessibilityLabel={retryStarted ? "Your independent retry" : "Your practice response"}
+          placeholder={retryStarted ? "Answer the new situation in your own words…" : "Type what you would say…"}
+          value={draft} onChangeText={setDraft} multiline maxLength={10000} textAlignVertical="top"
+          style={{ minHeight: 120, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12,
+            color: theme.ink, backgroundColor: theme.surface }} />
+        <Action title={retryStarted ? "Save independent retry" : "Save primary response"} disabled={!draft.trim()}
+          busy={saving} onPress={() => void saveResponse()} />
+      </>}
+      {["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && retryStarted && !retryCompleted &&
+        <Copy>Complete the independent retry before finishing this practice.</Copy>}
+      {["CREATED", "INTERRUPTED"].includes(practice.conversation.state) && retryCompleted &&
+        <Action title="Finish practice" secondary disabled={finishing} busy={finishing} onPress={() => void finishPractice()} />}
+      {Boolean(savedMessage) && <Copy>{savedMessage}</Copy>}
+      {Boolean(error) && <Copy error>{error}</Copy>}
+      {practice.turns.length > 0 && <Copy>
+        {practice.turns.length} response{practice.turns.length === 1 ? "" : "s"} saved. No assistant turns have been added.
+      </Copy>}
+    </Card>
     <Card><Heading eyebrow="Live AI voice">Conversational mode</Heading><Copy>The live coach uses a short-lived server-issued session key. Your standard API key never enters the mobile app. Stop the session when you finish so the server can settle your allowance.</Copy></Card>
     <Action title="Back to today" secondary onPress={() => router.replace("/home")} />
   </Screen>;

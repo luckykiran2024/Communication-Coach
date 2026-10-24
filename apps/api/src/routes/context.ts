@@ -9,6 +9,7 @@ import type { AssessmentProvider } from "../assessment-provider";
 
 export type BillingOptions = {
   enabled?: boolean;
+  providers?: ("apple" | "google")[];
   webhookSecret?: string;
   googleNotificationSecret?: string;
   verifyGoogleNotificationRequest?: (authorization: string | undefined) => Promise<boolean>;
@@ -32,7 +33,7 @@ export type BuildAppOptions = {
   oauth?: OAuthOptions;
   assessment?: {
     enabled?: boolean; provider?: AssessmentProvider; apiKey?: string; model?: string; timeoutMs?: number;
-    inputMicrosPerMillion?: number; outputMicrosPerMillion?: number;
+    inputMicrosPerMillion?: number; outputMicrosPerMillion?: number; dailyLimit?: number;
   };
   email?: { sender: EmailSender | null; linkBaseUrl?: string };
 };
@@ -46,6 +47,7 @@ export type RouteDependencies = AuthDependencies & {
   emailLinkBaseUrl: string;
   availableScenarios: () => Promise<Scenario[]>;
   billingEnabled: boolean;
+  billingProviders: ("apple" | "google")[];
   billingWebhookSecret: string;
   googleNotificationSecret: string;
   billingProductMap: Record<string, string>;
@@ -57,6 +59,7 @@ export type RouteDependencies = AuthDependencies & {
   assessmentProvider: AssessmentProvider | null;
   assessmentModel: string;
   assessmentTimeoutMs: number;
+  assessmentDailyLimit: number;
   reapVoiceSessions: () => Promise<void>;
   activePlan: (userId: string) => Promise<Plan>;
   planForProduct: (productId: string) => Plan | undefined;

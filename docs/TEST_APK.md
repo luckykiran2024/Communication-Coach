@@ -1,8 +1,46 @@
 # Isolated Android test release
 
+## Launch-hardening source notice — 2026-10-10
+
+The assessment recovery, paid-call gates and answer-date progress changes are local source changes only.
+The installed d66eca5b test APK, its OTA channel and hosted test API have not been updated in this increment.
+Android ADB sees the authorized Samsung SM-S908E (Android 16), but dumpsys reports an active lock screen;
+no new interactive device QA is claimed. Production remains gated. See PUBLIC_LAUNCH_READINESS.md.
+
+## Current refresh — 2026-10-10
+
+- Requested source: GitHub main ba2355f; verified source tree ec09131fe1b82b3642e10845873de49dc4bdabc7.
+  Includes the remaining-phase implementation and Light/Dark-only Settings with legacy System-to-Light migration.
+- New EAS Android build: d66eca5b-8d55-4f71-aeca-79210ef5056d, test-preview profile/channel, FINISHED successfully.
+  Build page: https://expo.dev/accounts/luckysoma/projects/communication-platform/builds/d66eca5b-8d55-4f71-aeca-79210ef5056d
+- Refreshed only the existing isolated test project to deployment dpl_7fMwqpppL8p8UdRm8yoi4scjt7Zj (READY).
+  The test URL below is unchanged. All 20 migrations are applied only to coach_apk_test; its one existing account is preserved.
+  Restricted-role checks found zero accessible public tables and no anon/authenticated test-schema access.
+- Hosted verification: 31 expected HTTP responses passed, including the server-owned advance/retry flow and measured progress.
+  Both disposable smoke accounts were deleted. Text-only practice reported one text session and zero measured voice minutes.
+- Actual local checks: typecheck PASS, general tests 138/138, regression tests 117/117.
+- The test-preview channel has no published OTA update groups, so no older OTA is expected to replace the bundled changes.
+- APK: https://expo.dev/artifacts/eas/aC7H5t7S0W4MlF1RT8LmBslSA5kCykCXyoNBKP5SEfA.apk
+  Local copy: artifacts/communication-coach-test-d66eca5b.apk, 151,089,531 bytes.
+  SHA-256: 80ce3021900dd344483dafc3f374671225e246af6b61b03a2f68d1e87402f20a.
+- Downloaded ZIP/CRC checks pass. The embedded app contains the isolated test API and independent-retry flow;
+  the production API URL and obsolete System-theme explanation are absent.
+  Android metadata verifies package com.example.communicationcoach.preview, version 0.1.0/code 1,
+  minimum SDK 24, target SDK 36 and test-preview update channel.
+- Installed on the authorized connected Samsung SM-S908E with adb install -r: Success, preserving existing app data.
+  Launch and Settings deep-link commands return Status: ok; process 27488 remains running with zero sampled startup
+  error matches. The phone is locked, so interactive Light/Dark screen verification and full native QA remain pending.
+  Unlock the phone and open Communication Coach preview to test; no Metro server or Expo Go is required.
+- Real AI voice/assessment, Google/Microsoft OAuth, verification/reset email delivery and store purchases remain disabled.
+  All workshops use the existing Executive test grant; changing the displayed plan is not a real purchase or entitlement test.
+- Production project remains on dpl_Dokactk2fRYnV5nPYfwp2K4BZwdj; no production deployment/migration or OTA was performed.
+
+## Previous APK checkpoint (historical)
+
 ## Scope
 
-The founder approved a separate test backend on 2026-10-10. This is not a Play Store release or a production-data upgrade. Phase 6 has not started.
+The founder approved a separate test backend on 2026-10-10. This historical checkpoint preceded Phase 6.
+It is not a Play Store release or a production-data upgrade; the refresh above supersedes its source/test counts.
 
 - Vercel project: `communication-coach-test-api` (`prj_3z5Lh2bWudlu3aPtmHaSRs4YMiBf`), under the existing owner team.
 - API: https://communication-coach-test-api-luckykiran2024s-projects.vercel.app/api

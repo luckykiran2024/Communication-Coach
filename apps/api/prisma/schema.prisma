@@ -23,6 +23,7 @@ model User {
   purchaseIntents PurchaseIntent[]
   voiceSessions VoiceSession[]
   voiceMonthUsage VoiceMonthUsage[]
+  assessmentRuns AssessmentRun[]
 }
 
 model UsageReservation {
@@ -63,6 +64,7 @@ model Conversation {
   voiceSessions VoiceSession[]
   assessment Assessment?
   assessmentUsage AssessmentUsage[]
+  assessmentRuns AssessmentRun[]
   @@index([userId, createdAt])
 }
 
@@ -72,6 +74,7 @@ model Assessment {
   rubricVersion String
   modelVersion String
   priorities Json
+  coachingReview Json?
   transferResult String
   inputTokens Int
   outputTokens Int
@@ -83,6 +86,9 @@ model Assessment {
 model AssessmentUsage {
   id String @id @db.Uuid
   conversationId String @db.Uuid
+  runId String? @db.Uuid
+  providerRequestId String?
+  providerResponseId String?
   attempt Int
   modelVersion String
   inputTokens Int?
@@ -90,7 +96,24 @@ model AssessmentUsage {
   costMicros Int?
   createdAt DateTime @default(now())
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  @@unique([conversationId, attempt])
+  run AssessmentRun? @relation(fields: [runId], references: [id], onDelete: Cascade)
+  @@unique([conversationId, runId, attempt])
+}
+
+model AssessmentRun {
+  id String @id @db.Uuid
+  userId String @db.Uuid
+  conversationId String @db.Uuid
+  dayKey String
+  status String
+  createdAt DateTime
+  expiresAt DateTime
+  finishedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  usage AssessmentUsage[]
+  @@index([userId, dayKey])
+  @@index([status, expiresAt])
 }
 
 model ConversationTurn {
