@@ -21,6 +21,11 @@ export async function request<Result>(
 export type Me = { user: { id: string; email: string; emailVerifiedAt: string | null }; profile: Profile | null };
 export type Catalog = { plans: Plan[]; priceNotice: string; liveVoiceAvailable: boolean };
 export type Recommendations = { scenarios: Scenario[]; previewOnly: boolean };
+export type VoiceUsage = {
+  planId: string; planTitle: string; modules: Plan["modules"];
+  sessionsRemaining: number; sessionsAllowed: number; lifetimeFreeLimit: boolean;
+  maxSessionSeconds: number; monthResetsAt: string;
+};
 export type ProgressSnapshot = {
   totalSessions: number; completedSessions: number; weeklySessions: number; practiceMinutes: number;
   weeklyPracticeMinutes: number; measuredVoiceSeconds: number; measuredVoiceMinutes: number;

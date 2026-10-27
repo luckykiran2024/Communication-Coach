@@ -63,7 +63,7 @@ The mobile sign-in flow now uses native OAuth requests and the API verifies the 
 Set these values through EAS environment variables; do not commit production values to the repository:
 
 - `APP_VARIANT=production`
-- `APP_IDENTIFIER=com.yourcompany.communicationcoach`
+- `APP_IDENTIFIER=com.c2coach.app`
 - `EXPO_PUBLIC_API_URL=https://api.yourdomain.com`
 - The Google client IDs and Microsoft client ID listed in `docs/OAUTH_SETUP.md`
 

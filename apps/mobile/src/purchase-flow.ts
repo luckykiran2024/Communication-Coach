@@ -1,6 +1,7 @@
 import type { ProductSubscription, Purchase, RequestPurchaseProps } from "expo-iap";
 
 export type StoreIntent = { id: string; accountToken: string };
+export type SubscriptionChange = { productId: string; purchaseToken: string };
 type PurchaseResult = { verified: boolean; accessGranted: boolean };
 type PurchaseDependencies = {
   createIntent(productId: string): Promise<StoreIntent>;
@@ -16,6 +17,7 @@ export function monthlyStoreOffer(product: ProductSubscription, basePlanId: stri
 
 export function subscriptionRequest(
   platform: string, product: ProductSubscription, accountToken: string, basePlanId: string,
+  change?: SubscriptionChange,
 ): RequestPurchaseProps {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(accountToken)) {
     throw new Error("The server did not return a valid billing account identifier.");
@@ -35,6 +37,13 @@ export function subscriptionRequest(
     request: { google: {
       skus: [product.id], obfuscatedAccountId: accountToken,
       subscriptionOffers: [{ sku: product.id, offerToken: offer.offerTokenAndroid }],
+      ...(change ? {
+        purchaseToken: change.purchaseToken,
+        subscriptionProductReplacementParams: {
+          oldProductId: change.productId,
+          replacementMode: "with-time-proration" as const,
+        },
+      } : {}),
     } },
   };
 }

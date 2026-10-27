@@ -4,7 +4,7 @@ import { Redirect, router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { brand, coachAccents, colorThemeDetails, type CoachAccent } from "@coach/core";
 import { useAuth } from "../src/auth";
-import { request } from "../src/api";
+import { request, type VoiceUsage } from "../src/api";
 import { Action, Card, Choices, Copy, Field, Heading, Icon, Screen, usePreferences, useTheme } from "../src/ui";
 import { AppearanceMode } from "../src/appearance-controls";
 
@@ -23,7 +23,7 @@ export default function Settings() {
   const [avatarDraft, setAvatarDraft] = useState(avatarUri);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [voiceUsage, setVoiceUsage] = useState<{ planTitle: string; sessionsRemaining: number; lifetimeFreeLimit: boolean; sessionsAllowed: number } | null>(null);
+  const [voiceUsage, setVoiceUsage] = useState<VoiceUsage | null>(null);
   useEffect(() => { setAvatarDraft(avatarUri); }, [avatarUri]);
   useEffect(() => { if (auth.token) void request<typeof voiceUsage>("/v1/me/voice-usage", auth.token).then(setVoiceUsage).catch(() => setVoiceUsage(null)); }, [auth.token]);
   useEffect(() => { void ImagePicker.getPendingResultAsync().then(result => { if (result && "canceled" in result && !result.canceled && result.assets[0]?.uri) { setAvatarUri(result.assets[0].uri); setAvatarDraft(result.assets[0].uri); setMessage("Display picture restored from your device."); } }); }, [setAvatarUri]);

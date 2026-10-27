@@ -1,6 +1,6 @@
 import type { ExpoConfig } from "expo/config";
 const variant = process.env.APP_VARIANT ?? "development";
-const baseId = process.env.APP_IDENTIFIER ?? "com.example.communicationcoach";
+const baseId = process.env.APP_IDENTIFIER ?? "com.c2coach.app";
 const production = variant === "production";
 const preview = variant === "preview";
 const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "";
@@ -28,7 +28,7 @@ if (production && microsoftClientId && !configuredClientId(microsoftClientId)) {
 }
 const config: ExpoConfig = {
   owner: "luckysoma",
-  name: (process.env.APP_NAME ?? "Communication Coach") + (production ? "" : " " + variant),
+  name: (process.env.APP_NAME ?? "C2Coach") + (production ? "" : " " + variant),
   slug: "communication-platform", scheme: "communicationcoach", version: "0.1.0",
   icon: "./assets/springbok-app-icon.png",
   extra: { eas: { projectId: "e874ae5c-f1cb-4d6b-bcf5-19b25231c0fd" } },

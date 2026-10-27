@@ -3,7 +3,7 @@ import { Platform, View } from "react-native";
 import { deepLinkToSubscriptions, getAvailablePurchases, useIAP, type Purchase } from "expo-iap";
 import Constants from "expo-constants";
 import { request } from "./api";
-import { monthlyStoreOffer, subscriptionRequest, verifyAndFinishPurchase, type StoreIntent } from "./purchase-flow";
+import { monthlyStoreOffer, subscriptionRequest, verifyAndFinishPurchase, type StoreIntent, type SubscriptionChange } from "./purchase-flow";
 import { Action, Copy } from "./ui";
 
 type Props = {
@@ -86,12 +86,18 @@ export function StorePurchaseActions({ token, productId, productIds, onComplete,
     setBusy(true); setNotice(""); onError("");
     try {
       const purchases = await getAvailablePurchases({ onlyIncludeActiveItemsIOS: true });
-      if (purchases.some(item => productIds.includes(item.productId) && item.purchaseState === "purchased")) {
-        setNotice("A subscription already exists. Restore it before changing or purchasing another plan.");
+      const activePurchase = purchases.find(item => productIds.includes(item.productId) && item.purchaseState === "purchased");
+      if (activePurchase?.productId === productId) {
+        setNotice("This package is already active. Restore it if the app has not refreshed your access yet.");
         return;
       }
+      let change: SubscriptionChange | undefined;
+      if (Platform.OS === "android" && activePurchase) {
+        if (!activePurchase.purchaseToken) throw new Error("Google Play did not return the current subscription token required to change plans.");
+        change = { productId: activePurchase.productId, purchaseToken: activePurchase.purchaseToken };
+      }
       const intent = await createIntent(productId);
-      const purchase = subscriptionRequest(Platform.OS, product, intent.accountToken, basePlanId);
+      const purchase = subscriptionRequest(Platform.OS, product, intent.accountToken, basePlanId, change);
       pendingIntent.current = intent;
       await requestPurchase(purchase);
     } catch (failure) {

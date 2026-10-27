@@ -125,7 +125,7 @@ docs/              Product source, architecture, decisions and handoff
 compose.yaml       Local PostgreSQL
 ```
 
-Edit branding and design tokens in packages/core/src/index.ts. Native app name and identifiers also accept APP_NAME and APP_IDENTIFIER through app.config.ts. Production identifiers defaulting to com.example are rejected.
+Edit branding and design tokens in packages/core/src/index.ts. Native app names and identifiers accept APP_NAME and APP_IDENTIFIER through app.config.ts. The permanent production identifier is `com.c2coach.app`; do not change it after the first Play Console upload.
 Plan targets and allowances live in apps/api/config/plans.json and are returned by the API; none unlock paid access.
 
 See docs/IMPLEMENTATION_STATUS.md for honest feature status, docs/TESTING_STATUS.md for verification, and docs/KNOWN_ISSUES.md before considering deployment.

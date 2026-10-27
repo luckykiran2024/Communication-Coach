@@ -1,0 +1,36 @@
+name: Build Android store AAB
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck workspaces
+        run: npm run typecheck
+      - name: Run release tests serially
+        run: node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test --test-concurrency=1 packages/core/test/*.test.ts apps/api/test/*.test.ts scripts/*.test.ts
+      - name: Start EAS Android App Bundle build
+        working-directory: apps/mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APP_VARIANT: production
+          APP_NAME: C2Coach
+          APP_IDENTIFIER: com.c2coach.app
+          EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
+          EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED: "true"
+          EXPO_PUBLIC_SUPABASE_URL: https://nrrmhftccqsofjvoaffm.supabase.co
+          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_epmtO5_9eHCx00XC5iBy5Q_u6ya9u8D
+          EXPO_PUBLIC_PAYMENT_PREVIEW: "false"
+        run: npx --yes eas-cli@24.12.0 build --platform android --profile store-sandbox --non-interactive --no-wait

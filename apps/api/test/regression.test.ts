@@ -108,6 +108,9 @@ test("regression: server-selected active plan gates business and leadership work
   assert.ok(businessScenario);
 
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, planId: "essential" } });
+  const professionalUsage = await app.inject({ url: "/v1/me/voice-usage", headers });
+  assert.equal(professionalUsage.json().planId, "professional");
+  assert.deepEqual(professionalUsage.json().modules, ["daily", "management"]);
   const professional = await app.inject({ url: "/v1/me/scenarios", headers });
   assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "management"), true);
   assert.equal(professional.json().scenarios.some((item: { module: string }) => item.module === "leadership"), false);
@@ -243,7 +246,9 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(created.statusCode, 201);
   assert.equal(created.json().received, true);
   assert.equal(created.json().idempotent, false);
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "executive");
+  const executiveUsage = (await app.inject({ url: "/v1/me/voice-usage", headers })).json();
+  assert.equal(executiveUsage.planId, "executive");
+  assert.deepEqual(executiveUsage.modules, ["daily", "management", "leadership"]);
   const repeated = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: event });
   assert.equal(repeated.statusCode, 200);
   assert.equal(repeated.json().idempotent, true);
@@ -251,7 +256,9 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(updated.statusCode, 200);
   assert.equal(updated.json().entitlement.status, "expired");
   assert.equal((await app.inject({ url: "/v1/me/entitlement", headers })).json().entitlement.status, "expired");
-  assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().planId, "free");
+  const freeUsage = (await app.inject({ url: "/v1/me/voice-usage", headers })).json();
+  assert.equal(freeUsage.planId, "free");
+  assert.deepEqual(freeUsage.modules, ["daily"]);
   const other = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "billing-other@example.com", password: "billing-password-123" } });
   const otherHeaders = { authorization: `Bearer ${other.json().token}` };
   const otherIntent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers: otherHeaders, payload: { provider: "google", productId: "com.coach.executive.monthly" } });
@@ -272,9 +279,9 @@ test("regression: verified mobile store purchases grant only matched entitlement
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "store-purchase@example.com", password: "store-password-123" } });
   const headers = { authorization: `Bearer ${registration.json().token}` };
-  const intent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "apple", productId: "com.communicationcoach.professional.monthly" } });
+  const intent = await app.inject({ method: "POST", url: "/v1/billing/intents", headers, payload: { provider: "apple", productId: "com.c2coach.app.professional.monthly" } });
   assert.equal(intent.statusCode, 201);
-  const payload = { purchaseIntentId: intent.json().intent.id, provider: "apple", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-transaction-1", purchaseToken: "signed-store-payload" };
+  const payload = { purchaseIntentId: intent.json().intent.id, provider: "apple", productId: "com.c2coach.app.professional.monthly", transactionId: "apple-transaction-1", purchaseToken: "signed-store-payload" };
   assert.equal((await app.inject({ method: "POST", url: "/v1/billing/purchases/verify", payload })).statusCode, 401);
   const verified = await app.inject({ method: "POST", url: "/v1/billing/purchases/verify", headers, payload });
   assert.equal(verified.statusCode, 201);
@@ -286,11 +293,11 @@ test("regression: verified mobile store purchases grant only matched entitlement
 
 test("regression: verified Apple lifecycle notifications update matching entitlements and ignore stale events", async context => {
   const store = new MemoryStore();
-  const app = await buildApp(store, { now: () => new Date("2026-10-06T00:00:00.000Z"), billing: { enabled: true, verifyAppleNotification: async signedPayload => signedPayload === "renewal" ? { notificationId: "notification-renewal", notificationType: "DID_RENEW", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-2", originalTransactionId: "apple-original-1", status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-05T00:00:00.000Z") } : signedPayload === "stale" ? { notificationId: "notification-stale", notificationType: "EXPIRED", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", status: "expired", environment: "sandbox", expiresAt: new Date("2026-10-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-04T00:00:00.000Z") } : null } });
+  const app = await buildApp(store, { now: () => new Date("2026-10-06T00:00:00.000Z"), billing: { enabled: true, verifyAppleNotification: async signedPayload => signedPayload === "renewal" ? { notificationId: "notification-renewal", notificationType: "DID_RENEW", productId: "com.c2coach.app.professional.monthly", transactionId: "apple-renewal-2", originalTransactionId: "apple-original-1", status: "active", environment: "sandbox", expiresAt: new Date("2026-12-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-05T00:00:00.000Z") } : signedPayload === "stale" ? { notificationId: "notification-stale", notificationType: "EXPIRED", productId: "com.c2coach.app.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", status: "expired", environment: "sandbox", expiresAt: new Date("2026-10-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-04T00:00:00.000Z") } : null } });
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "apple-lifecycle@example.com", password: "apple-lifecycle-password" } });
   const userId = registration.json().user.id as string;
-  await store.saveEntitlement({ id: randomUUID(), userId, provider: "apple", productId: "com.communicationcoach.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", purchaseToken: "apple-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
+  await store.saveEntitlement({ id: randomUUID(), userId, provider: "apple", productId: "com.c2coach.app.professional.monthly", transactionId: "apple-renewal-1", originalTransactionId: "apple-original-1", purchaseToken: "apple-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
   const renewal = await app.inject({ method: "POST", url: "/v1/billing/notifications/apple", payload: { signedPayload: "renewal" } });
   assert.equal(renewal.statusCode, 200);
   assert.equal(renewal.json().entitlement.transactionId, "apple-renewal-2");
@@ -307,8 +314,8 @@ test("regression: Google Pub/Sub lifecycle notifications reverify tokens before 
   context.after(() => app.close());
   const registration = await app.inject({ method: "POST", url: "/v1/auth/register", payload: { ...legalConsent, email: "google-lifecycle@example.com", password: "google-lifecycle-password" } });
   const userId = registration.json().user.id as string;
-  await store.saveEntitlement({ id: randomUUID(), userId, provider: "google", productId: "com.communicationcoach.professional.monthly", transactionId: "google-transaction-1", originalTransactionId: "google-purchase-token", purchaseToken: "google-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
-  const data = Buffer.from(JSON.stringify({ packageName: "com.communicationcoach", eventTimeMillis: "1791244800000", subscriptionNotification: { purchaseToken: "google-purchase-token", subscriptionId: "com.communicationcoach.professional.monthly", notificationType: 2 } })).toString("base64");
+  await store.saveEntitlement({ id: randomUUID(), userId, provider: "google", productId: "com.c2coach.app.professional.monthly", transactionId: "google-transaction-1", originalTransactionId: "google-purchase-token", purchaseToken: "google-purchase-token", status: "active", environment: "sandbox", expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"), createdAt: new Date("2026-10-01T00:00:00.000Z"), updatedAt: new Date("2026-10-01T00:00:00.000Z") });
+  const data = Buffer.from(JSON.stringify({ packageName: "com.c2coach.app", eventTimeMillis: "1791244800000", subscriptionNotification: { purchaseToken: "google-purchase-token", subscriptionId: "com.c2coach.app.professional.monthly", notificationType: 2 } })).toString("base64");
   const payload = { message: { data, messageId: "google-message-1" } };
   assert.equal((await app.inject({ method: "POST", url: "/v1/billing/notifications/google", payload })).statusCode, 401);
   const response = await app.inject({ method: "POST", url: "/v1/billing/notifications/google", headers: { "x-google-pubsub-secret": "google-secret" }, payload });
@@ -387,7 +394,7 @@ test("regression: usage endpoint is private, timezone-bound and never unlocks li
   await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...validProfile, timezone: "Asia/Kolkata" } });
   const usage = await app.inject({ url: "/v1/me/voice-usage", headers });
   assert.equal(usage.statusCode, 200);
-  assert.deepEqual(usage.json(), { planId: "executive", planTitle: "Executive", timezone: "Asia/Kolkata", dayKey: "2026-09-24", monthKey: "2026-09", sessionsUsedThisMonth: 0, sessionsRemainingThisMonth: 40, sessionsAllowed: 40, sessionsRemaining: 40, lifetimeFreeLimit: false, consumedSecondsThisMonth: 0, maxSessionSeconds: 420, reservedSecondsToday: 0, consumedSecondsToday: 0, resetsAt: "2026-09-24T18:30:00.000Z", monthResetsAt: "2026-09-30T18:30:00.000Z", enforcement: "server_reservations", liveVoiceAvailable: false });
+  assert.deepEqual(usage.json(), { planId: "executive", planTitle: "Executive", modules: ["daily", "management", "leadership"], timezone: "Asia/Kolkata", dayKey: "2026-09-24", monthKey: "2026-09", sessionsUsedThisMonth: 0, sessionsRemainingThisMonth: 40, sessionsAllowed: 40, sessionsRemaining: 40, lifetimeFreeLimit: false, consumedSecondsThisMonth: 0, maxSessionSeconds: 420, reservedSecondsToday: 0, consumedSecondsToday: 0, resetsAt: "2026-09-24T18:30:00.000Z", monthResetsAt: "2026-09-30T18:30:00.000Z", enforcement: "server_reservations", liveVoiceAvailable: false });
   now = new Date("2026-09-24T18:31:00.000Z");
   assert.equal((await app.inject({ url: "/v1/me/voice-usage", headers })).json().dayKey, "2026-09-25");
   const voice = await app.inject({ method: "POST", url: "/v1/voice/sessions", headers });

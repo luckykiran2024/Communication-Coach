@@ -47,6 +47,10 @@
       "android": { "buildType": "app-bundle" },
       "env": {
         "APP_VARIANT": "production",
+        "APP_NAME": "C2Coach",
+        "APP_IDENTIFIER": "com.c2coach.app",
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
+        "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true",
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
       }
     },
@@ -56,7 +60,11 @@
       "autoIncrement": true,
       "env": {
         "APP_VARIANT": "production",
-        "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
+        "APP_NAME": "C2Coach",
+        "APP_IDENTIFIER": "com.c2coach.app",
+        "EXPO_PUBLIC_PAYMENT_PREVIEW": "false",
+        "EXPO_PUBLIC_STORE_PRODUCT_PREFIX": "com.c2coach.app",
+        "EXPO_PUBLIC_GOOGLE_BASE_PLAN_ID": "monthly"
       }
     }
   },

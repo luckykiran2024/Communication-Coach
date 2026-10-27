@@ -26,7 +26,7 @@ export default function Payment() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const planId = params.planId ?? auth.me?.profile?.planId ?? "free";
   const previewPayment = process.env.EXPO_PUBLIC_PAYMENT_PREVIEW === "true" || (__DEV__ && process.env.EXPO_PUBLIC_PAYMENT_PREVIEW !== "false");
-  const productPrefix = process.env.EXPO_PUBLIC_STORE_PRODUCT_PREFIX ?? "com.communicationcoach";
+  const productPrefix = process.env.EXPO_PUBLIC_STORE_PRODUCT_PREFIX ?? "com.c2coach.app";
   const productIds = useMemo(() => (catalog?.plans ?? []).filter(item => item.id !== "free")
     .map(item => `${productPrefix}.${item.id}.monthly`), [catalog, productPrefix]);
   const refreshAccount = auth.refresh;

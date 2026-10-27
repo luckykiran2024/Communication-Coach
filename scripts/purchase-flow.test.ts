@@ -4,7 +4,7 @@ import type { ProductSubscription, Purchase } from "expo-iap";
 import { monthlyStoreOffer, paymentConfirmation, subscriptionRequest, verifyAndFinishPurchase } from "../apps/mobile/src/purchase-flow";
 
 const accountToken = "12345678-1234-4234-8234-123456789012";
-const sku = "com.communicationcoach.essential.monthly";
+const sku = "com.c2coach.app.essential.monthly";
 const product = {
   id: sku, platform: "android", type: "subs", title: "Essential", nameAndroid: "Essential",
   description: "15 monthly voice sessions", displayPrice: "₹299", currency: "INR",
@@ -25,6 +25,18 @@ test("billing mobile: Android uses the configured base plan and binds an opaque 
   assert.deepEqual(subscriptionRequest("android", product, accountToken, "monthly"), {
     type: "subs", request: { google: { skus: [sku], obfuscatedAccountId: accountToken,
       subscriptionOffers: [{ sku, offerToken: "monthly-offer" }] } },
+  });
+});
+
+test("billing mobile: Android plan changes replace the verified active subscription", () => {
+  assert.deepEqual(subscriptionRequest("android", product, accountToken, "monthly", {
+    productId: "com.c2coach.app.professional.monthly", purchaseToken: "existing-token",
+  }), {
+    type: "subs", request: { google: { skus: [sku], obfuscatedAccountId: accountToken,
+      subscriptionOffers: [{ sku, offerToken: "monthly-offer" }], purchaseToken: "existing-token",
+      subscriptionProductReplacementParams: {
+        oldProductId: "com.c2coach.app.professional.monthly", replacementMode: "with-time-proration",
+      } } },
   });
 });
 

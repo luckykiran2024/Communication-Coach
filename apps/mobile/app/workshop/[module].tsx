@@ -41,6 +41,11 @@ export default function WorkshopPath() {
     if (auth.token && moduleId) void load();
   }, [auth.token, moduleId]);
 
+  useEffect(() => {
+    const levels = [...new Set((scenarios ?? []).map(scenario => scenario.level))].sort((a, b) => a - b);
+    if (levels.length > 0 && !levels.includes(selectedProgramLevel)) setSelectedProgramLevel(levels[0]);
+  }, [scenarios, selectedProgramLevel]);
+
   if (auth.loading) return <Screen><Copy>Loading…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
   if (!auth.me?.profile) return <Redirect href="/onboarding" />;
@@ -48,6 +53,7 @@ export default function WorkshopPath() {
 
   const pathScenarios = (scenarios ?? []).filter(scenario => scenario.level === selectedProgramLevel);
   const availableLevels = [...new Set((scenarios ?? []).map(scenario => scenario.level))].sort((a, b) => a - b);
+  const availablePrograms = practicePrograms.filter(program => availableLevels.includes(program.level));
   const completedIndex = completedScenarioId ? pathScenarios.findIndex(scenario => scenario.id === completedScenarioId) : -1;
   const activeIndex = completedIndex >= 0 ? completedIndex + 1 : 0;
   const activeScenario = pathScenarios[activeIndex];
@@ -70,17 +76,17 @@ export default function WorkshopPath() {
     <Heading eyebrow="Practice path">{pathTitles[moduleId]}</Heading>
     <Copy>{module?.description ?? "Build your communication skills one exercise at a time."}</Copy>
     <Card>
-      <Heading eyebrow="Choose a programme">Five progressive programmes</Heading>
-      <Copy>Select the skill programme you want to work on. Later programmes unlock as you build practice evidence.</Copy>
-      {practicePrograms.map(program => {
-        const unlocked = availableLevels.includes(program.level);
+      <Heading eyebrow="Choose a programme">Available programmes</Heading>
+      <Copy>Select from the programmes and exercises currently active for you.</Copy>
+      {availablePrograms.map(program => {
         const selected = selectedProgramLevel === program.level;
         return <Card key={program.level} tone={selected ? "accent" : undefined}>
-          <Heading eyebrow={unlocked ? `Programme ${program.level}${selected ? " · selected" : ""}` : `Programme ${program.level} · locked`}>{program.title}</Heading>
+          <Heading eyebrow={`Programme ${program.level}${selected ? " · selected" : ""}`}>{program.title}</Heading>
           <Copy>{program.description}</Copy>
-          {unlocked ? <Action title={selected ? "Selected programme" : `Choose ${program.title}`} secondary={selected} disabled={selected} onPress={() => { setSelectedProgramLevel(program.level); setShowExamples(false); }} /> : <Copy>Unlock through the next mastery milestone. Your current practice level determines which exercises are available.</Copy>}
+          <Action title={selected ? "Selected programme" : `Choose ${program.title}`} secondary={selected} disabled={selected} onPress={() => { setSelectedProgramLevel(program.level); setShowExamples(false); }} />
         </Card>;
       })}
+      {scenarios !== null && availablePrograms.length === 0 && <Copy>No active programmes are available yet.</Copy>}
     </Card>
     {completedIndex >= 0 && <Card tone="accent"><Heading eyebrow="Exercise complete">Nice work. Let’s keep going.</Heading><Copy>Your response and independent retry are saved. Continue with the next exercise, or explore more examples below.</Copy></Card>}
     {scenarios === null && !error && <Copy>Loading your exercises…</Copy>}

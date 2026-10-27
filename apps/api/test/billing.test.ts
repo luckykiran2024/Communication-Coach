@@ -7,7 +7,7 @@ import { verifiedGoogleSubscription, type StorePurchaseInput, type VerifiedStore
 import { billingProvidersSchema, storeCredentialsConfigured } from "../src/billing-configuration";
 import { productionConfigurationErrors } from "../src/config";
 
-const sku = "com.communicationcoach.essential.monthly";
+const sku = "com.c2coach.app.essential.monthly";
 const now = new Date("2026-10-24T10:00:00Z");
 const input: StorePurchaseInput = { provider: "google", productId: sku, purchaseToken: "fixture-token", transactionId: "forged" };
 const google = {
@@ -69,7 +69,7 @@ test("billing HTTP: intents expose the account token and reject unknown or Free 
   const data = await fixture(context);
   assert.equal(data.intent.statusCode, 201);
   assert.equal(data.intent.json().intent.accountToken, data.account.id);
-  for (const productId of ["not-a-product", "com.communicationcoach.free.monthly"]) {
+  for (const productId of ["not-a-product", "com.c2coach.app.free.monthly"]) {
     assert.equal((await data.app.inject({ method: "POST", url: "/v1/billing/intents", headers: data.headers,
       payload: { provider: "google", productId } })).statusCode, 400);
   }

@@ -42,10 +42,10 @@ These are target INR prices, not proof that a storefront product exists or has b
 
 | Product ID | Target monthly price | Voice allowance |
 |---|---:|---:|
-| com.communicationcoach.essential.monthly | INR 299 | 15/month |
-| com.communicationcoach.professional.monthly | INR 399 | 20/month |
-| com.communicationcoach.executive.monthly | INR 699 | 40/month |
-| com.communicationcoach.extended.monthly | INR 799 | 60/month |
+| com.c2coach.app.essential.monthly | INR 299 | 15/month |
+| com.c2coach.app.professional.monthly | INR 399 | 20/month |
+| com.c2coach.app.executive.monthly | INR 699 | 40/month |
+| com.c2coach.app.extended.monthly | INR 799 | 60/month |
 
 Each voice session is capped at seven minutes. Free is two lifetime voice sessions and does not create a store product.
 Product prefixes can be changed with EXPO_PUBLIC_STORE_PRODUCT_PREFIX, but server BILLING_PRODUCT_MAP must match exactly.

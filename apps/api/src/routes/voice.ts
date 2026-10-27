@@ -34,6 +34,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     return {
       planId: plan.id,
       planTitle: plan.title,
+      modules: plan.modules,
       timezone,
       dayKey: today,
       monthKey: currentMonth,
