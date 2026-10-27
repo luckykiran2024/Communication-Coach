@@ -49,6 +49,7 @@
         "APP_VARIANT": "production",
         "APP_NAME": "C2Coach",
         "APP_IDENTIFIER": "com.c2coach.app",
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
         "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true",
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
       }
