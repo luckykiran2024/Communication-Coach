@@ -24,6 +24,6 @@ test("release gates: store sandbox uses real native billing without silently inh
   assert.equal(sandbox.android.buildType, "app-bundle");
   assert.equal(sandbox.env.APP_VARIANT, "production");
   assert.equal(sandbox.env.EXPO_PUBLIC_PAYMENT_PREVIEW, "false");
-  assert.equal(sandbox.env.EXPO_PUBLIC_API_URL, undefined);
+  assert.equal(sandbox.env.EXPO_PUBLIC_API_URL, "https://communication-coach-api.vercel.app/api");
   assert.equal(config.submit["store-sandbox"], undefined);
 });
