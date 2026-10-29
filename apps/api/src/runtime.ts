@@ -42,8 +42,17 @@ const productionErrors = productionConfigurationErrors({
   googleNotificationAudience: env.GOOGLE_PUBSUB_AUDIENCE, billingProductMap: env.BILLING_PRODUCT_MAP,
   storeVerifierConfigured,
 });
-if (productionErrors.length > 0) {
-  throw new Error(`Production configuration is invalid:\n- ${productionErrors.join("\n- ")}`);
+const launchGated = process.env.LAUNCH_GATED === "true";
+const gatedOptionalErrors = [
+  "Vercel production requires CRON_SECRET",
+  "Configure EMAIL_PROVIDER=resend",
+  "ACCOUNT_EMAIL_LINK_BASE_URL",
+];
+const blockingProductionErrors = launchGated
+  ? productionErrors.filter(error => !gatedOptionalErrors.some(prefix => error.startsWith(prefix)))
+  : productionErrors;
+if (blockingProductionErrors.length > 0) {
+  throw new Error(`Production configuration is invalid:\n- ${blockingProductionErrors.join("\n- ")}`);
 }
 const storePurchaseVerifier = createStorePurchaseVerifierFromEnv(process.env);
 const appleNotificationVerifier = createAppleNotificationVerifierFromEnv(process.env);
