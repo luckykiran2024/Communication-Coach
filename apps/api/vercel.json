@@ -11,6 +11,10 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/privacy",
+      "destination": "/api/index"
+    },
+    {
       "source": "/api/:__route*",
       "destination": "/api/index"
     }
