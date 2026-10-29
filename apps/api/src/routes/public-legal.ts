@@ -75,8 +75,59 @@ const privacyHtml = `<!doctype html>
 </body>
 </html>`;
 
+const accountDeletionHtml = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delete your C2Coach account</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #f5f7f4; color: #132019; line-height: 1.65; }
+    main { max-width: 820px; margin: 0 auto; padding: 48px 24px 72px; }
+    article { background: #fff; border: 1px solid #dbe5dc; border-radius: 20px; padding: 36px; box-shadow: 0 12px 36px rgba(13, 45, 29, .08); }
+    h1, h2 { color: #0b3d2a; line-height: 1.25; }
+    h1 { margin-top: 0; font-size: clamp(2rem, 5vw, 3rem); }
+    h2 { margin-top: 2rem; font-size: 1.25rem; }
+    a { color: #087a55; }
+    .brand { color: #087a55; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    @media (max-width: 600px) { main { padding: 20px 12px 48px; } article { padding: 24px 20px; border-radius: 14px; } }
+  </style>
+</head>
+<body>
+<main>
+  <article>
+    <div class="brand">C2Coach</div>
+    <h1>Delete your account and data</h1>
+    <p>C2Coach users can permanently delete their account from the Android or iOS application.</p>
+
+    <h2>Delete your account in the app</h2>
+    <ol>
+      <li>Sign in to C2Coach.</li>
+      <li>Open <strong>Settings</strong>.</li>
+      <li>Select <strong>Delete account</strong>.</li>
+      <li>Review the warning and select <strong>Delete permanently</strong>.</li>
+    </ol>
+
+    <h2>If you cannot access the app</h2>
+    <p>Email <a href="mailto:luckykiran2024@gmail.com?subject=C2Coach%20account%20deletion%20request">luckykiran2024@gmail.com</a> from the address used for your C2Coach account. Use the subject “C2Coach account deletion request”. We may ask you to verify account ownership before processing the request.</p>
+
+    <h2>Data deleted</h2>
+    <p>Deletion removes the C2Coach account, profile and learning preferences, authentication sessions, practice conversations and responses, feedback and scores, progress records, voice-session records, and subscription entitlement links associated with the account.</p>
+
+    <h2>Data that may be retained</h2>
+    <p>Limited transaction, fraud-prevention, security or legal-compliance records may be retained where required by law or reasonably necessary to protect users and the service. App-store purchase records remain subject to Google Play or Apple retention rules. Any retained records are restricted to those purposes and are not used to continue the deleted account.</p>
+  </article>
+</main>
+</body>
+</html>`;
+
 export function register(app: FastifyInstance) {
   app.get("/privacy", { config: { rateLimit: false } }, async (_request, reply) => {
     return reply.type("text/html; charset=utf-8").send(privacyHtml);
   });
+  app.get("/account-deletion", { config: { rateLimit: false } }, async (_request, reply) => {
+    return reply.type("text/html; charset=utf-8").send(accountDeletionHtml);
+  });
 }
+
