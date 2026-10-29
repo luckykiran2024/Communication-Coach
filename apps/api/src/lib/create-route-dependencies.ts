@@ -67,6 +67,14 @@ export async function createRouteDependencies(store: Store, options: BuildAppOpt
     return plans.find(item => productId.endsWith(`.${item.id}.monthly`) || productId.endsWith(`.${item.id}`));
   }
   async function activePlan(userId: string) {
+    const reviewerEmails = new Set((process.env.PLAY_REVIEWER_EMAILS ?? "")
+      .split(",").map(email => email.trim().toLowerCase()).filter(Boolean));
+    if (reviewerEmails.size > 0) {
+      const reviewer = await store.accountById(userId);
+      if (reviewer && reviewerEmails.has(reviewer.email.toLowerCase())) {
+        return plans.find(plan => plan.id === "executive") ?? freePlan;
+      }
+    }
     if (!billingEnabled) {
       const isolatedTest = process.env.COACH_TEST_BACKEND === "true"
         && process.env.VERCEL_PROJECT_ID === "prj_3z5Lh2bWudlu3aPtmHaSRs4YMiBf" && !assessmentEnabled && !realtimeEnabled;
