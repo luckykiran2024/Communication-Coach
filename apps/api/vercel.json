@@ -23,5 +23,5 @@
       "maxDuration": 60
     }
   },
-  "crons": [{ "path": "/api/internal/cron/reap-voice-sessions", "schedule": "* * * * *" }]
+  "crons": [{ "path": "/api/internal/cron/reap-voice-sessions", "schedule": "0 3 * * *" }]
 }
