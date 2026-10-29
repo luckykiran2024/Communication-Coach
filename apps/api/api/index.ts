@@ -8,6 +8,6 @@ export default async function handler(request: IncomingMessage, response: Server
     console.error("C2Coach API bootstrap failed", error);
     response.statusCode = 500;
     response.setHeader("Content-Type", "application/json");
-    response.end(JSON.stringify({ error: "API startup failed." }));
+    response.end(JSON.stringify({ error: "API startup failed.", detail: error instanceof Error ? error.message : "Unknown startup failure" }));
   }
 }
