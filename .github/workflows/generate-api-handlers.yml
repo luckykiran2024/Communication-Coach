@@ -1,0 +1,30 @@
+name: Generate Vercel API handlers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build:vercel -w @coach/api
+      - name: Commit generated handlers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f apps/api/api/index.js 'apps/api/api/[...path].js'
+          if git diff --cached --quiet; then
+            echo "Generated handlers are already current."
+          else
+            git commit -m "Generate Vercel API handlers"
+            git push
+          fi
