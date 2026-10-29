@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import { AccessibilityInfo, Animated, Easing, type ImageStyle, type StyleProp } from "react-native";
+import { AccessibilityInfo, Animated, Easing, Image, type StyleProp, type ViewStyle } from "react-native";
 import { useTheme } from "./ui";
 
-export function SpringbokLogo({ size, style, repeat = false }: { size: number; style?: StyleProp<ImageStyle>; repeat?: boolean }) {
-  const { reducedMotion } = useTheme();
+export function SpringbokLogo({ size, style, repeat = false }: { size: number; style?: StyleProp<ViewStyle>; repeat?: boolean }) {
+  const { isDark, reducedMotion } = useTheme();
   const lift = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -25,15 +25,20 @@ export function SpringbokLogo({ size, style, repeat = false }: { size: number; s
     return () => { cancelled = true; animation.stop(); };
   }, [lift, reducedMotion, repeat]);
 
-  return <Animated.Image
+  return <Animated.View
     accessible
     accessibilityLabel="Communication Coach springbok logo"
-    source={require("../assets/springbok-app-icon.png")}
-    style={[{ width: size, height: size, borderRadius: size / 4 }, style, {
+    style={[{
+      width: size, height: size, borderRadius: size / 4, alignItems: "center", justifyContent: "center",
+      backgroundColor: isDark ? "#FFFFFF" : "#146C50", overflow: "hidden",
+    }, style, {
       transform: [
         { translateY: lift.interpolate({ inputRange: [0, 1], outputRange: [0, -5] }) },
         { scale: lift.interpolate({ inputRange: [0, 1], outputRange: [1, 1.04] }) },
       ],
     }]}
-  />;
+  >
+    <Image source={require("../assets/springbok-mark.png")} style={{ width: size * 0.82, height: size * 0.82 }} resizeMode="contain" />
+  </Animated.View>;
 }
+

@@ -25,7 +25,7 @@ export default function Plans() {
       await deepLinkToSubscriptions(Platform.OS === "android" ? { packageNameAndroid: packageName } : {});
     } catch (failure) { setError((failure as Error).message); }
   }
-  return <Screen><Heading eyebrow="Practice plans">Choose your practice space.</Heading><Copy>Your active plan is {catalog?.plans.find(plan => plan.id === currentPlanId)?.title ?? currentPlanId}. Each voice session lasts up to {Math.floor((usage?.maxSessionSeconds ?? 420) / 60)} minutes; your profile’s shorter practice preference still applies.</Copy><Copy>{usage?.lifetimeFreeLimit ? `${usage.sessionsRemaining} of ${usage.sessionsAllowed} free voice sessions remain (lifetime).` : `${usage?.sessionsRemaining ?? "—"} of ${usage?.sessionsAllowed ?? "—"} voice sessions remain this month.`}</Copy><Copy>{activeExerciseCount} active exercises are available across {usage?.modules.length ?? 0} included workshop{usage?.modules.length === 1 ? "" : "s"}.</Copy>
+  return <Screen><Heading eyebrow="Practice plans">Choose your practice space.</Heading><Copy>Your active plan is {catalog?.plans.find(plan => plan.id === currentPlanId)?.title ?? currentPlanId}. Each voice session lasts up to {Math.floor((usage?.maxSessionSeconds ?? 420) / 60)} minutes; your profile’s shorter practice preference still applies.</Copy><Copy>Package changes are scheduled for your next renewal date. Your active package cannot change in the middle of its billing month.</Copy><Copy>{usage?.lifetimeFreeLimit ? `${usage.sessionsRemaining} of ${usage.sessionsAllowed} free voice sessions remain (lifetime).` : `${usage?.sessionsRemaining ?? "—"} of ${usage?.sessionsAllowed ?? "—"} voice sessions remain this month.`}</Copy><Copy>{activeExerciseCount} active exercises are available across {usage?.modules.length ?? 0} included workshop{usage?.modules.length === 1 ? "" : "s"}.</Copy>
     <Card tone="accent"><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="clock" size={26} color={theme.ink} /><View style={{ flex: 1 }}><Heading eyebrow="The habit">Seven focused minutes</Heading><Copy>Short, deliberate conversations build clearer communication.</Copy></View></View></Card>
     {!catalog && !error && <Copy>Loading plans…</Copy>}
     {Boolean(error) && <><Copy error>{error}</Copy><Action title="Retry" onPress={load} /></>}
@@ -34,3 +34,4 @@ export default function Plans() {
     <Copy>{catalog?.priceNotice ?? "Actual storefront pricing will be configured before release."}</Copy>
   </Screen>;
 }
+

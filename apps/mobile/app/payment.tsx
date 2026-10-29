@@ -50,7 +50,7 @@ export default function Payment() {
     <Action title="Start today’s practice" onPress={() => router.replace("/home")} />
   </Card></Screen>;
   return <Screen><Heading eyebrow="One clear next step">Confirm your practice package.</Heading>
-    <Copy>Review your selected package. Paid access changes only after the store purchase is verified.</Copy>
+    <Copy>Review your selected package. A first purchase starts after store verification. Changes to an active package take effect on its next renewal date.</Copy>
     <Card tone="accent">
       <Heading eyebrow="Selected package">{plan?.title ?? planId}</Heading>
       <Heading eyebrow={proficiency.level}>{proficiency.summary}</Heading>
@@ -61,7 +61,7 @@ export default function Payment() {
       <Copy>{previewPayment ? "Development preview: no payment is processed."
         : "Prices above are plan targets. The store displays your actual local price and renewal terms."}</Copy>
     </Card>
-    <Card><Heading eyebrow="What proficiency means">A guided communication range, not a test score.</Heading><Copy>Your package determines the situations and practice depth available to you. You can change packages later from Settings; your progress and profile remain yours.</Copy></Card>
+    <Card><Heading eyebrow="What proficiency means">A guided communication range, not a test score.</Heading><Copy>Your package determines the situations and practice depth available to you. You can schedule another package from Settings; Google Play applies it on your existing renewal date. Your current access, progress, and profile remain unchanged until then.</Copy></Card>
     {plan?.id === "free" ? <Action title="Continue with Free" onPress={() => router.replace("/home")} />
       : previewPayment ? <Action title="Simulate payment confirmation" disabled={!plan}
         onPress={() => setConfirmed("preview")} />
@@ -74,3 +74,4 @@ export default function Payment() {
     <Action title="Back to profile setup" secondary onPress={() => router.back()} />
   </Screen>;
 }
+

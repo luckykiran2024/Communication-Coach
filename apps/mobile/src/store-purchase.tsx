@@ -100,6 +100,7 @@ export function StorePurchaseActions({ token, productId, productIds, onComplete,
       const purchase = subscriptionRequest(Platform.OS, product, intent.accountToken, basePlanId, change);
       pendingIntent.current = intent;
       await requestPurchase(purchase);
+      if (change) setNotice("Google Play will schedule this package for your next renewal date. Your current package remains active until then.");
     } catch (failure) {
       pendingIntent.current = null;
       onError((failure as Error).message);
@@ -128,6 +129,8 @@ export function StorePurchaseActions({ token, productId, productIds, onComplete,
     <Action title="Manage store subscription" secondary disabled={busy} onPress={() => void manageSubscription()} />
     {Boolean(notice) && <Copy>{notice}</Copy>}
     <Copy>Subscriptions renew automatically until cancelled in your store account. Review the final price and terms there.</Copy>
+    <Copy>Package changes are deferred to your next renewal date. C2Coach does not switch or prorate an active package mid-cycle.</Copy>
     <Copy>Access requires server verification. Test purchases must use a sandbox account and test payment method.</Copy>
   </View>;
 }
+

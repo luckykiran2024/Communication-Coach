@@ -35,7 +35,7 @@ test("billing mobile: Android plan changes replace the verified active subscript
     type: "subs", request: { google: { skus: [sku], obfuscatedAccountId: accountToken,
       subscriptionOffers: [{ sku, offerToken: "monthly-offer" }], purchaseToken: "existing-token",
       subscriptionProductReplacementParams: {
-        oldProductId: "com.c2coach.app.professional.monthly", replacementMode: "with-time-proration",
+        oldProductId: "com.c2coach.app.professional.monthly", replacementMode: "deferred",
       } } },
   });
 });
@@ -104,3 +104,4 @@ test("billing mobile: native SDK base-plan IDs and promotional types cannot be c
   const offers = product.subscriptionOffers.map(item => item.id === "monthly" ? { ...item, type: "promotional" as const } : item);
   assert.equal(monthlyStoreOffer({ ...product, subscriptionOffers: offers }, "monthly"), undefined);
 });
+

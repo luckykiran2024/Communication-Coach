@@ -24,7 +24,7 @@ export type Recommendations = { scenarios: Scenario[]; previewOnly: boolean };
 export type VoiceUsage = {
   planId: string; planTitle: string; modules: Plan["modules"];
   sessionsRemaining: number; sessionsAllowed: number; lifetimeFreeLimit: boolean;
-  maxSessionSeconds: number; monthResetsAt: string;
+  maxSessionSeconds: number; monthResetsAt: string; liveVoiceAvailable: boolean;
 };
 export type ProgressSnapshot = {
   totalSessions: number; completedSessions: number; weeklySessions: number; practiceMinutes: number;
@@ -38,3 +38,4 @@ export type ProgressSnapshot = {
   skillSignal: number | null; skillSignalStatus: "awaiting_assessment" | "available";
 };
 export type VoiceCapabilities = { platform: "android" | "ios" | "web"; transport: "react-native-webrtc"; nativeModuleAvailable: boolean; developmentBuild: boolean; providerConfigured: boolean; liveVoiceAvailable: boolean; code: "WEB_PREVIEW_ONLY" | "DEV_CLIENT_REQUIRED" | "PROVIDER_NOT_CONFIGURED" | "READY" };
+

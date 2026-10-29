@@ -154,8 +154,8 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
         model: deps.realtimeModel,
         expiresAt: session.expiresAt.toISOString(),
         providerSessionCreated: true,
-        liveVoiceAvailable: false,
-        message: "Provider session created. Native WebRTC transport remains gated until device verification.",
+        liveVoiceAvailable: true,
+        message: "Provider session created. The secure native WebRTC connection is ready.",
       });
     } catch (error) {
       if (sessionSlotReserved) await deps.store.releaseVoiceSession(user.id, currentMonth, lifetimeLimit).catch(() => undefined);
@@ -220,3 +220,4 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     return { sessionId: id, status: "ended", consumedSeconds, conversationState: "INTERRUPTED", providerTermination };
   });
 }
+

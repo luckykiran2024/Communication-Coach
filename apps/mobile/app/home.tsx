@@ -18,16 +18,15 @@ export default function Home() {
   if (!auth.me.profile) return <Redirect href="/onboarding" />;
   const profile = auth.me.profile;
   return <Screen>
+    <View style={{ alignItems: "center" }}><SpringbokLogo size={86} repeat /></View>
     <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-      {avatarUri
-        ? <Image accessibilityLabel="Your display picture" source={{ uri: avatarUri }} style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: theme.border }} />
-        : <SpringbokLogo size={58} />}
+      {avatarUri && <Image accessibilityLabel="Your display picture" source={{ uri: avatarUri }} style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: theme.border }} />}
       <View style={{ flex: 1 }}><Heading eyebrow={brand.name}>A clearer message starts here, {profile.displayName}.</Heading></View>
       <IconButton name="settings" label="Open settings" onPress={() => router.push("/settings")} />
     </View>
     <EmailVerificationBanner />
     <Card tone="accent"><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="spark" size={27} color={theme.ink} /><View style={{ flex: 1 }}><Heading eyebrow={`Level ${progress?.mastery.level ?? 1}`}>{progress?.mastery.title ?? "Getting started"}</Heading><Copy>Mastery grows through practice days, completed scenarios, independent retries, and saved-response evidence.</Copy></View></View><ProgressBar value={progress?.mastery.progressPercent ?? 0} color={theme.ink} /><Copy>{progress?.mastery.nextLevel ? `${progress.mastery.practiceDays} practice days · ${progress.mastery.successfulRetries} successful retries · next is Level ${progress.mastery.nextLevel}.` : "Top level reached. Keep your practice habit going."}</Copy><Action title="See my progress" secondary icon="progress" onPress={() => router.push("/progress")} /></Card>
-    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="person" size={24} color={theme.accent} /><Heading eyebrow="Your chosen focus">{profile.goal}</Heading></View><Copy>{profile.practiceMinutes} minutes at your pace · {profile.function} · {usage?.planTitle ?? profile.planId} plan</Copy><Action title="Check my microphone" icon="mic" onPress={() => router.push("/voice")} /><Copy>Live voice coaching is not connected yet. This check records and plays back your voice locally.</Copy></Card>
+    <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Icon name="person" size={24} color={theme.accent} /><Heading eyebrow="Your chosen focus">{profile.goal}</Heading></View><Copy>{profile.practiceMinutes} minutes at your pace · {profile.function} · {usage?.planTitle ?? profile.planId} plan</Copy><Action title="Check my microphone" icon="mic" onPress={() => router.push("/voice")} /><Copy>{usage?.liveVoiceAvailable ? "AI live coaching is available inside an active practice exercise." : "AI live coaching is awaiting secure provider configuration. This check records and plays back your voice locally."}</Copy></Card>
     {usage && <Card><Heading eyebrow={usage.lifetimeFreeLimit ? "Free voice sessions" : "Monthly voice sessions"}>{usage.sessionsRemaining} sessions remaining</Heading><Copy>{usage.lifetimeFreeLimit ? "Two free voice sessions are available for the lifetime of this account." : `${usage.sessionsAllowed} sessions included in ${usage.planTitle}; each lasts up to ${Math.floor(usage.maxSessionSeconds / 60)} minutes. Sessions reset ${new Date(usage.monthResetsAt).toLocaleDateString()}.`}</Copy></Card>}
     {recent.length > 0 && <><Heading eyebrow="Continue practice">Saved sessions</Heading>{recent.map(item => <Card key={item.conversation.id}><Heading eyebrow={modules.find(module => module.id === item.scenario.module)?.title}>{displayScenarioTitle(item.scenario.title)}</Heading><Copy>{item.conversation.state} · {new Date(item.conversation.createdAt).toLocaleString()}</Copy><Action title="Open practice" secondary onPress={() => router.push(`/practice/${item.conversation.id}`)} /></Card>)}</>}
     <Heading eyebrow="Choose a workshop">What would you like to practice today?</Heading>
@@ -44,3 +43,4 @@ export default function Home() {
 function displayScenarioTitle(title: string) {
   return title.replace(/\s*·\s*(?:Clarity foundation|Structured message|Evidence and trade-offs|Audience adaptation|Leadership transfer)$/i, "");
 }
+

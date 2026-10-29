@@ -41,7 +41,7 @@ export function subscriptionRequest(
         purchaseToken: change.purchaseToken,
         subscriptionProductReplacementParams: {
           oldProductId: change.productId,
-          replacementMode: "with-time-proration" as const,
+          replacementMode: "deferred" as const,
         },
       } : {}),
     } },
@@ -67,3 +67,4 @@ export function paymentConfirmation(preview: boolean) {
     ? "Preview complete. No payment was taken and no paid access was granted."
     : "Your store purchase is verified. Your practice access has been refreshed.";
 }
+
