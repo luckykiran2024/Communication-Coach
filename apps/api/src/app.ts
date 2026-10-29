@@ -6,6 +6,7 @@ import { ConflictError, type Store } from "./store";
 import { ApiError } from "./lib/errors";
 import { createRouteDependencies } from "./lib/create-route-dependencies";
 import type { BuildAppOptions } from "./routes/context";
+import { register as registerPublicLegalRoutes } from "./routes/public-legal";
 import { register as registerHealthRoutes } from "./routes/health";
 import { register as registerBillingRoutes } from "./routes/billing";
 import { register as registerScenarioRoutes } from "./routes/scenarios";
@@ -73,6 +74,7 @@ export async function buildApp(store: Store, options: BuildAppOptions = {}) {
   });
   app.addHook("onSend", async (_request, reply, payload) => { reply.header("Cache-Control", "no-store"); return payload; });
 
+  registerPublicLegalRoutes(app);
   registerHealthRoutes(app, deps);
   registerBillingRoutes(app, deps);
   registerScenarioRoutes(app, deps);
