@@ -15,5 +15,13 @@
       "destination": "/api/index"
     }
   ],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
+    },
+    "api/[...path].js": {
+      "maxDuration": 30
+    }
+  },
   "crons": [{ "path": "/api/internal/cron/reap-voice-sessions", "schedule": "0 3 * * *" }]
 }
