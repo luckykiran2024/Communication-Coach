@@ -2,6 +2,9 @@ name: Generate Vercel API handlers
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/generate-api-handlers.yml
 
 permissions:
   contents: write
