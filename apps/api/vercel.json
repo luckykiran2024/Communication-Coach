@@ -7,7 +7,7 @@
     }
   },
   "framework": null,
-  "buildCommand": "test -n \"$Communicatio_Caoch_DATABASE_URL\" || { echo \"Database URL integration variable is missing\" >&2; exit 1; }; DATABASE_URL=\"$Communicatio_Caoch_DATABASE_URL\" npm run db:migrate && npm run build:vercel && node -e \\\"import('./api/index.js').then(() => console.log('API bootstrap import passed'))\\\"",
+  "buildCommand": "npm run deploy:vercel",
   "outputDirectory": "public",
   "rewrites": [
     {
