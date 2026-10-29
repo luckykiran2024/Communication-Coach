@@ -13,7 +13,7 @@ export default async function handler(request: IncomingMessage, response: Server
       requestUrl.searchParams.delete("__route");
       request.url = `/${originalPath}${requestUrl.search}`;
     } else {
-      request.url = requestUrl.pathname.replace(/^\\/api(?=\\/|$)/, "") + requestUrl.search;
+      request.url = requestUrl.pathname.replace(/^\/api(?=\/|$)/, "") + requestUrl.search;
     }
     app.server.emit("request", request, response);
   } catch (error) {
