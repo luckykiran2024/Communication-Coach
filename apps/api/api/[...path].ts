@@ -1,1 +1,1 @@
-export { default } from "../src/vercel-handler";
+export { default } from "./index";
