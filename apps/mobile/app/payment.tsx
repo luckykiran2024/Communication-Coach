@@ -62,6 +62,20 @@ export default function Payment() {
         : "Prices above are plan targets. The store displays your actual local price and renewal terms."}</Copy>
     </Card>
     <Card><Heading eyebrow="What proficiency means">A guided communication range, not a test score.</Heading><Copy>Your package determines the situations and practice depth available to you. You can schedule another package from Settings; Google Play applies it on your existing renewal date. Your current access, progress, and profile remain unchanged until then.</Copy></Card>
+    <Heading eyebrow="Compare packages">What each paid package includes.</Heading>
+    {(catalog?.plans ?? []).filter(item => item.id !== "free").map(item => {
+      const details = planProficiency[item.id] ?? planProficiency.professional;
+      const includedWorkshops = item.modules.map(moduleId => moduleId === "management"
+        ? "Professional & Business Communication" : moduleId === "leadership" ? "Leadership" : "Daily Communication");
+      return <Card key={item.id} tone={item.id === planId ? "accent" : undefined}>
+        <Heading eyebrow={item.id === planId ? `${item.title} · selected` : item.title}>
+          ₹{item.targetPriceInr} / month
+        </Heading>
+        <Copy>{details.summary}</Copy>
+        <Copy>{item.voiceSessionsPerMonth} voice sessions per month · up to 7 minutes each.</Copy>
+        <Copy>Includes: {includedWorkshops.join(" · ")}</Copy>
+      </Card>;
+    })}
     {plan?.id === "free" ? <Action title="Continue with Free" onPress={() => router.replace("/home")} />
       : previewPayment ? <Action title="Simulate payment confirmation" disabled={!plan}
         onPress={() => setConfirmed("preview")} />
@@ -74,4 +88,3 @@ export default function Payment() {
     <Action title="Back to profile setup" secondary onPress={() => router.back()} />
   </Screen>;
 }
-

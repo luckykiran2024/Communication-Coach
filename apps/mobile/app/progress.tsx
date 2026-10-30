@@ -31,6 +31,8 @@ export default function Progress() {
   const daily = progress?.dailyPractice ?? [];
   const maxMinutes = Math.max(1, ...daily.map(day => day.minutes));
   const aiEvidence = progress?.evidenceSource === "ai_assessment";
+  const scoreTrend = (progress?.assessmentTrend ?? []).slice(-8);
+  const movement = progress?.scoreMovement;
   return <Screen>
     <Heading eyebrow={brand.name}>Progress you can trace to practice.</Heading>
     {Boolean(error) && <Copy error>{error}</Copy>}
@@ -54,8 +56,7 @@ export default function Progress() {
     <Card>
       <Heading eyebrow="Measured voice time">{minutes(progress?.measuredVoiceMinutes ?? 0)} minutes</Heading>
       <Copy>{minutes(weeklyMinutes)} measured minutes this week · {progress?.settledVoiceSessions ?? 0} settled voice calls.</Copy>
-      <ProgressBar value={Math.min(100, weeklyMinutes / Math.max(1, profile.practiceMinutes * 7) * 100)} />
-      <Copy>Your {profile.practiceMinutes}-minute daily target is a goal, not recorded practice.</Copy>
+      <Copy>Practice is session-based, not daily. Use your included sessions whenever you choose during the billing period.</Copy>
       {Boolean(progress?.unknownVoiceDurations) &&
         <Copy>{progress?.unknownVoiceDurations} call durations are unavailable and are excluded—not estimated.</Copy>}
     </Card>
@@ -63,6 +64,39 @@ export default function Progress() {
       <Heading eyebrow="Completed text practice">{progress?.textSessions ?? 0} sessions</Heading>
       <Copy>Completed conversations with saved learner responses and no settled voice call. No minutes are invented.</Copy>
     </Card>
+    <Card tone="accent">
+      <Heading eyebrow="Cumulative communication rating">
+        {progress?.cumulativeScore === null || progress?.cumulativeScore === undefined
+          ? "Awaiting rated practice" : `${progress.cumulativeScore}/10`}
+      </Heading>
+      <Copy>This is the running average of evidence-backed AI scorecards from your independent retries—not a certified ability score.</Copy>
+      {scoreTrend.length > 0 ? <>
+        <View style={{ height: 176, flexDirection: "row", alignItems: "flex-end", gap: 8, paddingTop: 12 }}>
+          {scoreTrend.map((point, index) => <View key={point.conversationId}
+            style={{ flex: 1, minWidth: 24, alignItems: "center", gap: 5 }}>
+            <Text style={{ color: theme.ink, fontSize: 11, fontWeight: "700" }}>{point.cumulativeScore}</Text>
+            <View accessibilityLabel={`Exercise ${index + 1}: cumulative rating ${point.cumulativeScore} out of 10`}
+              style={{ width: "72%", maxWidth: 30, height: Math.max(8, point.cumulativeScore / 10 * 112),
+                borderRadius: 8, backgroundColor: theme.accent }} />
+            <Text style={{ color: theme.muted, fontSize: 10 }}>E{Math.max(1, (progress?.assessmentTrend.length ?? 0) - scoreTrend.length + index + 1)}</Text>
+          </View>)}
+        </View>
+        <Copy>{movement === null || movement === undefined ? "This is your starting benchmark."
+          : movement > 0 ? `↑ ${movement.toFixed(1)} points since your first rated exercise.`
+            : movement < 0 ? `↓ ${Math.abs(movement).toFixed(1)} points since your first rated exercise.`
+              : "Your cumulative rating is steady since your first rated exercise."}</Copy>
+        <Copy>Bars show how your cumulative average changes after each rated exercise. The latest eight are displayed.</Copy>
+      </> : <Copy>Complete an AI-reviewed independent retry to create your first benchmark and start the graph.</Copy>}
+    </Card>
+    {Boolean(progress?.areaRatings.some(item => item.score !== null)) && <Card>
+      <Heading eyebrow="Cumulative skill ratings">Where your communication is moving.</Heading>
+      {(progress?.areaRatings ?? []).map(item => <View key={item.area}
+        style={{ flexDirection: "row", justifyContent: "space-between", gap: 12, paddingVertical: 7 }}>
+        <Text style={{ color: theme.ink, flex: 1 }}>{item.label}</Text>
+        <Text style={{ color: theme.ink, fontWeight: "700" }}>{item.score === null ? "Not assessed" : `${item.score}/10`}</Text>
+      </View>)}
+      <Copy>Each rating is the average of saved, evidence-backed scores for that skill.</Copy>
+    </Card>}
     <Card>
       <Heading eyebrow="Last seven days">Measured voice rhythm</Heading>
       <View style={{ height: 150, flexDirection: "row", alignItems: "flex-end", gap: 8 }}>
@@ -81,12 +115,14 @@ export default function Progress() {
       </Copy>)}
     </Card>
     <Card>
-      <Heading eyebrow={aiEvidence ? "Evidence-linked AI feedback" : "Local evidence check"}>
-        {progress?.successfulRetries ?? 0} demonstrated retries
+      <Heading eyebrow={aiEvidence ? "Your retry results" : "Practice check"}>
+        {progress?.evidenceAssessments ?? 0} assessed retries
       </Heading>
-      <Copy>{progress?.evidenceAssessments ?? 0} saved comparisons. {aiEvidence
-        ? "Only validated feedback showing demonstrated transfer counts as a successful retry."
-        : "AI feedback is disabled. Local checks are a limited development fallback, not an AI quality rating."}</Copy>
+      <Copy>{progress?.successfulRetries ?? 0} demonstrated · {Math.max(0,
+        (progress?.evidenceAssessments ?? 0) - (progress?.successfulRetries ?? 0))} developing</Copy>
+      <Copy>{aiEvidence
+        ? "Demonstrated means you used the skill clearly in a new situation. Developing means you are improving but need more practice."
+        : "AI feedback is off. This development check is only a simple practice signal."}</Copy>
       {!aiEvidence && progress?.skillSignalStatus === "available" &&
         <Copy>Local heuristic signal: {progress.skillSignal}%. This is not a validated ability score.</Copy>}
     </Card>

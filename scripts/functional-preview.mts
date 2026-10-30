@@ -24,9 +24,13 @@ const app = await buildApp(store, {
       const retry = input.turns.find(turn => turn.role === "user" && turn.phase === "independent_retry");
       if (!retry) throw new Error("Retry evidence required");
       const quote = retry.text.slice(0, 300);
+      const review = coachingReviewFixture(retry.id, quote);
+      const scoreLift = Math.min(1.5, Math.max(0, assessmentCalls - 2) * 0.5);
+      review.scores = review.scores.map(area => ({ ...area,
+        score: area.score === null ? null : Math.min(10, area.score + scoreLift) }));
       return { value: {
         rubricVersion: assessmentRubrics[input.scenario.module].version, modelVersion: input.model, audioAssessed: false,
-        transferResult: "partial", coachingReview: coachingReviewFixture(retry.id, quote),
+        transferResult: "partial", coachingReview: review,
         priorities: [{ observation: "Authored fixture: check that your recommendation explains the changed constraint.",
           quote, turnId: retry.id, confidence: "medium", nextExercise: "Explain a different constraint and a practical next step.",
           coaching: priorityCoachingFixture }],

@@ -11,6 +11,7 @@ import { progressSnapshot } from "../src/lib/progress-snapshot";
 import { productionConfigurationErrors } from "../src/config";
 import { runtimeEnvironmentSchema } from "../src/runtime-env";
 import type { LearningRecord } from "../src/store";
+import { coachingReviewFixture } from "../../../packages/core/test/coaching-review.fixture";
 
 test("launch: production billing-off is always free except the paid-provider-disabled dedicated test project", async () => {
   const names = ["NODE_ENV", "COACH_TEST_BACKEND", "VERCEL_PROJECT_ID"];
@@ -102,6 +103,34 @@ test("launch: streaks, weekly activity and mastery days use actual learner answe
   store.learningRecords = async () => [record, empty];
   const progress = await learnerScenarioProgress(store, record.conversation.userId, profile);
   assert.equal(progress.mastery.practiceDays, 2);
+});
+
+test("launch: progress exposes evidence-backed cumulative coaching ratings and movement", () => {
+  const profile = profileSchema.parse({ displayName: "Maya", function: "Engineering", jobTitle: "Engineer",
+    careerLevel: "First-time manager", audience: "Team", goal: "Explain ideas clearly", timezone: "Asia/Kolkata" });
+  const now = new Date("2026-10-10T10:00:00Z");
+  const makeRecord = (day: number, improvement: number): LearningRecord => {
+    const conversationId = randomUUID();
+    const turnId = randomUUID();
+    const quote = "I recommend confirming the dependency before committing.";
+    const review = coachingReviewFixture(turnId, quote);
+    review.scores = review.scores.map(item => ({ ...item,
+      score: item.score === null ? null : Math.min(10, item.score + improvement) }));
+    return {
+      conversation: { id: conversationId, userId: randomUUID(), scenarioId: scenarios[0].id,
+        state: "FEEDBACK_READY", createdAt: new Date(2026, 9, day), updatedAt: new Date(2026, 9, day) },
+      turns: [{ id: turnId, sessionId: conversationId, role: "user", phase: "independent_retry", text: quote,
+        createdAt: new Date(2026, 9, day) }],
+      assessment: { id: randomUUID(), conversationId, rubricVersion: "fixture", modelVersion: "fixture",
+        priorities: [], audioAssessed: false, transferResult: "demonstrated", coachingReview: review,
+        inputTokens: 1, outputTokens: 1, costMicros: 1, createdAt: new Date(2026, 9, day) },
+    };
+  };
+  const result = progressSnapshot([makeRecord(8, 0), makeRecord(9, 1)], [], profile, now, true);
+  assert.deepEqual(result.assessmentTrend.map(item => [item.score, item.cumulativeScore]), [[7.9, 7.9], [8.9, 8.4]]);
+  assert.equal(result.cumulativeScore, 8.4);
+  assert.equal(result.scoreMovement, 0.5);
+  assert.equal(result.areaRatings.find(item => item.area === "opening")?.score, 8.5);
 });
 
 test("launch: future and assistant-only turns do not count as activity; unfinished learner work does", () => {

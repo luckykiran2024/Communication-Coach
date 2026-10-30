@@ -35,7 +35,9 @@ export type ProgressSnapshot = {
   evidenceSource: "ai_assessment" | "local_check";
   dailyPractice: { day: string; minutes: number; sessions: number; textSessions: number }[];
   levelTrack: { level: number; title: string; reached: boolean }[];
+  cumulativeScore: number | null; scoreMovement: number | null;
+  assessmentTrend: { conversationId: string; day: string; score: number; cumulativeScore: number }[];
+  areaRatings: { area: string; label: string; score: number | null }[];
   skillSignal: number | null; skillSignalStatus: "awaiting_assessment" | "available";
 };
 export type VoiceCapabilities = { platform: "android" | "ios" | "web"; transport: "react-native-webrtc"; nativeModuleAvailable: boolean; developmentBuild: boolean; providerConfigured: boolean; liveVoiceAvailable: boolean; code: "WEB_PREVIEW_ONLY" | "DEV_CLIENT_REQUIRED" | "PROVIDER_NOT_CONFIGURED" | "READY" };
-

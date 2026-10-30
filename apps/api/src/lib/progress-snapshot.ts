@@ -1,4 +1,7 @@
-import { getEngagementLevel, getMasteryLevel, masteryLevels, type Profile } from "@coach/core";
+import {
+  coachingAreaLabels, coachingAreas, coachingOverallScore, getEngagementLevel, getMasteryLevel, masteryLevels,
+  type Profile,
+} from "@coach/core";
 import type { LearningRecord, MeasuredVoiceSession } from "../store";
 import { completedStates, learnerActivityDates, recordEvidence } from "./progress";
 import { dayKey } from "./time";
@@ -32,6 +35,28 @@ export function progressSnapshot(
   const completedScenarios = new Set(completed.map(record => record.conversation.scenarioId)).size;
   const successfulRetries = assessments.filter(assessment => assessment.passed).length;
   const mastery = getMasteryLevel({ practiceDays, completedScenarios, successfulRetries, evidenceAssessments: assessments.length });
+  const scoredReviews = completed.flatMap(record => {
+    const review = record.assessment?.coachingReview;
+    if (!review || record.conversation.state !== "FEEDBACK_READY") return [];
+    const score = coachingOverallScore(review);
+    return score === null ? [] : [{ conversationId: record.conversation.id, day: record.assessment!.createdAt,
+      score, review }];
+  }).sort((first, second) => first.day.getTime() - second.day.getTime());
+  let runningScore = 0;
+  const assessmentTrend = scoredReviews.map((item, index) => {
+    runningScore += item.score;
+    return { conversationId: item.conversationId, day: dayKey(item.day, profile.timezone), score: item.score,
+      cumulativeScore: Math.round(runningScore / (index + 1) * 10) / 10 };
+  });
+  const cumulativeScore = assessmentTrend.at(-1)?.cumulativeScore ?? null;
+  const scoreMovement = assessmentTrend.length > 1 && cumulativeScore !== null
+    ? Math.round((cumulativeScore - assessmentTrend[0].cumulativeScore) * 10) / 10 : null;
+  const areaRatings = coachingAreas.map(area => {
+    const scores = scoredReviews.flatMap(item => item.review.scores
+      .filter(score => score.area === area && score.score !== null).map(score => score.score as number));
+    return { area, label: coachingAreaLabels[area], score: scores.length
+      ? Math.round(scores.reduce((total, score) => total + score, 0) / scores.length * 10) / 10 : null };
+  });
   const dailyPractice = Array.from({ length: 7 }, (_, index) => {
     const key = dayKey(new Date(now.getTime() - (6 - index) * 86400000), profile.timezone);
     const dayVoice = activeVoice.filter(session => dayKey(session.startedAt, profile.timezone) === key);
@@ -58,6 +83,7 @@ export function progressSnapshot(
     mastery, practiceDays, completedScenarios, successfulRetries, evidenceAssessments: assessments.length,
     evidenceSource: assessmentEnabled ? "ai_assessment" : "local_check", dailyPractice,
     levelTrack: masteryLevels.map(item => ({ level: item.level, title: item.title, reached: mastery.level >= item.level })),
+    cumulativeScore, scoreMovement, assessmentTrend, areaRatings,
     skillSignal, skillSignalStatus: skillSignal === null ? "awaiting_assessment" as const : "available" as const,
   };
 }
