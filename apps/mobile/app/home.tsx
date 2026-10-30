@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { Redirect, router } from "expo-router";
 import { brand, modules } from "@coach/core";
-import { request, type ProgressSnapshot, type VoiceUsage } from "../src/api";
+import { request, type ProgressSnapshot, type Recommendations, type VoiceUsage } from "../src/api";
 import { useAuth } from "../src/auth";
 import { EmailVerificationBanner } from "../src/email-verification-banner";
 import { Action, Card, Copy, Heading, Icon, IconButton, ProgressBar, Screen, usePreferences, useTheme } from "../src/ui";
 import { SpringbokLogo } from "../src/springbok-logo";
 type RecentPractice = { conversation: { id: string; state: string; createdAt: string }; scenario: { title: string; module: "daily" | "management" | "leadership" } };
 export default function Home() {
-  const auth = useAuth(); const theme = useTheme(); const { avatarUri } = usePreferences(); const [usage, setUsage] = useState<VoiceUsage | null>(null); const [recent, setRecent] = useState<RecentPractice[]>([]); const [progress, setProgress] = useState<ProgressSnapshot | null>(null); const [error, setError] = useState("");
-  async function load() { try { const [currentUsage, recentResponse, progressSnapshot] = await Promise.all([request<VoiceUsage>("/v1/me/voice-usage", auth.token), request<{ conversations: RecentPractice[] }>("/v1/me/conversations", auth.token), request<ProgressSnapshot>("/v1/me/progress", auth.token)]); setUsage(currentUsage); setRecent(recentResponse.conversations); setProgress(progressSnapshot); setError(""); } catch (failure) { setError((failure as Error).message); } }
+  const auth = useAuth(); const theme = useTheme(); const { avatarUri } = usePreferences(); const [usage, setUsage] = useState<VoiceUsage | null>(null); const [recent, setRecent] = useState<RecentPractice[]>([]); const [progress, setProgress] = useState<ProgressSnapshot | null>(null); const [recommendations, setRecommendations] = useState<Recommendations | null>(null); const [error, setError] = useState("");
+  async function load() { try { const [currentUsage, recentResponse, progressSnapshot, currentRecommendations] = await Promise.all([request<VoiceUsage>("/v1/me/voice-usage", auth.token), request<{ conversations: RecentPractice[] }>("/v1/me/conversations", auth.token), request<ProgressSnapshot>("/v1/me/progress", auth.token), request<Recommendations>("/v1/me/scenarios", auth.token)]); setUsage(currentUsage); setRecent(recentResponse.conversations); setProgress(progressSnapshot); setRecommendations(currentRecommendations); setError(""); } catch (failure) { setError((failure as Error).message); } }
   useEffect(() => { if (auth.me?.profile) void load(); }, [auth.token, auth.me?.profile]);
   if (auth.loading) return <Screen><Copy>Loading…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
@@ -34,7 +34,8 @@ export default function Home() {
       { id: "daily" as const, title: "Daily Communication", description: "Everyday conversations, clear messages, and confident responses." },
       { id: "management" as const, title: "Professional & Business Communication", description: "Workplace decisions, recommendations, feedback, and business conversations." },
       { id: "leadership" as const, title: "Leadership", description: "Present ideas, guide teams, and handle high-stakes conversations." },
-    ].filter(path => usage?.modules.includes(path.id)).map(path => <Card key={path.id}><Heading eyebrow="Included in your plan">{path.title}</Heading><Copy>{path.description}</Copy><Action title={`Explore ${path.title}`} icon="play" onPress={() => router.push(`/workshop/${path.id}`)} /></Card>)}
+    ].filter(path => usage?.modules.includes(path.id) && recommendations?.scenarios.some(scenario => scenario.module === path.id)).map(path => <Card key={path.id}><Heading eyebrow="Active for you">{path.title}</Heading><Copy>{path.description}</Copy><Action title={`Explore ${path.title}`} icon="play" onPress={() => router.push(`/workshop/${path.id}`)} /></Card>)}
+    {recommendations && recommendations.scenarios.length === 0 && <Card><Heading eyebrow="Exercises">New relevant practice is coming soon.</Heading><Copy>No active exercises currently match your function, level, focus, and plan.</Copy></Card>}
     {Boolean(error) && <><Copy error>{error}</Copy><Action title="Retry" secondary onPress={load} /></>}
     <Card><Heading eyebrow="Progress">Your story starts with practice.</Heading><Copy>Track streaks, practice time, and communication skills as your sessions become assessable.</Copy><Action title="See my progress" secondary icon="progress" onPress={() => router.push("/progress")} /></Card>
   </Screen>;
