@@ -9,10 +9,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://communicationcoach.vercel.app"),
+  metadataBase: new URL("https://c2coach.work"),
   title: `${brand.name} | From Thought to Impact`,
   description: "Private, voice-first communication coaching. Practice 20 minutes a day and build real speaking confidence across daily work, business management, and executive leadership.",
   keywords: [
+    "c2coach",
+    "c2coach.work",
     "communication coach",
     "voice coaching",
     "public speaking",
@@ -22,10 +24,13 @@ export const metadata: Metadata = {
     "business communication",
   ],
   authors: [{ name: "Communication Coach Team" }],
+  alternates: {
+    canonical: "https://c2coach.work",
+  },
   openGraph: {
     title: `${brand.name} · Practice 20 minutes a day`,
     description: "Personalized voice-first professional communication development engine for Android, iOS and Web.",
-    url: "https://communicationcoach.vercel.app",
+    url: "https://c2coach.work",
     siteName: brand.name,
     type: "website",
     images: [

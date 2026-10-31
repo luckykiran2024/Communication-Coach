@@ -1242,8 +1242,8 @@ export default function Page() {
         </div>
 
         <div className="footer-bottom-bar">
-          <div>© {new Date().getFullYear()} {brand.name}. All rights reserved. Target market: India & International.</div>
-          <div>Vercel DNS & Custom Domain Ready · Node 24 & Next.js 16</div>
+          <div>© {new Date().getFullYear()} {brand.name} (c2coach.work). All rights reserved. Target market: India & International.</div>
+          <div>c2coach.work · Vercel DNS Active · Node 24 & Next.js 16</div>
         </div>
       </footer>
     </>
