@@ -10,6 +10,8 @@
     "node": ">=22.13"
   },
   "scripts": {
+    "postinstall": "npm run build -w @coach/core",
+    "pretest": "npm run build -w @coach/core",
     "dev:api": "npm run dev -w @coach/api",
     "dev:mobile": "npm run start -w @coach/mobile",
     "dev:portal": "npm run dev -w @coach/portal",
@@ -27,5 +29,8 @@
     "@types/node": "^24.0.0",
     "tsx": "4.23.15",
     "typescript": "~5.9.2"
+  },
+  "dependencies": {
+    "esbuild": "0.28.2"
   }
 }

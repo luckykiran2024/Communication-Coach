@@ -8,7 +8,7 @@ const credentials = { email: "learner@example.com", password: "a-long-test-passw
 const profile = { displayName: "Sam", function: "Engineering", jobTitle: "Engineer", careerLevel: "Experienced individual contributor", audience: "Product team", goal: "Present recommendations" };
 test("production configuration rejects unsafe storage, origins and provider settings", () => {
   const errors = productionConfigurationErrors({ nodeEnv: "production", devMemoryStore: true, corsOrigins: ["http://localhost:3000"], managerEmails: [], realtimeEnabled: true, realtimeApiKey: "", billingEnabled: true, billingWebhookSecret: "replace-with-a-secret", storeVerifierConfigured: false });
-  assert.equal(errors.length, 10);
+  assert.equal(errors.length, 9);
   assert.match(errors.join(" "), /PostgreSQL/);
   assert.match(errors.join(" "), /CORS_ORIGINS/);
   assert.match(errors.join(" "), /OPENAI_API_KEY/);

@@ -1,0 +1,51 @@
+name: Publish mobile preview update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - "packages/core/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/eas-update.yml"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      APP_VARIANT: preview
+      EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
+      EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
+    steps:
+      - name: Skip publishing until Expo token is configured
+        id: expo-token
+        shell: bash
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        working-directory: .
+        run: |
+          if [[ -z "$EXPO_TOKEN" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Set the EXPO_TOKEN repository secret to enable OTA publishing."
+          fi
+      - uses: actions/checkout@v4
+        if: steps.expo-token.outputs.skip != 'true'
+      - uses: actions/setup-node@v4
+        if: steps.expo-token.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --workspace @coach/mobile
+        if: steps.expo-token.outputs.skip != 'true'
+        working-directory: .
+      - run: npm run typecheck -w @coach/mobile
+        if: steps.expo-token.outputs.skip != 'true'
+      - run: npx --yes eas-cli@24.11.0 update --channel local-preview --message "GitHub ${{ github.sha }}" --non-interactive
+        if: steps.expo-token.outputs.skip != 'true'
+        working-directory: apps/mobile

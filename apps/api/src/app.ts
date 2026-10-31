@@ -5,7 +5,7 @@ import rateLimit from "@fastify/rate-limit";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { assessCommunicationEvidence, conversationCreateSchema, credentialsSchema, getEngagementLevel, getMasteryLevel, isPublishedScenario, masteryLevels, oauthSchema, profileSchema, recommendScenarios, modules, plansSchema, scenarioSchema, scenarios, userConversationTurnSchema, voiceTransportStatus } from "@coach/core";
-import planData from "../config/plans.json";
+import planData from "../config/plans.json" with { type: "json" };
 import { ConflictError, type Entitlement, type OAuthIdentity, type PurchaseIntent, type Store, type VoiceSession } from "./store";
 import { hashPassword, verifyPassword } from "./password";
 import { ProviderUnavailableError, startLiveConversation } from "./conversation-service";
@@ -141,6 +141,7 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
   }
   async function verifiedOAuthIdentity(provider: "google" | "microsoft", accessToken: string) {
     type ProviderIdentityResponse = { email?: string; mail?: string; userPrincipalName?: string; sub?: string; id?: string; aud?: string | string[]; email_verified?: boolean | string };
+    if (provider === "google" && !(options.oauth?.googleClientIds?.length)) throw new ApiError(503, "Google sign-in is not configured for this deployment.");
     const response = provider === "google"
       ? await (options.oauth?.fetchImpl ?? fetch)(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`)
       : await (options.oauth?.fetchImpl ?? fetch)("https://graph.microsoft.com/v1.0/me", { headers: { authorization: `Bearer ${accessToken}` } });
@@ -160,6 +161,7 @@ export async function buildApp(store: Store, options: { logger?: boolean; origin
   }
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof ConflictError) return reply.code(409).send({ error: error.message || "Unable to create account. Try signing in." });
+    if (error instanceof ApiError) return reply.code(error.statusCode).send({ error: error.message });
     const failure = error instanceof Error ? error as Error & { statusCode?: number } : new Error("Unknown error");
     const status = "statusCode" in failure && typeof failure.statusCode === "number" && failure.statusCode >= 400 && failure.statusCode < 500 ? failure.statusCode : 500;
     if (status === 500) request.log.error({ errorType: failure.name }, "Request failed");

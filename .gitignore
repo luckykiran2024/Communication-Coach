@@ -10,3 +10,7 @@ coverage/
 *.tsbuildinfo
 apps/mobile/android/
 apps/mobile/ios/
+*.apk
+artifacts/
+temp-ui.xml
+

@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "channel": "development",
       "developmentClient": true,
       "distribution": "internal",
       "env": {
@@ -12,15 +13,32 @@
       }
     },
     "preview": {
+      "developmentClient": false,
+      "channel": "preview",
+      "environment": "preview",
       "distribution": "internal",
+      "android": { "buildType": "apk" },
       "env": {
-        "APP_VARIANT": "preview"
+        "APP_VARIANT": "preview",
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
+        "EXPO_PUBLIC_PAYMENT_PREVIEW": "true"
+      }
+    },
+    "local-preview": {
+      "extends": "preview",
+      "channel": "local-preview",
+      "environment": "development",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api"
       }
     },
     "production": {
+      "channel": "production",
+      "environment": "production",
       "autoIncrement": true,
       "env": {
-        "APP_VARIANT": "production"
+        "APP_VARIANT": "production",
+        "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
       }
     }
   },

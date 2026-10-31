@@ -48,6 +48,12 @@ test("regression: social auth rejects malformed provider payloads", async contex
   assert.equal(response.statusCode, 400);
   assert.equal(store.accounts.size, 0);
 });
+test("regression: Google OAuth stays unavailable when no client audience is configured", async context => {
+  const app = await buildApp(new MemoryStore()); context.after(() => app.close());
+  const response = await app.inject({ method: "POST", url: "/v1/auth/oauth", payload: { provider: "google", accessToken: "valid-looking-google-token" } });
+  assert.equal(response.statusCode, 503);
+  assert.match(response.json().error, /not configured/);
+});
 
 test("regression: OAuth identities link by stable provider subject and do not trust changed email claims", async context => {
   const store = new MemoryStore();

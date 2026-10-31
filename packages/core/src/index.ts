@@ -1,5 +1,5 @@
 import { z } from "zod";
-import scenarioData from "../content/scenarios.json";
+import scenarioData from "../content/scenarios.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";
 export const brand = { name: "Communication Coach", tagline: "Practice 20 minutes a day and be at brilliance." };
 export const palette = {
