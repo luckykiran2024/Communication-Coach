@@ -11,7 +11,7 @@ export default function Onboarding() {
   const { setReducedMotion } = usePreferences();
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Profile>(auth.me?.profile ?? {
-    displayName: "", primaryLanguage: "English", coachingLanguage: "English", function: "Engineering", jobTitle: "", careerLevel: "Experienced individual contributor", industry: "", audience: "", situations: "", goal: "Explain ideas clearly", challenges: "", practiceMinutes: 10, planId: "professional", timezone: "Asia/Kolkata", reducedMotion: false,
+    displayName: "", primaryLanguage: "English", coachingLanguage: "English", function: "Engineering", jobTitle: "", careerLevel: "Experienced individual contributor", industry: "", audience: "", situations: "", goal: "Explain ideas clearly", challenges: "", practiceMinutes: 7, planId: "professional", timezone: "Asia/Kolkata", reducedMotion: false,
   });
   const [busy, setBusy] = useState(false); const [error, setError] = useState("");
   useEffect(() => { if (auth.me?.profile) setReducedMotion(auth.me.profile.reducedMotion); }, [auth.me?.profile?.reducedMotion]);
@@ -19,7 +19,7 @@ export default function Onboarding() {
   if (!auth.token) return <Redirect href="/" />;
   function change<Key extends keyof Profile>(key: Key, value: Profile[Key]) { setDraft(current => ({ ...current, [key]: value })); }
   async function save() {
-    const checked = profileSchema.safeParse(draft);
+    const checked = profileSchema.safeParse({ ...draft, practiceMinutes: 7 });
     if (!checked.success) { setError(checked.error.issues.map(issue => issue.path.join(".") + ": " + issue.message).join("\n")); return; }
     setBusy(true); setError("");
     try { await request("/v1/me/profile", auth.token, "PUT", checked.data); await auth.refresh(); router.replace(auth.me?.profile ? "/home" : "/payment"); }
@@ -45,8 +45,7 @@ export default function Onboarding() {
       <Copy>These are your self-reported experiences, not assessed learning needs.</Copy></>}
     {step === 2 && <><Field label="Primary language" value={draft.primaryLanguage} onChangeText={value => change("primaryLanguage", value)} />
       <Copy>Coaching language: English. More languages are planned.</Copy>
-      <Choices label="Preferred practice length" options={["5", "10", "15", "20"]} value={String(draft.practiceMinutes)} onChange={value => change("practiceMinutes", Number(value))} />
-      <Copy>Choose the length that suits one practice session. This is only your preferred pace; you can use your included sessions whenever you choose.</Copy>
+      <Copy>Each live coaching session lasts up to 7 minutes. You can use your included sessions whenever you choose during the billing period.</Copy>
       {!auth.me?.profile ? <Choices label="Practice timezone" options={practiceTimezones} value={draft.timezone} onChange={value => change("timezone", value)} /> : <><Field label="Practice timezone" editable={false} value={draft.timezone} /><Copy>Your timezone is locked after setup so monthly records reset consistently. Contact support to change it.</Copy></>}
       <Copy>Your practice timezone determines when monthly voice sessions reset. It does not track your location or change your device clock.</Copy>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}><Copy>Reduce motion</Copy><Switch accessibilityLabel="Reduce motion" value={draft.reducedMotion} onValueChange={value => { change("reducedMotion", value); setReducedMotion(value); }} /></View><Copy>When enabled, the app avoids nonessential movement and transitions, keeping controls visually stable. It does not affect audio or recording.</Copy>

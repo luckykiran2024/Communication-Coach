@@ -34,7 +34,7 @@ export default function VerifyEmail() {
   }
   return (
     <Screen>
-      <Heading eyebrow="Account security">Your email, confirmed.</Heading>
+      <Heading eyebrow="Account security">Verify your email.</Heading>
       {auth.token ? (
         <Card>
           <Copy>{auth.me?.user.email}</Copy>

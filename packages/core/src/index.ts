@@ -44,7 +44,7 @@ export const profileSchema = z.object({
   situations: z.string().trim().max(500).default(""),
   goal: z.enum(goals),
   challenges: z.string().trim().max(1000).default(""),
-  practiceMinutes: z.number().int().min(2).max(20).default(10),
+  practiceMinutes: z.number().int().min(2).max(20).default(7),
   planId: z.enum(planIds).default("professional"),
   timezone: z.string().refine(value => { try { new Intl.DateTimeFormat("en", { timeZone: value }); return true; } catch { return false; } }, "Use a valid IANA timezone").default("Asia/Kolkata"),
   reducedMotion: z.boolean().default(false),

@@ -29,9 +29,12 @@ export default function Progress() {
   if (!profile) return <Redirect href="/onboarding" />;
   const weeklyMinutes = progress?.weeklyPracticeMinutes ?? 0;
   const daily = progress?.dailyPractice ?? [];
+  const areaRatings = progress?.areaRatings ?? [];
+  const assessmentTrend = progress?.assessmentTrend ?? [];
+  const levelTrack = progress?.levelTrack ?? [];
   const maxMinutes = Math.max(1, ...daily.map(day => day.minutes));
   const aiEvidence = progress?.evidenceSource === "ai_assessment";
-  const scoreTrend = (progress?.assessmentTrend ?? []).slice(-8);
+  const scoreTrend = assessmentTrend.slice(-8);
   const movement = progress?.scoreMovement;
   return <Screen>
     <Heading eyebrow={brand.name}>Progress you can trace to practice.</Heading>
@@ -78,7 +81,7 @@ export default function Progress() {
             <View accessibilityLabel={`Exercise ${index + 1}: cumulative rating ${point.cumulativeScore} out of 10`}
               style={{ width: "72%", maxWidth: 30, height: Math.max(8, point.cumulativeScore / 10 * 112),
                 borderRadius: 8, backgroundColor: theme.accent }} />
-            <Text style={{ color: theme.muted, fontSize: 10 }}>E{Math.max(1, (progress?.assessmentTrend.length ?? 0) - scoreTrend.length + index + 1)}</Text>
+            <Text style={{ color: theme.muted, fontSize: 10 }}>E{Math.max(1, assessmentTrend.length - scoreTrend.length + index + 1)}</Text>
           </View>)}
         </View>
         <Copy>{movement === null || movement === undefined ? "This is your starting benchmark."
@@ -88,9 +91,9 @@ export default function Progress() {
         <Copy>Bars show how your cumulative average changes after each rated exercise. The latest eight are displayed.</Copy>
       </> : <Copy>Complete an AI-reviewed independent retry to create your first benchmark and start the graph.</Copy>}
     </Card>
-    {Boolean(progress?.areaRatings.some(item => item.score !== null)) && <Card>
+    {areaRatings.some(item => item.score !== null) && <Card>
       <Heading eyebrow="Cumulative skill ratings">Where your communication is moving.</Heading>
-      {(progress?.areaRatings ?? []).map(item => <View key={item.area}
+      {areaRatings.map(item => <View key={item.area}
         style={{ flexDirection: "row", justifyContent: "space-between", gap: 12, paddingVertical: 7 }}>
         <Text style={{ color: theme.ink, flex: 1 }}>{item.label}</Text>
         <Text style={{ color: theme.ink, fontWeight: "700" }}>{item.score === null ? "Not assessed" : `${item.score}/10`}</Text>
@@ -110,7 +113,7 @@ export default function Progress() {
     </Card>
     <Card>
       <Heading eyebrow="Practice milestones">Your learning path</Heading>
-      {(progress?.levelTrack ?? []).map(item => <Copy key={item.level}>
+      {levelTrack.map(item => <Copy key={item.level}>
         Level {item.level} · {item.title} · {item.reached ? "Reached" : "Next evidence needed"}
       </Copy>)}
     </Card>

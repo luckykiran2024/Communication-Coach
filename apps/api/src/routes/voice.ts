@@ -93,7 +93,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     const currentMonth = monthKey(deps.now(), profile.timezone);
     const lifetimeLimit = plan.id === "free";
     const allowanceSeconds = plan.voiceSessionsPerMonth * plan.maxSessionSeconds;
-    const maximumSeconds = Math.min(profile.practiceMinutes * 60, plan.maxSessionSeconds);
+    const maximumSeconds = Math.min(7 * 60, plan.maxSessionSeconds);
     try {
       await deps.store.reserveVoiceSession(user.id, currentMonth, plan.voiceSessionsPerMonth, lifetimeLimit);
     } catch (error) {
@@ -220,4 +220,3 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     return { sessionId: id, status: "ended", consumedSeconds, conversationState: "INTERRUPTED", providerTermination };
   });
 }
-
