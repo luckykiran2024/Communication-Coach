@@ -3,8 +3,8 @@ import { router } from "expo-router";
 import { legalVersion } from "@coach/core";
 import { Action, Card, Copy, Heading, Screen } from "../src/ui";
 
-const privacyEmail = process.env.EXPO_PUBLIC_PRIVACY_EMAIL;
-const privacyUrl = process.env.EXPO_PUBLIC_PRIVACY_URL;
+const privacyEmail = process.env.EXPO_PUBLIC_PRIVACY_EMAIL ?? "support@c2coach.work";
+const privacyUrl = process.env.EXPO_PUBLIC_PRIVACY_URL ?? "https://c2coach.work";
 
 export default function Legal() {
   return <Screen>
@@ -29,6 +29,7 @@ export default function Legal() {
       <Copy>We do not sell your practice responses for advertising. You can request an account export, sign out, or delete your account in Settings. The app may use service logs to diagnose failures and prevent abuse.</Copy>
       {privacyEmail ? <Copy>Privacy and support contact: {privacyEmail}.</Copy>
         : <Copy>Privacy and support contact is not configured in this test build; public release remains blocked until one is published.</Copy>}
+      <Copy>Website: https://c2coach.work.</Copy>
       {privacyUrl && <Action title="Open published Privacy Policy" secondary onPress={() => void Linking.openURL(privacyUrl)} />}
     </Card>
 

@@ -8,7 +8,7 @@ export default function Layout() {
 }
 function AppStack() {
   const theme = useTheme();
-  return <><StatusBar style={theme.isDark ? "light" : "dark"} /><Stack screenOptions={{ animation: theme.reducedMotion ? "none" : "fade", animationDuration: theme.reducedMotion ? 0 : 180, headerStyle: { backgroundColor: theme.surface }, headerTintColor: theme.ink, headerShadowVisible: false, contentStyle: { backgroundColor: theme.background } }}>
+  return <><StatusBar style={theme.isDark ? "light" : "dark"} /><Stack screenOptions={{ animation: theme.reducedMotion ? "none" : "fade", animationDuration: theme.reducedMotion ? 0 : 180, headerStyle: { backgroundColor: theme.background }, headerTintColor: theme.ink, headerTitleStyle: { fontWeight: "700" }, headerShadowVisible: false, contentStyle: { backgroundColor: theme.background } }}>
     <Stack.Screen name="index" options={{ headerShown: false }} />
     <Stack.Screen name="oauth" options={{ title: "Secure sign-in", headerBackVisible: false }} />
     <Stack.Screen name="verify-email" options={{ title: "Verify your email" }} />

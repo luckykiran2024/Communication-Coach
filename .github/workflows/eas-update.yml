@@ -13,6 +13,8 @@ jobs:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       APP_VARIANT: preview
       EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
+      EXPO_PUBLIC_PRIVACY_EMAIL: support@c2coach.work
+      EXPO_PUBLIC_PRIVACY_URL: https://c2coach.work
       EXPO_PUBLIC_PAYMENT_PREVIEW: "true"
     steps:
       - name: Check Expo publishing token

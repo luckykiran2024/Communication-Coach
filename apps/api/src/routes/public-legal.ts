@@ -69,7 +69,8 @@ const privacyHtml = `<!doctype html>
     <p>We may update this policy as C2Coach develops. We will publish the revised policy with a new effective date and provide additional notice when required.</p>
 
     <h2>Contact</h2>
-    <p>For privacy questions or requests, contact <a href="mailto:luckykiran2024@gmail.com">luckykiran2024@gmail.com</a>.</p>
+    <p>For privacy questions or requests, contact <a href="mailto:support@c2coach.work">support@c2coach.work</a>.</p>
+    <p>Website: <a href="https://c2coach.work">https://c2coach.work</a>.</p>
   </article>
 </main>
 </body>
@@ -110,7 +111,7 @@ const accountDeletionHtml = `<!doctype html>
     </ol>
 
     <h2>If you cannot access the app</h2>
-    <p>Email <a href="mailto:luckykiran2024@gmail.com?subject=C2Coach%20account%20deletion%20request">luckykiran2024@gmail.com</a> from the address used for your C2Coach account. Use the subject “C2Coach account deletion request”. We may ask you to verify account ownership before processing the request.</p>
+    <p>Email <a href="mailto:support@c2coach.work?subject=C2Coach%20account%20deletion%20request">support@c2coach.work</a> from the address used for your C2Coach account. Use the subject “C2Coach account deletion request”. We may ask you to verify account ownership before processing the request.</p>
 
     <h2>Data deleted</h2>
     <p>Deletion removes the C2Coach account, profile and learning preferences, authentication sessions, practice conversations and responses, feedback and scores, progress records, voice-session records, and subscription entitlement links associated with the account.</p>

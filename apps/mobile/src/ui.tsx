@@ -4,13 +4,14 @@ import {
   ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions, type TextInputProps,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router, usePathname } from "expo-router";
 import { SymbolView, type AndroidSymbol, type SFSymbol } from "expo-symbols";
 import { coachAccents, colorPalettes, normalizeColorTheme, type CoachAccent, type ColorTheme } from "@coach/core";
 import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
 import { radioSelection, wrappingTextStyle } from "./presentation";
 import { GradientWash } from "./gradient-wash";
 
-type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings";
+type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings" | "home" | "insights";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
   mic: { ios: "mic.fill" as SFSymbol, android: "mic" as AndroidSymbol, web: "mic" as AndroidSymbol },
   person: { ios: "person.fill" as SFSymbol, android: "person" as AndroidSymbol, web: "person" as AndroidSymbol },
@@ -21,6 +22,8 @@ const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: Andr
   clock: { ios: "clock.fill" as SFSymbol, android: "schedule" as AndroidSymbol, web: "schedule" as AndroidSymbol },
   play: { ios: "play.fill" as SFSymbol, android: "play_arrow" as AndroidSymbol, web: "play_arrow" as AndroidSymbol },
   settings: { ios: "gearshape.fill" as SFSymbol, android: "settings" as AndroidSymbol, web: "settings" as AndroidSymbol },
+  home: { ios: "house.fill" as SFSymbol, android: "home" as AndroidSymbol, web: "home" as AndroidSymbol },
+  insights: { ios: "chart.pie.fill" as SFSymbol, android: "monitoring" as AndroidSymbol, web: "monitoring" as AndroidSymbol },
 };
 const fontFamily = Platform.select({ ios: "System", android: "sans-serif", default: "system-ui" });
 
@@ -85,20 +88,50 @@ export function IconButton({ name, label, onPress }: { name: IconName; label: st
 
 export function Screen({ children, topInset = false }: { children: ReactNode; topInset?: boolean }) {
   const theme = useTheme();
+  const pathname = usePathname();
   const { width } = useWindowDimensions();
   const edges = topInset ? ["top", "bottom", "left", "right"] as const : ["bottom", "left", "right"] as const;
   const behavior = Platform.OS === "ios" ? "padding" : Platform.OS === "android" ? "height" : undefined;
+  const showNavigation = ["/home", "/progress", "/settings", "/appearance"].includes(pathname)
+    || pathname.startsWith("/workshop") || pathname.startsWith("/practice/");
   return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={edges}>
-    <View pointerEvents="none" accessible={false} style={[StyleSheet.absoluteFill, { height: 460, opacity: 0.55 }]}>
+    <View pointerEvents="none" accessible={false} style={[StyleSheet.absoluteFill, { height: 560, opacity: theme.isDark ? 0.92 : 0.68 }]}>
       <GradientWash start={theme.accentSurface} end={theme.background} />
     </View>
+    <View pointerEvents="none" accessible={false} style={{ position: "absolute", width: 260, height: 260,
+      borderRadius: 130, top: -130, right: -90, backgroundColor: theme.glow, opacity: theme.isDark ? 0.22 : 0.32 }} />
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={behavior} keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 0}>
       <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
-        automaticallyAdjustKeyboardInsets contentContainerStyle={[styles.page, { paddingHorizontal: width < 380 ? 16 : 24 }]}>
+        automaticallyAdjustKeyboardInsets contentContainerStyle={[styles.page, { paddingHorizontal: width < 380 ? 14 : 20,
+          paddingBottom: showNavigation ? 118 : 48 }]}>
         {children}
       </ScrollView>
     </KeyboardAvoidingView>
+    {showNavigation && <BottomNavigation pathname={pathname} />}
   </SafeAreaView>;
+}
+
+function BottomNavigation({ pathname }: { pathname: string }) {
+  const theme = useTheme();
+  const items: { label: string; icon: IconName; route: "/home" | "/workshop/daily" | "/progress" | "/settings"; active: boolean }[] = [
+    { label: "Home", icon: "home", route: "/home", active: pathname === "/home" },
+    { label: "Practice", icon: "play", route: "/workshop/daily", active: pathname.startsWith("/workshop") || pathname.startsWith("/practice/") },
+    { label: "Progress", icon: "insights", route: "/progress", active: pathname === "/progress" },
+    { label: "Profile", icon: "person", route: "/settings", active: pathname === "/settings" || pathname === "/appearance" },
+  ];
+  return <View style={{ position: "absolute", left: 14, right: 14, bottom: 10, minHeight: 70, borderRadius: 24,
+    flexDirection: "row", alignItems: "center", justifyContent: "space-around", paddingHorizontal: 8,
+    backgroundColor: theme.surface, borderColor: theme.border, borderWidth: 1,
+    shadowColor: theme.glow, shadowOpacity: theme.isDark ? 0.55 : 0.25, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 14 }}>
+    {items.map(item => <Pressable key={item.label} accessibilityRole="button" accessibilityLabel={item.label}
+      onPress={() => router.replace(item.route)} style={({ pressed }) => ({ minWidth: 64, minHeight: 58, borderRadius: 18,
+        alignItems: "center", justifyContent: "center", gap: 4, opacity: pressed ? 0.7 : 1,
+        backgroundColor: item.active ? theme.accentSurface : "transparent" })}>
+      <Icon name={item.icon} size={22} color={item.active ? theme.accent : theme.muted} />
+      <Text style={{ color: item.active ? theme.accent : theme.muted, fontFamily, fontSize: 11,
+        fontWeight: item.active ? "700" : "500" }}>{item.label}</Text>
+    </Pressable>)}
+  </View>;
 }
 
 export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: string }) {
@@ -108,7 +141,7 @@ export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: 
       {eyebrow.toUpperCase()}
     </Text>}
     <Text accessibilityRole="header"
-      style={{ color: theme.ink, fontFamily, fontSize: 32, fontWeight: "700", lineHeight: 39, letterSpacing: -0.4 }}>
+      style={{ color: theme.ink, fontFamily, fontSize: 28, fontWeight: "700", lineHeight: 34, letterSpacing: -0.5 }}>
       {children}
     </Text>
   </View>;
@@ -123,7 +156,9 @@ export function Copy({ children, error = false }: { children: ReactNode; error?:
 export function Card({ children, tone = "default" }: { children: ReactNode; tone?: "default" | "accent" }) {
   const theme = useTheme();
   return <View style={{ padding: 20, borderRadius: 24, backgroundColor: theme.surface,
-    borderColor: theme.border, borderWidth: 1, gap: 16, overflow: "hidden" }}>
+    borderColor: tone === "accent" ? theme.accent : theme.border, borderWidth: 1, gap: 16, overflow: "hidden",
+    shadowColor: tone === "accent" ? theme.accent : theme.glow, shadowOpacity: theme.isDark ? 0.32 : 0.16,
+    shadowRadius: tone === "accent" ? 18 : 12, shadowOffset: { width: 0, height: 8 }, elevation: tone === "accent" ? 8 : 4 }}>
     {tone === "accent" && <GradientWash start={theme.accentSurface} end={theme.surface} />}
     {children}
   </View>;
@@ -137,8 +172,10 @@ export function Action({ title, onPress, secondary = false, disabled = false, bu
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled: disabled || busy, busy }}
     disabled={disabled || busy} onPress={onPress} style={({ pressed }) => ({
       minHeight: 52, padding: 16, gap: 10, flexDirection: "row", alignItems: "center", justifyContent: "center",
-      borderRadius: 16, borderWidth: 1, borderColor: secondary ? theme.controlBorder : theme.accent,
+      borderRadius: 26, borderWidth: 1, borderColor: secondary ? theme.controlBorder : theme.accent,
       backgroundColor: secondary ? theme.surface : theme.accent,
+      shadowColor: secondary ? theme.glow : theme.accent, shadowOpacity: secondary ? 0.08 : 0.28,
+      shadowRadius: 10, shadowOffset: { width: 0, height: 5 }, elevation: secondary ? 1 : 5,
       opacity: disabled || busy ? .55 : pressed ? .8 : 1,
     })}>
     {busy ? <ActivityIndicator color={textColor} /> : <>
@@ -158,8 +195,9 @@ export function Field({ label, ...props }: TextInputProps & { label: string }) {
     <TextInput {...props} accessibilityLabel={label} placeholderTextColor={theme.muted}
       onFocus={event => { setFocused(true); props.onFocus?.(event); }}
       onBlur={event => { setFocused(false); props.onBlur?.(event); }}
-      style={[{ borderWidth: 1, borderColor: focused ? theme.accent : theme.controlBorder, borderRadius: 14,
-        padding: 14, minHeight: 52, color: theme.ink, backgroundColor: theme.surface, fontFamily, fontSize: 16 }, props.style]} />
+      style={[{ borderWidth: 1, borderColor: focused ? theme.accent : theme.controlBorder, borderRadius: 18,
+        padding: 14, minHeight: 54, color: theme.ink, backgroundColor: theme.accentSurface, fontFamily, fontSize: 16,
+        shadowColor: focused ? theme.accent : "transparent", shadowOpacity: 0.2, shadowRadius: 8 }, props.style]} />
   </View>;
 }
 
@@ -169,7 +207,7 @@ export function Choices({ label, options, value, onChange }: { label: string; op
     <Text style={{ color: theme.ink, fontFamily, fontWeight: "600" }}>{label}</Text>
     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
       {options.map(option => <Pressable key={option} accessibilityRole="radio" {...radioSelection(option === value)}
-        onPress={() => onChange(option)} style={{ minHeight: 46, justifyContent: "center", borderRadius: 12, padding: 12,
+        onPress={() => onChange(option)} style={{ minHeight: 48, justifyContent: "center", borderRadius: 16, padding: 13,
           borderWidth: 1, borderColor: option === value ? theme.accent : theme.controlBorder,
           backgroundColor: option === value ? theme.accentSurface : theme.surface }}>
         <Text style={{ color: option === value ? theme.accent : theme.ink, fontFamily,
@@ -208,7 +246,8 @@ export function MicButton({ active = false, label, onPress }: { active?: boolean
 
 export function ProgressBar({ value, color }: { value: number; color?: string }) {
   const theme = useTheme();
-  return <View style={{ height: 10, borderRadius: 5, overflow: "hidden", backgroundColor: theme.border }}><View style={{ width: `${Math.max(0, Math.min(100, value))}%`, height: "100%", borderRadius: 5, backgroundColor: color ?? theme.accent }} /></View>;
+  return <View style={{ height: 10, borderRadius: 5, overflow: "hidden", backgroundColor: theme.border }}><View style={{ width: `${Math.max(0, Math.min(100, value))}%`, height: "100%", borderRadius: 5, backgroundColor: color ?? theme.accent,
+    shadowColor: color ?? theme.accent, shadowOpacity: 0.8, shadowRadius: 8 }} /></View>;
 }
 
-const styles = StyleSheet.create({ page: { width: "100%", maxWidth: 700, alignSelf: "center", padding: 24, paddingBottom: 48, gap: 24, flexGrow: 1 } });
+const styles = StyleSheet.create({ page: { width: "100%", maxWidth: 700, alignSelf: "center", paddingTop: 22, gap: 20, flexGrow: 1 } });

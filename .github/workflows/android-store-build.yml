@@ -31,6 +31,8 @@ jobs:
           APP_NAME: C2Coach
           APP_IDENTIFIER: com.c2coach.app
           EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
+          EXPO_PUBLIC_PRIVACY_EMAIL: support@c2coach.work
+          EXPO_PUBLIC_PRIVACY_URL: https://c2coach.work
           EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED: "true"
           EXPO_PUBLIC_SUPABASE_URL: https://nrrmhftccqsofjvoaffm.supabase.co
           EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_epmtO5_9eHCx00XC5iBy5Q_u6ya9u8D
