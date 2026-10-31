@@ -1451,6 +1451,302 @@ body {
   }
 }
 
+/* ============================================================
+   NEW INTERACTIVE PRODUCT SUITE STYLES
+   ============================================================ */
+
+/* Phone Screen Switcher */
+.phone-mockup-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.screen-switcher-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 5;
+  background: rgba(16, 21, 40, 0.85);
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.screen-tab-pill {
+  background: transparent;
+  border: none;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.screen-tab-pill:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.screen-tab-pill.active {
+  background: linear-gradient(135deg, #FF5C4D 0%, #FF786B 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 10px rgba(255, 92, 77, 0.35);
+}
+
+/* QR Code Download Widget */
+.qr-code-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  backdrop-filter: blur(8px);
+}
+
+.qr-code-graphic {
+  background: white;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.qr-code-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.qr-code-text strong {
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.qr-code-text span {
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+/* In-Browser Live Speaking Test Drill */
+.live-drill-card {
+  background: linear-gradient(145deg, rgba(23, 29, 54, 0.9) 0%, rgba(13, 17, 34, 0.95) 100%);
+  border: 1px solid rgba(255, 92, 77, 0.35);
+  border-radius: var(--radius-xl);
+  padding: 38px;
+  box-shadow: 0 20px 50px -10px rgba(255, 92, 77, 0.2);
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.live-drill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--coral), var(--blue));
+}
+
+.drill-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.drill-prompt-box {
+  background: rgba(10, 14, 28, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.drill-mic-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 24px;
+  background: rgba(10, 14, 28, 0.5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+}
+
+.big-mic-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #FF5C4D 0%, #FF786B 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 0 8px rgba(255, 92, 77, 0.15), 0 8px 24px rgba(255, 92, 77, 0.4);
+  transition: all 0.25s ease;
+}
+
+.big-mic-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 12px rgba(255, 92, 77, 0.25), 0 10px 30px rgba(255, 92, 77, 0.5);
+}
+
+.big-mic-btn.recording {
+  background: linear-gradient(135deg, #08A889 0%, #15B898 100%);
+  box-shadow: 0 0 0 12px rgba(8, 168, 137, 0.3), 0 8px 24px rgba(8, 168, 137, 0.5);
+  animation: pulseMic 1.4s infinite;
+}
+
+@keyframes pulseMic {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* Comparison Matrix Table */
+.comparison-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 14px;
+}
+
+.comparison-table th {
+  background: rgba(10, 14, 28, 0.8);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.comparison-table th.highlight-col,
+.comparison-table td.highlight-col {
+  background: rgba(255, 92, 77, 0.06);
+  border-left: 1px solid rgba(255, 92, 77, 0.25);
+  border-right: 1px solid rgba(255, 92, 77, 0.25);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.icon-check {
+  color: var(--teal);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-cross {
+  color: #EF4444;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Interactive ROI Calculator */
+.roi-calculator-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.roi-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roi-slider {
+  width: 100%;
+  accent-color: var(--coral);
+  height: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.roi-results-card {
+  background: rgba(10, 14, 28, 0.8);
+  border: 1px solid rgba(8, 168, 137, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roi-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+.roi-stat-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.roi-stat-num {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+@media (max-width: 900px) {
+  .drill-grid {
+    grid-template-columns: 1fr;
+  }
+  .roi-calculator-box {
+    grid-template-columns: 1fr;
+  }
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -1459,3 +1755,4 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+

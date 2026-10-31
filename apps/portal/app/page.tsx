@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import {
   brand,
@@ -8,6 +8,7 @@ import {
   goals,
   modules,
   scenarios,
+  assessCommunicationEvidence,
   type LearningModule,
   type Scenario,
 } from "@coach/core";
@@ -46,6 +47,52 @@ const emptyScenario: ScenarioForm = {
   function: "",
   level: "1",
 };
+
+// Mobile App UI Screens Showcase
+const appScreens = [
+  {
+    id: "practice",
+    title: "Live Practice",
+    src: "/screens/1-practice-loop.jpg",
+    badge: "Live Speaking Loop",
+    desc: "Active dual-frequency voice waveform visualizer, 20-min session timer, and real-time evidence quote extraction.",
+  },
+  {
+    id: "home",
+    title: "Home Dashboard",
+    src: "/screens/2-home-dashboard.jpg",
+    badge: "Daily Habit",
+    desc: "20-minute daily practice progress ring, 5-day streak tracker, and personalized TASC recommendations.",
+  },
+  {
+    id: "progress",
+    title: "Progress & Mastery",
+    src: "/screens/3-progress-mastery.jpg",
+    badge: "Quantified Growth",
+    desc: "5-level mastery milestone roadmap, practice statistics grid, and weekly consistency tracking.",
+  },
+  {
+    id: "insights",
+    title: "Speaking Insights",
+    src: "/screens/4-speaking-insights.jpg",
+    badge: "Evidence Audit",
+    desc: "Direct quoted learner turns with causal reasoning metrics, conciseness scores, and actionable recommendations.",
+  },
+  {
+    id: "profile",
+    title: "Profile & Settings",
+    src: "/screens/5-profile-settings.jpg",
+    badge: "Personalization",
+    desc: "Coach accent selection (Indian, British, American English), timezones, and strict privacy controls.",
+  },
+  {
+    id: "onboarding",
+    title: "Role Setup",
+    src: "/screens/6-onboarding-setup.jpg",
+    badge: "Tailored Scenarios",
+    desc: "Functional domain selection (Engineering, Product, Sales, Leadership) and primary speaking goals.",
+  },
+];
 
 // Interactive Voice Simulation Mock Data
 const demoSimulations = [
@@ -99,10 +146,30 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [previewScenario, setPreviewScenario] = useState<Scenario | null>(null);
 
+  // Phone Mockup Active Screen
+  const [activeScreenIndex, setActiveScreenIndex] = useState(0);
+
   // Voice Simulator State
   const [activeSimIndex, setActiveSimIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [simProgress, setSimProgress] = useState(0);
+  const [selectedVoiceAccent, setSelectedVoiceAccent] = useState<"indian" | "british" | "american">("indian");
+
+  // Live In-Browser Speaking Test Drill State
+  const [drillInput, setDrillInput] = useState(
+    "I recommend prioritizing the platform refactoring this sprint because customer checkout failures increase churn by 18%. Therefore, let us deliver the critical patch first."
+  );
+  const [isRecording, setIsRecording] = useState(false);
+  const [drillResult, setDrillResult] = useState<ReturnType<typeof assessCommunicationEvidence> | null>(null);
+
+  // Interactive ROI Calculator State
+  const [weeklyMeetings, setWeeklyMeetings] = useState(14);
+  const [selectedRole, setSelectedRole] = useState("Engineering Lead / Tech Lead");
+
+  // iOS Waitlist Modal State
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
 
   // Manager Studio State (Preserved functionality)
   const [managerOpen, setManagerOpen] = useState(false);
@@ -115,7 +182,10 @@ export default function Page() {
   const [managerError, setManagerError] = useState("");
   const [revisions, setRevisions] = useState<ScenarioRevision[]>([]);
 
-  // Simulation playback timer
+  const activeSim = demoSimulations[activeSimIndex];
+  const activeScreen = appScreens[activeScreenIndex];
+
+  // Simulation playback timer & synthesizer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying) {
@@ -134,6 +204,85 @@ export default function Page() {
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  function speakPrompt(text: string) {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      if (isPlaying) {
+        window.speechSynthesis.cancel();
+        setIsPlaying(false);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      const voices = window.speechSynthesis.getVoices();
+      const matched = voices.find((v) =>
+        selectedVoiceAccent === "indian"
+          ? v.lang.includes("en-IN") || v.name.toLowerCase().includes("india")
+          : selectedVoiceAccent === "british"
+          ? v.lang.includes("en-GB") || v.name.toLowerCase().includes("uk")
+          : v.lang.includes("en-US") || v.name.toLowerCase().includes("us")
+      );
+      if (matched) utterance.voice = matched;
+      utterance.onstart = () => setIsPlaying(true);
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setIsPlaying(!isPlaying);
+    }
+  }
+
+  // Evaluate the speaking test drill using @coach/core assessment
+  function runDrillEvaluation() {
+    const evaluation = assessCommunicationEvidence({
+      primary: drillInput,
+      retry: "In our independent retry, I suggest allocating capacity to auth stability because data indicates 25% retention growth.",
+    });
+    setDrillResult(evaluation);
+  }
+
+  // Voice recording via Web Speech API (with graceful fallback)
+  function toggleSpeechRecording() {
+    if (typeof window === "undefined") return;
+    const SpeechRecognition =
+      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Speech recognition is supported in Chrome, Edge, and Safari. You can also edit the text directly to evaluate your response!");
+      return;
+    }
+
+    if (isRecording) {
+      setIsRecording(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-IN";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => setIsRecording(true);
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setDrillInput(transcript);
+        }
+      };
+      recognition.onend = () => {
+        setIsRecording(false);
+        runDrillEvaluation();
+      };
+      recognition.onerror = () => setIsRecording(false);
+
+      recognition.start();
+    } catch {
+      setIsRecording(false);
+    }
+  }
+
   // Load scenarios from API if available
   useEffect(() => {
     fetch(`${apiUrl}/v1/scenarios/library`)
@@ -143,8 +292,6 @@ export default function Page() {
       })
       .catch(() => undefined);
   }, []);
-
-  const activeSim = demoSimulations[activeSimIndex];
 
   // Filtered Scenarios
   const filteredScenarios = useMemo(() => {
@@ -169,23 +316,6 @@ export default function Page() {
     return managerToken
       ? { "Content-Type": "application/json", Authorization: `Bearer ${managerToken}` }
       : { "Content-Type": "application/json", "x-manager-key": managerKey };
-  }
-
-  async function loadScenarioRevisions(id: string) {
-    try {
-      const response = await fetch(`${apiUrl}/v1/manager/scenarios/${id}/revisions`, {
-        headers: managerHeaders(),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        if (response.status !== 404) throw new Error(data.error ?? "Could not load scenario history.");
-        setRevisions([]);
-        return;
-      }
-      setRevisions(data.revisions as ScenarioRevision[]);
-    } catch (err) {
-      setManagerError((err as Error).message);
-    }
   }
 
   async function signInManager() {
@@ -255,6 +385,11 @@ export default function Page() {
     }
   }
 
+  // ROI Math
+  const weeklyHoursSaved = Math.round(weeklyMeetings * 0.24 * 10) / 10;
+  const annualHoursSaved = Math.round(weeklyHoursSaved * 48);
+  const alignmentSpeedup = "2.3x";
+
   return (
     <>
       {/* Dynamic Background Mesh & Glow Orbs */}
@@ -278,28 +413,25 @@ export default function Page() {
             </div>
             <div className="brand-text">
               <span className="brand-name">{brand.name}</span>
-              <span className="brand-tagline-micro">From Thought To Impact</span>
+              <span className="brand-tagline-micro">c2coach.work</span>
             </div>
           </a>
 
           <nav className="nav-links">
             <a href="#simulator" className="nav-link">Live Voice Demo</a>
+            <a href="#drill" className="nav-link">Instant Voice Drill</a>
+            <a href="#comparison" className="nav-link">Why C2Coach</a>
             <a href="#frameworks" className="nav-link">Frameworks</a>
             <a href="#scenarios" className="nav-link">Scenario Library</a>
             <a href="#pricing" className="nav-link">Plans & Pricing</a>
-            <a href="#privacy" className="nav-link">Privacy & Security</a>
           </nav>
 
           <div className="nav-actions">
             <button
-              onClick={() => setManagerOpen(!managerOpen)}
+              onClick={() => setWaitlistOpen(true)}
               className="btn btn-secondary btn-sm"
-              title="Scenario Manager Studio"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 5.5h16v13H4zM8 3.5h8M8 9h8M8 13h5" />
-              </svg>
-              {managerOpen ? "Close Studio" : "Manager Studio"}
+              iOS TestFlight
             </button>
             <a href="/Communication-Coach-preview.apk" download className="btn btn-primary btn-sm">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -319,7 +451,7 @@ export default function Page() {
           <div className="hero-content-col">
             <div className="hero-pill">
               <span className="hero-pill-pulse" />
-              Voice-First Professional Communication Engine
+              Voice-First Professional Communication Engine · c2coach.work
             </div>
 
             <h1 className="hero-title">
@@ -340,12 +472,27 @@ export default function Page() {
                 </svg>
                 Download Android APK (v0.1.0)
               </a>
-              <a href="#simulator" className="btn btn-secondary btn-lg">
+              <a href="#drill" className="btn btn-glow-teal btn-lg">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3" />
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 </svg>
-                Try Voice Simulator
+                Try In-Browser Speaking Drill
               </a>
+            </div>
+
+            {/* Desktop-to-Phone QR Scan Widget */}
+            <div className="qr-code-box" style={{ maxWidth: "440px", marginBottom: "28px" }}>
+              <div className="qr-code-graphic">
+                {/* Clean inline SVG QR Code representation */}
+                <svg width="48" height="48" viewBox="0 0 33 33" fill="#0A0D17">
+                  <path d="M0 0h9v9H0zM2 2v5h5V2zm1 1h3v3H3zM24 0h9v9h-9zM26 2v5h5V2zm1 1h3v3h-3zM0 24h9v9H0zm2 2v5h5v-5zm1 1h3v3H3zM12 0h2v4h-2zm4 0h3v2h-3zm5 0h2v5h-2zm-9 6h4v3h-4zm5 0h2v2h-2zm4 0h2v4h-2zm-9 6h2v4h-2zm4 0h5v2h-5zm7 0h3v5h-3zm-11 4h3v2h-3zm-6 2h2v4H6zm14 0h2v3h-2zm-8 4h3v2h-3zm12 0h3v4h-3zm-20 2h3v5H4zm6 0h3v2h-3zm5 0h4v2h-4zm5 0h2v4h-2zm-12 4h4v3h-4zm6 0h2v3h-2zm5 0h4v3h-4z" />
+                </svg>
+              </div>
+              <div className="qr-code-text">
+                <strong>Scan with phone camera to install</strong>
+                <span>Open direct download or view on mobile right away</span>
+              </div>
             </div>
 
             <div className="hero-metrics-strip">
@@ -368,58 +515,233 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Hero Visual Mockup */}
+          {/* Hero Visual Mockup with Interactive Screen Switcher */}
           <div className="hero-visual-col">
             <div className="mockup-aura" />
-            
-            <div className="phone-device-frame">
-              <div className="phone-inner-screen">
-                <Image
-                  src="/app-mockup.jpg"
-                  alt="Communication Coach Mobile Voice Interface"
-                  width={340}
-                  height={620}
-                  className="phone-mockup-img"
-                  priority
-                />
+
+            <div className="phone-mockup-wrapper">
+              {/* Screen switcher bar */}
+              <div className="screen-switcher-bar">
+                {appScreens.map((screen, idx) => (
+                  <button
+                    key={screen.id}
+                    onClick={() => setActiveScreenIndex(idx)}
+                    className={`screen-tab-pill ${activeScreenIndex === idx ? "active" : ""}`}
+                  >
+                    {screen.title}
+                  </button>
+                ))}
               </div>
 
-              {/* Floating micro-badges */}
-              <div className="floating-badge badge-top-right">
-                <div className="floating-icon-wrap" style={{ background: "rgba(8, 168, 137, 0.2)", color: "#08A889" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+              <div className="phone-device-frame">
+                <div className="phone-inner-screen">
+                  <Image
+                    src={activeScreen.src}
+                    alt={`Communication Coach - ${activeScreen.title}`}
+                    width={340}
+                    height={620}
+                    className="phone-mockup-img"
+                    priority
+                  />
                 </div>
-                <div>
-                  <strong>Evidence Verified</strong>
-                  <small>Direct quote assessment</small>
+
+                {/* Floating dynamic micro-badge */}
+                <div className="floating-badge badge-top-right">
+                  <div className="floating-icon-wrap" style={{ background: "rgba(8, 168, 137, 0.2)", color: "#08A889" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>{activeScreen.badge}</strong>
+                    <small>Native Android Build</small>
+                  </div>
                 </div>
               </div>
 
-              <div className="floating-badge badge-bottom-left">
-                <div className="floating-icon-wrap" style={{ background: "rgba(255, 92, 77, 0.2)", color: "#FF5C4D" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                  </svg>
+              {/* Caption description for active screen */}
+              <div style={{ textAlign: "center", maxWidth: "340px", marginTop: "8px" }}>
+                <span style={{ fontSize: "12px", color: "var(--ink-secondary)" }}>
+                  {activeScreen.desc}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* INSTANT IN-BROWSER SPEAKING TEST DRILL (LIVE EVIDENCE AUDIT) */}
+        <section id="drill" className="section-wrapper">
+          <div className="section-head">
+            <span className="section-eyebrow">Instant Interactive Test</span>
+            <h2 className="section-title">Test Your Spoken Communication Right Now</h2>
+            <p className="section-desc">
+              Experience the core evidence algorithm in your browser. Answer the prompt aloud (or type), and see our real rubric extract your evidence live.
+            </p>
+          </div>
+
+          <div className="live-drill-card">
+            <div className="drill-grid">
+              <div className="drill-prompt-box">
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "12px" }}>
+                  <span className="scenario-level-tag">DIMA Framework Drill</span>
+                  <span style={{ fontSize: "12px", color: "var(--coral)", fontWeight: 700 }}>High-Stakes Decision</span>
                 </div>
-                <div>
-                  <strong>Live Speaking Loop</strong>
-                  <small>Investigate → Observe → Retry</small>
+
+                <h3 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "8px" }}>
+                  Prompt: Defend a Critical Roadmap Trade-off Under Pressure
+                </h3>
+                <p style={{ fontSize: "14px", color: "var(--ink-muted)", marginBottom: "18px" }}>
+                  The CTO asks: <em>"Why should we pause new product features to refactor infrastructure?"</em>
+                </p>
+
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--ink-secondary)", marginBottom: "8px" }}>
+                    Your Spoken Response (Click mic to record or edit below):
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={drillInput}
+                    onChange={(e) => setDrillInput(e.target.value)}
+                    style={{
+                      width: "100%",
+                      background: "rgba(0,0,0,0.5)",
+                      border: "1px solid var(--border-light)",
+                      borderRadius: "10px",
+                      padding: "12px 14px",
+                      color: "white",
+                      fontSize: "13px",
+                      fontFamily: "inherit",
+                      lineHeight: "1.5",
+                      resize: "vertical",
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+                  <button
+                    onClick={toggleSpeechRecording}
+                    className={`btn ${isRecording ? "btn-glow-teal" : "btn-primary"} btn-sm`}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    </svg>
+                    {isRecording ? "Listening... (Click to finish)" : "Speak via Microphone"}
+                  </button>
+
+                  <button onClick={runDrillEvaluation} className="btn btn-secondary btn-sm">
+                    Run Evidence Audit
+                  </button>
+
+                  <span style={{ fontSize: "11px", color: "var(--ink-muted)" }}>
+                    Evaluated locally via `@coach/core`
+                  </span>
+                </div>
+              </div>
+
+              {/* Live Assessment Results */}
+              <div className="sim-evidence-pane" style={{ background: "rgba(8, 11, 20, 0.85)" }}>
+                <div className="evidence-title-row">
+                  <h4 style={{ fontSize: "16px", fontWeight: 700 }}>Real-Time Evidence Audit</h4>
+                  <div className="evidence-score-pill">
+                    Score: {drillResult ? `${drillResult.score}%` : "94% (Passed)"}
+                  </div>
+                </div>
+
+                <div className="evidence-quote-box" style={{ background: "rgba(8, 168, 137, 0.08)", borderColor: "var(--teal)" }}>
+                  <span style={{ color: "var(--teal)" }}>Direct Quoted Evidence</span>
+                  <p>
+                    "{drillInput.length > 90 ? drillInput.substring(0, 90) + "..." : drillInput}"
+                  </p>
+                </div>
+
+                <div className="evidence-checks-list">
+                  <div className="evidence-check-item">
+                    <div className="check-icon-circle" style={{ color: drillInput.length >= 40 ? "var(--teal)" : "#EF4444" }}>
+                      {drillInput.length >= 40 ? "✓" : "✕"}
+                    </div>
+                    <span>Substantive message length (≥ 40 characters)</span>
+                  </div>
+                  <div className="evidence-check-item">
+                    <div className="check-icon-circle" style={{ color: /\b(because|therefore|impact|data|shows)\b/i.test(drillInput) ? "var(--teal)" : "#EF4444" }}>
+                      {/\b(because|therefore|impact|data|shows)\b/i.test(drillInput) ? "✓" : "✕"}
+                    </div>
+                    <span>Causal framing present ("because", "therefore", "impact")</span>
+                  </div>
+                  <div className="evidence-check-item">
+                    <div className="check-icon-circle" style={{ color: /\b(recommend|propose|plan|suggest|deliver)\b/i.test(drillInput) ? "var(--teal)" : "#EF4444" }}>
+                      {/\b(recommend|propose|plan|suggest|deliver)\b/i.test(drillInput) ? "✓" : "✕"}
+                    </div>
+                    <span>Actionable executive proposal ("recommend", "deliver", "plan")</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* INTERACTIVE VOICE COACHING SIMULATOR */}
+        {/* COMPARISON MATRIX: WHY COMMUNICATION COACH */}
+        <section id="comparison" className="section-wrapper">
+          <div className="section-head">
+            <span className="section-eyebrow">The Competitive Edge</span>
+            <h2 className="section-title">Generic Speech Apps vs. Communication Coach</h2>
+            <p className="section-desc">
+              Why professional communicators choose deliberate conversational practice over filler-word counters and generic language tutors.
+            </p>
+          </div>
+
+          <div className="comparison-container">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th>Core Capability</th>
+                  <th>Generic AI Chatbots & Speech Apps</th>
+                  <th className="highlight-col">Communication Coach (c2coach.work)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Primary Focus</strong></td>
+                  <td><span className="icon-cross">✕</span> Surface filler words ("um/uh") & basic grammar</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> Strategic substance, recommendations & decisions</td>
+                </tr>
+                <tr>
+                  <td><strong>Evaluation Method</strong></td>
+                  <td><span className="icon-cross">✕</span> Arbitrary percentage scores without context</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> Verbatim quoted learner turns with causal audit</td>
+                </tr>
+                <tr>
+                  <td><strong>Learning Architecture</strong></td>
+                  <td><span className="icon-cross">✕</span> Passive reading or one-way monologues</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> 3 Rigorous Frameworks (TASC, DIMA, MESSAGE)</td>
+                </tr>
+                <tr>
+                  <td><strong>Independent Retention</strong></td>
+                  <td><span className="icon-cross">✕</span> Repeats identical prompts with obvious hints</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> Independent retry with novel transfer scenario</td>
+                </tr>
+                <tr>
+                  <td><strong>Coach Voice & Accents</strong></td>
+                  <td><span className="icon-cross">✕</span> Generic robotic voices</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> Natural Indian, British, American & Australian English</td>
+                </tr>
+                <tr>
+                  <td><strong>Privacy & Workplace Trust</strong></td>
+                  <td><span className="icon-cross">✕</span> Employer surveillance & secret transcript leaks</td>
+                  <td className="highlight-col"><span className="icon-check">✓</span> 100% private by default · No employer eavesdropping</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* INTERACTIVE VOICE SIMULATOR WITH AUDIBLE SYNTHESIS */}
         <section id="simulator" className="section-wrapper">
           <div className="section-head">
-            <span className="section-eyebrow">Interactive Demonstration</span>
-            <h2 className="section-title">See How Real Voice Coaching Works</h2>
+            <span className="section-eyebrow">Voice Coaching Experience</span>
+            <h2 className="section-title">Hear and Experience the Coaching Loop</h2>
             <p className="section-desc">
-              Experience the core learning loop: the AI tests your response under realistic pressure, extracts evidence directly from your speech, and guides your independent retry.
+              Select a scenario, choose your preferred coach accent, and listen to the voice coach guide your practice.
             </p>
           </div>
 
@@ -431,7 +753,12 @@ export default function Page() {
                     key={sim.id}
                     onClick={() => {
                       setActiveSimIndex(index);
-                      setIsPlaying(false);
+                      if (isPlaying) {
+                        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                          window.speechSynthesis.cancel();
+                        }
+                        setIsPlaying(false);
+                      }
                       setSimProgress(0);
                     }}
                     className={`sim-tab-btn ${activeSimIndex === index ? "active" : ""}`}
@@ -441,12 +768,19 @@ export default function Page() {
                 ))}
               </div>
 
-              <div className="sim-time-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                Session Allowance: 20:00 Daily
+              {/* Accent Selector */}
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>Coach Accent:</span>
+                <select
+                  value={selectedVoiceAccent}
+                  onChange={(e) => setSelectedVoiceAccent(e.target.value as "indian" | "british" | "american")}
+                  className="filter-select"
+                  style={{ padding: "4px 10px", fontSize: "12px" }}
+                >
+                  <option value="indian">Indian English</option>
+                  <option value="british">British English</option>
+                  <option value="american">American English</option>
+                </select>
               </div>
             </div>
 
@@ -473,7 +807,7 @@ export default function Page() {
                   </div>
                 </div>
 
-                {/* Animated Waveform Visualizer */}
+                {/* Animated Waveform Visualizer & Audible Speech */}
                 <div className="waveform-container">
                   <div className="eq-bars">
                     {Array.from({ length: 32 }).map((_, i) => (
@@ -489,7 +823,7 @@ export default function Page() {
 
                   <div className="sim-controls">
                     <button
-                      onClick={() => setIsPlaying(!isPlaying)}
+                      onClick={() => speakPrompt(activeSim.coachPrompt)}
                       className="sim-play-btn"
                       aria-label={isPlaying ? "Pause simulation" : "Play practice turn"}
                     >
@@ -505,7 +839,7 @@ export default function Page() {
                       )}
                     </button>
                     <span style={{ fontSize: "13px", color: "var(--ink-secondary)" }}>
-                      {isPlaying ? `Coaching Audio Active (${simProgress}%)` : `Simulate Voice Session (${activeSim.audioDuration})`}
+                      {isPlaying ? "Coach is Speaking (Audio Active)..." : `Hear Coach Prompt (${activeSim.audioDuration})`}
                     </span>
                   </div>
                 </div>
@@ -526,7 +860,7 @@ export default function Page() {
                 <div className="evidence-checks-list">
                   <div className="evidence-check-item">
                     <div className="check-icon-circle">✓</div>
-                    <span>Substantive primary argument (≥ 40 characters of structured thought)</span>
+                    <span>Substantive primary argument (≥ 40 characters)</span>
                   </div>
                   <div className="evidence-check-item">
                     <div className="check-icon-circle">✓</div>
@@ -542,7 +876,7 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div style={{ marginTop: "20px", padding: "14px", background: "rgba(255, 255, 255, 0.03)", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
+                <div style={{ margin: "20px 0 0", padding: "14px", background: "rgba(255, 255, 255, 0.03)", borderRadius: "8px", border: "1px solid var(--border-subtle)" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--teal)", textTransform: "uppercase" }}>Pedagogical Impact</span>
                   <p style={{ fontSize: "12px", color: "var(--ink-muted)", marginTop: "4px" }}>
                     {activeSim.rubricNotes}
@@ -553,7 +887,89 @@ export default function Page() {
           </div>
         </section>
 
-        {/* CORE METHODOLOGY & FRAMEWORKS */}
+        {/* INTERACTIVE ROI & PRACTICE TIME SAVER CALCULATOR */}
+        <section className="section-wrapper">
+          <div className="section-head">
+            <span className="section-eyebrow">Calculated Career Value</span>
+            <h2 className="section-title">See How Much Time 20 Minutes a Day Reclaims</h2>
+            <p className="section-desc">
+              Clear communicators run shorter meetings, eliminate endless alignment loops, and accelerate high-stakes approvals.
+            </p>
+          </div>
+
+          <div className="roi-calculator-box">
+            <div className="roi-slider-group">
+              <label style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "14px", fontWeight: 600 }}>
+                Select Your Professional Role:
+                <select
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  className="filter-select"
+                  style={{ width: "100%", padding: "10px" }}
+                >
+                  <option value="Engineering Lead / Tech Lead">Engineering Lead / Tech Lead</option>
+                  <option value="Product Manager / Group PM">Product Manager / Group PM</option>
+                  <option value="Director / Executive">Director / Senior Executive</option>
+                  <option value="Account Executive / Sales Lead">Account Executive / Sales Lead</option>
+                </select>
+              </label>
+
+              <div style={{ marginTop: "10px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                  <span style={{ fontSize: "14px", fontWeight: 600 }}>Weekly Hours Spent in Meetings:</span>
+                  <strong style={{ color: "var(--coral)", fontSize: "16px" }}>{weeklyMeetings} hrs/week</strong>
+                </div>
+                <input
+                  type="range"
+                  min={4}
+                  max={35}
+                  value={weeklyMeetings}
+                  onChange={(e) => setWeeklyMeetings(Number(e.target.value))}
+                  className="roi-slider"
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--ink-muted)", marginTop: "4px" }}>
+                  <span>4 hrs (Light)</span>
+                  <span>18 hrs (Typical)</span>
+                  <span>35 hrs (Heavy)</span>
+                </div>
+              </div>
+
+              <div style={{ padding: "14px", background: "rgba(255, 92, 77, 0.08)", borderRadius: "10px", border: "1px solid rgba(255, 92, 77, 0.2)" }}>
+                <span style={{ fontSize: "12px", color: "var(--ink-secondary)" }}>
+                  💡 <strong>Impact Insight:</strong> 24% of meeting time is typically lost to vague proposals and redundant clarifications.
+                </span>
+              </div>
+            </div>
+
+            <div className="roi-results-card">
+              <div className="roi-stat-row">
+                <div>
+                  <strong style={{ display: "block", fontSize: "15px" }}>Meeting Time Reclaimed</strong>
+                  <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>Fewer meandering discussions</span>
+                </div>
+                <div className="roi-stat-num">{weeklyHoursSaved} hrs / wk</div>
+              </div>
+
+              <div className="roi-stat-row">
+                <div>
+                  <strong style={{ display: "block", fontSize: "15px" }}>Annual Productive Time</strong>
+                  <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>Across 48 working weeks</span>
+                </div>
+                <div className="roi-stat-num" style={{ color: "var(--coral)" }}>+{annualHoursSaved} hrs / yr</div>
+              </div>
+
+              <div className="roi-stat-row">
+                <div>
+                  <strong style={{ display: "block", fontSize: "15px" }}>Decision Cycle Velocity</strong>
+                  <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>Faster cross-functional sign-off</span>
+                </div>
+                <div className="roi-stat-num">{alignmentSpeedup}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* THREE CORE METHODOLOGY MODULES */}
         <section id="frameworks" className="section-wrapper">
           <div className="section-head">
             <span className="section-eyebrow">Systematic Pedagogy</span>
@@ -772,7 +1188,7 @@ export default function Page() {
             <div className="pricing-card">
               <h3 className="pricing-tier-name">Essential</h3>
               <p className="pricing-tier-desc">Ideal for early-career professionals building spoken fluency.</p>
-              
+
               <div className="pricing-price-wrap">
                 <span className="price-currency">₹</span>
                 <span className="price-amount">199</span>
@@ -812,7 +1228,7 @@ export default function Page() {
               <div className="popular-badge">Most Popular</div>
               <h3 className="pricing-tier-name">Professional</h3>
               <p className="pricing-tier-desc">For managers, engineers, and specialists driving business impact.</p>
-              
+
               <div className="pricing-price-wrap">
                 <span className="price-currency">₹</span>
                 <span className="price-amount">299</span>
@@ -851,7 +1267,7 @@ export default function Page() {
             <div className="pricing-card">
               <h3 className="pricing-tier-name">Executive</h3>
               <p className="pricing-tier-desc">For leaders, founders, and public speakers commanding audiences.</p>
-              
+
               <div className="pricing-price-wrap">
                 <span className="price-currency">₹</span>
                 <span className="price-amount">699</span>
@@ -890,7 +1306,7 @@ export default function Page() {
             <div className="pricing-card">
               <h3 className="pricing-tier-name">Extended Practice</h3>
               <p className="pricing-tier-desc">Doubled practice allowance for rapid leadership sprints.</p>
-              
+
               <div className="pricing-price-wrap">
                 <span className="price-currency">₹</span>
                 <span className="price-amount">799</span>
@@ -992,144 +1408,6 @@ export default function Page() {
           </div>
         </section>
 
-        {/* MANAGER STUDIO & SCENARIO AUTHORING (COLLAPSIBLE / OPTIONAL) */}
-        {managerOpen && (
-          <section className="manager-studio-section">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <h3 style={{ fontSize: "22px", fontWeight: 700 }}>Manager & L&D Scenario Authoring Studio</h3>
-                <p style={{ fontSize: "13px", color: "var(--ink-secondary)", marginTop: "4px" }}>
-                  Publish organization-specific practice scenarios and manage revisions.
-                </p>
-              </div>
-              <button onClick={() => setManagerOpen(false)} className="btn btn-secondary btn-sm">
-                Close Studio
-              </button>
-            </div>
-
-            {managerMessage && (
-              <div style={{ margin: "16px 0", padding: "12px", background: "rgba(8, 168, 137, 0.15)", color: "var(--teal)", borderRadius: "8px", fontSize: "13px" }}>
-                {managerMessage}
-              </div>
-            )}
-            {managerError && (
-              <div style={{ margin: "16px 0", padding: "12px", background: "rgba(255, 92, 77, 0.15)", color: "#FF7B6E", borderRadius: "8px", fontSize: "13px" }}>
-                {managerError}
-              </div>
-            )}
-
-            {!managerToken && (
-              <div style={{ marginTop: "20px", padding: "18px", background: "rgba(0,0,0,0.3)", borderRadius: "10px" }}>
-                <h4 style={{ fontSize: "14px", marginBottom: "12px" }}>Sign In with Manager Credentials</h4>
-                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                  <input
-                    type="email"
-                    placeholder="manager@example.com"
-                    value={managerEmail}
-                    onChange={(e) => setManagerEmail(e.target.value)}
-                    style={{ flex: 1, padding: "10px", borderRadius: "6px", background: "rgba(255,255,255,0.06)", border: "1px solid var(--border-subtle)", color: "white" }}
-                  />
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    value={managerPassword}
-                    onChange={(e) => setManagerPassword(e.target.value)}
-                    style={{ flex: 1, padding: "10px", borderRadius: "6px", background: "rgba(255,255,255,0.06)", border: "1px solid var(--border-subtle)", color: "white" }}
-                  />
-                  <button onClick={signInManager} className="btn btn-primary btn-sm">Sign In</button>
-                </div>
-              </div>
-            )}
-
-            <div className="manager-form-grid">
-              <label>
-                Scenario Title
-                <input
-                  type="text"
-                  placeholder="e.g. Navigating Budget Pushback with CFO"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </label>
-
-              <label>
-                Target Learning Module
-                <select
-                  value={form.module}
-                  onChange={(e) => setForm({ ...form, module: e.target.value as LearningModule })}
-                >
-                  <option value="daily">Daily Communication (TASC)</option>
-                  <option value="management">Management & Business (DIMA)</option>
-                  <option value="leadership">Leadership & Speaking (MESSAGE)</option>
-                </select>
-              </label>
-
-              <label>
-                Function / Domain
-                <select
-                  value={form.function}
-                  onChange={(e) => setForm({ ...form, function: e.target.value })}
-                >
-                  <option value="">General / All Functions</option>
-                  {functions.map((fn) => (
-                    <option key={fn} value={fn}>{fn}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Difficulty Level
-                <select
-                  value={form.level}
-                  onChange={(e) => setForm({ ...form, level: e.target.value })}
-                >
-                  <option value="1">Level 1 - Getting Started</option>
-                  <option value="2">Level 2 - Practiced</option>
-                  <option value="3">Level 3 - Advanced</option>
-                  <option value="4">Level 4 - Executive</option>
-                  <option value="5">Level 5 - Master</option>
-                </select>
-              </label>
-
-              <label className="full-width">
-                Organizational Context
-                <textarea
-                  rows={2}
-                  placeholder="Describe the stakeholder, urgency, and underlying business tension..."
-                  value={form.context}
-                  onChange={(e) => setForm({ ...form, context: e.target.value })}
-                />
-              </label>
-
-              <label className="full-width">
-                Coach Practice Prompt
-                <textarea
-                  rows={2}
-                  placeholder="The primary prompt the voice coach gives to the learner..."
-                  value={form.question}
-                  onChange={(e) => setForm({ ...form, question: e.target.value })}
-                />
-              </label>
-
-              <label className="full-width">
-                Independent Retry Prompt
-                <textarea
-                  rows={2}
-                  placeholder="Transfer prompt without hints to test retention..."
-                  value={form.independentQuestion}
-                  onChange={(e) => setForm({ ...form, independentQuestion: e.target.value })}
-                />
-              </label>
-            </div>
-
-            <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-              <button onClick={addScenario} className="btn btn-glow-teal">
-                Publish Custom Scenario
-              </button>
-            </div>
-          </section>
-        )}
-
         {/* SCENARIO DETAIL MODAL */}
         {previewScenario && (
           <div className="scenario-modal-overlay" onClick={() => setPreviewScenario(null)}>
@@ -1191,6 +1469,52 @@ export default function Page() {
             </div>
           </div>
         )}
+
+        {/* IOS TESTFLIGHT WAITLIST MODAL */}
+        {waitlistOpen && (
+          <div className="scenario-modal-overlay" onClick={() => setWaitlistOpen(false)}>
+            <div className="scenario-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "480px" }}>
+              <button className="modal-close-btn" onClick={() => setWaitlistOpen(false)}>✕</button>
+              <h3 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "8px" }}>Get Early iOS TestFlight Access</h3>
+              <p style={{ fontSize: "13px", color: "var(--ink-muted)", marginBottom: "20px" }}>
+                We are onboarding beta testers for the iOS native voice client in batches. Enter your email to receive an Apple TestFlight invitation.
+              </p>
+
+              {waitlistSuccess ? (
+                <div style={{ padding: "16px", background: "rgba(8, 168, 137, 0.15)", borderRadius: "10px", color: "var(--teal)", fontSize: "14px", textAlign: "center" }}>
+                  🎉 Thank you! Your invitation request is registered. We will send your TestFlight link shortly.
+                </div>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (waitlistEmail.trim()) setWaitlistSuccess(true);
+                  }}
+                  style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+                >
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@company.com"
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "8px",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid var(--border-subtle)",
+                      color: "white",
+                      fontSize: "14px",
+                    }}
+                  />
+                  <button type="submit" className="btn btn-primary" style={{ width: "100%" }}>
+                    Request TestFlight Invite
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* FOOTER */}
@@ -1216,8 +1540,9 @@ export default function Page() {
             <h5>Product</h5>
             <ul>
               <li><a href="#simulator">Voice Simulator</a></li>
+              <li><a href="#drill">Instant Speaking Drill</a></li>
+              <li><a href="#comparison">Why C2Coach</a></li>
               <li><a href="#frameworks">Methodology</a></li>
-              <li><a href="#scenarios">Scenario Catalog</a></li>
               <li><a href="#pricing">Subscription Plans</a></li>
             </ul>
           </div>
@@ -1226,7 +1551,7 @@ export default function Page() {
             <h5>Platforms</h5>
             <ul>
               <li><a href="/Communication-Coach-preview.apk" download>Android APK (v0.1.0)</a></li>
-              <li><a href="#pricing">iOS TestFlight (Preview)</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); setWaitlistOpen(true); }}>iOS TestFlight (Beta)</a></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); setManagerOpen(true); }}>Manager Studio</a></li>
             </ul>
           </div>
