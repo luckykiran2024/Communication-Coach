@@ -1,7 +1,62 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { brand } from "@coach/core";
 import "./globals.css";
-export const metadata: Metadata = { title: brand.name + " · Learning workspace", description: brand.tagline };
+
+export const viewport: Viewport = {
+  themeColor: "#0b0f19",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://c2coach.work"),
+  title: `${brand.name} | From Thought to Impact`,
+  description: "Private, voice-first communication coaching with focused seven-minute sessions for daily work, business management, and executive leadership.",
+  keywords: [
+    "c2coach",
+    "c2coach.work",
+    "communication coach",
+    "voice coaching",
+    "public speaking",
+    "management communication",
+    "executive presence",
+    "AI voice coach",
+    "business communication",
+  ],
+  authors: [{ name: "Communication Coach Team" }],
+  alternates: {
+    canonical: "https://c2coach.work",
+  },
+  openGraph: {
+    title: `${brand.name} · Speak with impact`,
+    description: "Personalized voice-first professional communication development engine for Android, iOS and Web.",
+    url: "https://c2coach.work",
+    siteName: brand.name,
+    type: "website",
+    images: [
+      {
+        url: "/app-mockup.jpg",
+        width: 1080,
+        height: 1920,
+        alt: "Communication Coach Mobile App Interface",
+      },
+    ],
+  },
+};
+
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body>{children}</body></html>;
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
 }
+
