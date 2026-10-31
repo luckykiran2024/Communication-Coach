@@ -50,6 +50,31 @@ export const profileSchema = z.object({
   reducedMotion: z.boolean().default(false),
 }).strict();
 export type Profile = z.infer<typeof profileSchema>;
+export type PlanRecommendation = { planId: Exclude<Profile["planId"], "free">; reasons: string[] };
+export function recommendPlan(profile: Pick<Profile, "function" | "jobTitle" | "careerLevel" | "audience" | "situations" | "goal" | "challenges">): PlanRecommendation {
+  const context = `${profile.jobTitle} ${profile.audience} ${profile.situations} ${profile.challenges}`.toLowerCase();
+  const seniorContext = /\b(board|c-suite|cxo|chief|investor|senior leadership|executive committee|high[- ]stakes)\b/.test(context);
+  const intensivePractice = /\b(daily|frequent|multiple|many|intensive|repeated|several times|every day)\b/.test(context);
+  const leadershipLevel = ["Experienced manager", "Senior leader", "Executive", "Founder/entrepreneur"].includes(profile.careerLevel);
+  const professionalLevel = ["Experienced individual contributor", "First-time manager"].includes(profile.careerLevel);
+  if ((leadershipLevel || seniorContext) && intensivePractice) return {
+    planId: "extended",
+    reasons: ["Your role includes senior or high-stakes communication.", "You described frequent practice needs, so the larger monthly session allowance may fit better."],
+  };
+  if (leadershipLevel || seniorContext || profile.goal === "Handle challenging questions"
+    || ["General Management", "Entrepreneurship"].includes(profile.function)) return {
+    planId: "executive",
+    reasons: ["Your role or situations include leadership and higher-stakes conversations.", "This package includes Daily, Professional, and Leadership practice."],
+  };
+  if (professionalLevel || ["Give constructive feedback", "Present recommendations"].includes(profile.goal)) return {
+    planId: "professional",
+    reasons: ["Your profile includes business decisions, recommendations, or people conversations.", "This package includes Daily and Professional & Business Communication practice."],
+  };
+  return {
+    planId: "essential",
+    reasons: ["Your current focus is building clarity and confidence in everyday workplace conversations.", "Essential provides a focused starting point with Daily Communication practice."],
+  };
+}
 export const engagementLevels = [
   { level: 1, title: "Getting started", threshold: 0 },
   { level: 2, title: "Finding your voice", threshold: 60 },

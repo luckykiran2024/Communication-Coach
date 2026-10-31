@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { assessCommunicationEvidence, getEngagementLevel, getMasteryLevel, profileSchema, recommendScenarios, scenarios, transition, validateAssessment, voiceTransportStatus } from "../src/index";
+import { assessCommunicationEvidence, getEngagementLevel, getMasteryLevel, profileSchema, recommendPlan, recommendScenarios, scenarios, transition, validateAssessment, voiceTransportStatus } from "../src/index";
 test("scenario library contains 100-plus levelled practice scenarios", () => {
   assert.ok(scenarios.length >= 100);
   assert.equal(scenarios.filter(scenario => scenario.id.startsWith("library-")).length, 120);
@@ -23,6 +23,13 @@ test("role context selects different scenarios without assigning ability", () =>
   assert.equal(profile.timezone, "Asia/Kolkata");
   assert.equal(profile.planId, "professional");
   assert.equal(profileSchema.safeParse({ ...profile, timezone: "Not/AZone" }).success, false);
+});
+test("plan recommendations use role, communication context and practice demand", () => {
+  const base = profileSchema.parse({ displayName: "Asha", function: "Engineering", jobTitle: "Analyst", careerLevel: "Early-career professional", audience: "My manager", goal: "Explain ideas clearly" });
+  assert.equal(recommendPlan(base).planId, "essential");
+  assert.equal(recommendPlan({ ...base, careerLevel: "First-time manager", goal: "Give constructive feedback" }).planId, "professional");
+  assert.equal(recommendPlan({ ...base, careerLevel: "Senior leader", audience: "Board and executive committee" }).planId, "executive");
+  assert.equal(recommendPlan({ ...base, careerLevel: "Executive", situations: "Daily investor and board conversations" }).planId, "extended");
 });
 test("completed voice sessions cannot restart or bypass assessment", () => {
   assert.equal(transition("ACTIVE", "COMPLETED"), "COMPLETED");

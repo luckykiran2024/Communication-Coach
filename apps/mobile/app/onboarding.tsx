@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Switch, View } from "react-native";
 import { Redirect, router } from "expo-router";
-import { careerLevels, functions, goals, planIds, practiceTimezones, profileSchema, type Profile } from "@coach/core";
+import { careerLevels, functions, goals, planIds, practiceTimezones, profileSchema, recommendPlan, type Profile } from "@coach/core";
 import { request } from "../src/api";
 import { useAuth } from "../src/auth";
 import { EmailVerificationBanner } from "../src/email-verification-banner";
@@ -14,12 +14,15 @@ export default function Onboarding() {
     displayName: "", primaryLanguage: "English", coachingLanguage: "English", function: "Engineering", jobTitle: "", careerLevel: "Experienced individual contributor", industry: "", audience: "", situations: "", goal: "Explain ideas clearly", challenges: "", practiceMinutes: 7, planId: "professional", timezone: "Asia/Kolkata", reducedMotion: false,
   });
   const [busy, setBusy] = useState(false); const [error, setError] = useState("");
+  const [planChosenByUser, setPlanChosenByUser] = useState(Boolean(auth.me?.profile));
   useEffect(() => { if (auth.me?.profile) setReducedMotion(auth.me.profile.reducedMotion); }, [auth.me?.profile?.reducedMotion]);
   if (auth.loading) return <Screen><Copy>Loading…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
   function change<Key extends keyof Profile>(key: Key, value: Profile[Key]) { setDraft(current => ({ ...current, [key]: value })); }
+  const recommendation = recommendPlan(draft);
   async function save() {
-    const checked = profileSchema.safeParse({ ...draft, practiceMinutes: 7 });
+    const checked = profileSchema.safeParse({ ...draft, practiceMinutes: 7,
+      planId: planChosenByUser ? draft.planId : recommendation.planId });
     if (!checked.success) { setError(checked.error.issues.map(issue => issue.path.join(".") + ": " + issue.message).join("\n")); return; }
     setBusy(true); setError("");
     try { await request("/v1/me/profile", auth.token, "PUT", checked.data); await auth.refresh(); router.replace(auth.me?.profile ? "/home" : "/payment"); }
@@ -49,7 +52,9 @@ export default function Onboarding() {
       {!auth.me?.profile ? <Choices label="Practice timezone" options={practiceTimezones} value={draft.timezone} onChange={value => change("timezone", value)} /> : <><Field label="Practice timezone" editable={false} value={draft.timezone} /><Copy>Your timezone is locked after setup so monthly records reset consistently. Contact support to change it.</Copy></>}
       <Copy>Your practice timezone determines when monthly voice sessions reset. It does not track your location or change your device clock.</Copy>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}><Copy>Reduce motion</Copy><Switch accessibilityLabel="Reduce motion" value={draft.reducedMotion} onValueChange={value => { change("reducedMotion", value); setReducedMotion(value); }} /></View><Copy>When enabled, the app avoids nonessential movement and transitions, keeping controls visually stable. It does not affect audio or recording.</Copy>
-      <Choices label="Choose your practice plan" options={planIds.map(planId => planLabels[planId])} value={checkedPlanLabel(draft.planId)} onChange={value => change("planId", planIds.find(planId => planLabels[planId] === value) ?? "free")} />
+      <Heading eyebrow="Recommended for your profile">{planLabels[recommendation.planId]}</Heading>
+      {recommendation.reasons.map(reason => <Copy key={reason}>• {reason}</Copy>)}
+      <Choices label="Choose your practice plan" options={planIds.map(planId => planLabels[planId])} value={checkedPlanLabel(planChosenByUser ? draft.planId : recommendation.planId)} onChange={value => { setPlanChosenByUser(true); change("planId", planIds.find(planId => planLabels[planId] === value) ?? "free"); }} />
       <Copy>We’ll confirm this package next and show the payment step before your first practice begins.</Copy>
       <Copy>Microphone access is requested only when you start an audio check. Optional recordings are not uploaded or retained by the server.</Copy></>}
     <EmailVerificationBanner />

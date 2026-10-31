@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { Platform } from "react-native";
-import { brand } from "@coach/core";
+import { brand, recommendPlan } from "@coach/core";
 import { useAuth } from "../src/auth";
 import { request, type Catalog } from "../src/api";
 import { StorePurchaseActions } from "../src/store-purchase";
@@ -24,7 +24,8 @@ export default function Payment() {
   const [confirmed, setConfirmed] = useState<"preview" | "store" | null>(null);
   const [error, setError] = useState("");
   const [catalog, setCatalog] = useState<Catalog | null>(null);
-  const planId = params.planId ?? auth.me?.profile?.planId ?? "free";
+  const [selectedPlanId, setSelectedPlanId] = useState(params.planId ?? auth.me?.profile?.planId ?? "free");
+  const planId = selectedPlanId;
   const previewPayment = process.env.EXPO_PUBLIC_PAYMENT_PREVIEW === "true" || (__DEV__ && process.env.EXPO_PUBLIC_PAYMENT_PREVIEW !== "false");
   const productPrefix = process.env.EXPO_PUBLIC_STORE_PRODUCT_PREFIX ?? "com.c2coach.app";
   const productIds = useMemo(() => (catalog?.plans ?? []).filter(item => item.id !== "free")
@@ -41,6 +42,7 @@ export default function Payment() {
   if (auth.loading) return <Screen><Copy>Loading your plan…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
   if (!auth.me?.profile) return <Redirect href="/onboarding" />;
+  const recommendation = recommendPlan(auth.me.profile);
   const plan = (catalog?.plans ?? []).find(item => item.id === planId);
   const proficiency = planProficiency[planId] ?? planProficiency.professional;
   if (confirmed) return <Screen><Card tone="accent">
@@ -50,7 +52,10 @@ export default function Payment() {
     <Action title="Start today’s practice" onPress={() => router.replace("/home")} />
   </Card></Screen>;
   return <Screen><Heading eyebrow="One clear next step">Confirm your practice package.</Heading>
-    <Copy>Review your selected package. A first purchase starts after store verification. Changes to an active package take effect on its next renewal date.</Copy>
+    <Copy>Select any package below before continuing. A first purchase starts after store verification. Changes to an active package take effect on its next renewal date.</Copy>
+    <Card><Heading eyebrow="Recommended for your profile">{(catalog?.plans ?? []).find(item => item.id === recommendation.planId)?.title ?? recommendation.planId}</Heading>
+      {recommendation.reasons.map(reason => <Copy key={reason}>• {reason}</Copy>)}
+      <Copy>This is guidance only. You can choose any available package.</Copy></Card>
     <Card tone="accent">
       <Heading eyebrow="Selected package">{plan?.title ?? planId}</Heading>
       <Heading eyebrow={proficiency.level}>{proficiency.summary}</Heading>
@@ -74,6 +79,8 @@ export default function Payment() {
         <Copy>{details.summary}</Copy>
         <Copy>{item.voiceSessionsPerMonth} voice sessions per month · up to 7 minutes each.</Copy>
         <Copy>Includes: {includedWorkshops.join(" · ")}</Copy>
+        <Action title={item.id === planId ? "Selected package" : `Choose ${item.title}`}
+          secondary={item.id === planId} disabled={item.id === planId} onPress={() => { setError(""); setSelectedPlanId(item.id); }} />
       </Card>;
     })}
     {plan?.id === "free" ? <Action title="Continue with Free" onPress={() => router.replace("/home")} />
