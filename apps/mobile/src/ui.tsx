@@ -11,7 +11,7 @@ import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
 import { radioSelection, wrappingTextStyle } from "./presentation";
 import { GradientWash } from "./gradient-wash";
 
-type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings" | "home" | "insights";
+type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings" | "home" | "insights" | "coach";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
   mic: { ios: "mic.fill" as SFSymbol, android: "mic" as AndroidSymbol, web: "mic" as AndroidSymbol },
   person: { ios: "person.fill" as SFSymbol, android: "person" as AndroidSymbol, web: "person" as AndroidSymbol },
@@ -24,6 +24,7 @@ const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: Andr
   settings: { ios: "gearshape.fill" as SFSymbol, android: "settings" as AndroidSymbol, web: "settings" as AndroidSymbol },
   home: { ios: "house.fill" as SFSymbol, android: "home" as AndroidSymbol, web: "home" as AndroidSymbol },
   insights: { ios: "chart.pie.fill" as SFSymbol, android: "monitoring" as AndroidSymbol, web: "monitoring" as AndroidSymbol },
+  coach: { ios: "waveform.and.mic" as SFSymbol, android: "graphic_eq" as AndroidSymbol, web: "graphic_eq" as AndroidSymbol },
 };
 const fontFamily = Platform.select({ ios: "System", android: "sans-serif", default: "system-ui" });
 
@@ -92,7 +93,7 @@ export function Screen({ children, topInset = false }: { children: ReactNode; to
   const { width } = useWindowDimensions();
   const edges = topInset ? ["top", "bottom", "left", "right"] as const : ["bottom", "left", "right"] as const;
   const behavior = Platform.OS === "ios" ? "padding" : Platform.OS === "android" ? "height" : undefined;
-  const showNavigation = ["/home", "/progress", "/settings", "/appearance"].includes(pathname)
+  const showNavigation = ["/home", "/coach", "/progress", "/settings", "/appearance"].includes(pathname)
     || pathname.startsWith("/workshop") || pathname.startsWith("/practice/");
   return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={edges}>
     <View pointerEvents="none" accessible={false} style={[StyleSheet.absoluteFill, { height: 560, opacity: theme.isDark ? 0.92 : 0.68 }]}>
@@ -113,9 +114,10 @@ export function Screen({ children, topInset = false }: { children: ReactNode; to
 
 function BottomNavigation({ pathname }: { pathname: string }) {
   const theme = useTheme();
-  const items: { label: string; icon: IconName; route: "/home" | "/workshop/daily" | "/progress" | "/settings"; active: boolean }[] = [
+  const items: { label: string; icon: IconName; route: "/home" | "/workshop/daily" | "/coach" | "/progress" | "/settings"; active: boolean }[] = [
     { label: "Home", icon: "home", route: "/home", active: pathname === "/home" },
     { label: "Practice", icon: "play", route: "/workshop/daily", active: pathname.startsWith("/workshop") || pathname.startsWith("/practice/") },
+    { label: "Coach", icon: "coach", route: "/coach", active: pathname === "/coach" },
     { label: "Progress", icon: "insights", route: "/progress", active: pathname === "/progress" },
     { label: "Profile", icon: "person", route: "/settings", active: pathname === "/settings" || pathname === "/appearance" },
   ];
@@ -124,7 +126,7 @@ function BottomNavigation({ pathname }: { pathname: string }) {
     backgroundColor: theme.surface, borderColor: theme.border, borderWidth: 1,
     shadowColor: theme.glow, shadowOpacity: theme.isDark ? 0.55 : 0.25, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 14 }}>
     {items.map(item => <Pressable key={item.label} accessibilityRole="button" accessibilityLabel={item.label}
-      onPress={() => router.replace(item.route)} style={({ pressed }) => ({ minWidth: 64, minHeight: 58, borderRadius: 18,
+      onPress={() => router.replace(item.route)} style={({ pressed }) => ({ minWidth: 52, minHeight: 58, borderRadius: 18,
         alignItems: "center", justifyContent: "center", gap: 4, opacity: pressed ? 0.7 : 1,
         backgroundColor: item.active ? theme.accentSurface : "transparent" })}>
       <Icon name={item.icon} size={22} color={item.active ? theme.accent : theme.muted} />
@@ -251,3 +253,4 @@ export function ProgressBar({ value, color }: { value: number; color?: string })
 }
 
 const styles = StyleSheet.create({ page: { width: "100%", maxWidth: 700, alignSelf: "center", paddingTop: 22, gap: 20, flexGrow: 1 } });
+
