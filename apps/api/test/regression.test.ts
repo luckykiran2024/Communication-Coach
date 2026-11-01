@@ -650,7 +650,7 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal(session.json().clientSecret, "ephemeral-client-secret");
   assert.equal(session.json().conversation.state, "ACTIVE");
   assert.equal(session.json().providerSessionCreated, true);
-  assert.equal(session.json().liveVoiceAvailable, false);
+  assert.equal(session.json().liveVoiceAvailable, true);
   assert.equal(store.reservations.size, 1);
   assert.equal(store.voiceSessions.size, 1);
   assert.equal(providerRequest?.headers.get("authorization"), "Bearer server-only-key");
@@ -704,3 +704,4 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/complete`, headers })).statusCode, 200);
   assert.equal((await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } })).statusCode, 409);
 });
+
