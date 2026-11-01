@@ -35,7 +35,7 @@ export async function buildApp(store: Store, options: BuildAppOptions = {}) {
     trustProxy: false,
   });
   await app.register(helmet);
-  await app.register(cors, { origin: options.origins ?? ["http://localhost:3000", "http://localhost:8081"] });
+  await app.register(cors, { origin: options.origins ?? ["http://localhost:3000", "http://localhost:8081"], methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"] });
   await app.register(rateLimit, {
     max: options.rateLimitMax ?? 100, timeWindow: 60000, skipOnError: false,
     store: sharedRateLimitStore(store, options.now ?? (() => new Date()), options.rateLimitNamespace),

@@ -78,12 +78,13 @@ export default function Settings() {
     </Card>
 
     <Card>
-      <Heading eyebrow="Your practice">Shortcuts</Heading>
+      <Heading eyebrow="Your practice">Membership & Account</Heading>
       <Copy>Current plan: {voiceUsage?.planTitle ?? profile.planId}</Copy>
       {voiceUsage && <Copy>{voiceUsage.lifetimeFreeLimit ? `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} free voice sessions remaining (lifetime).` : `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} voice sessions remaining this month.`}</Copy>}
-      <Action title="Change practice plan" icon="clock" onPress={() => router.push("/plans")} />
+      <Action title="Manage practice plan" icon="clock" onPress={() => router.push("/plans")} />
       <Action title="View my progress" secondary icon="progress" onPress={() => router.push("/progress")} />
       <Action title="Edit practice profile" secondary icon="person" onPress={() => router.push("/onboarding")} />
+      <Action title="Security & password recovery" secondary onPress={() => router.push("/password-reset")} />
       <Action title="About, terms & privacy" secondary onPress={() => router.push("/legal")} />
     </Card>
 

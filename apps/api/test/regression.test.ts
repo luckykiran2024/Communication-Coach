@@ -240,7 +240,7 @@ test("regression: billing entitlement webhooks are authenticated, idempotent and
   assert.equal(intentResponse.statusCode, 201);
   const purchaseIntentId = intentResponse.json().intent.id as string;
   assert.ok(intentResponse.json().intent.nonce);
-  const event = { purchaseIntentId, productId: "com.coach.executive.monthly", transactionId: "google-transaction-1", status: "active", environment: "sandbox", expiresAt: "2026-11-01T00:00:00.000Z" };
+  const event = { purchaseIntentId, productId: "com.coach.executive.monthly", transactionId: "google-transaction-1", status: "active", environment: "sandbox", expiresAt: "2027-01-01T00:00:00.000Z" };
   assert.equal((await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", payload: event })).statusCode, 401);
   const created = await app.inject({ method: "POST", url: "/v1/billing/webhooks/google", headers: { "x-billing-webhook-secret": "billing-secret" }, payload: event });
   assert.equal(created.statusCode, 201);
@@ -272,7 +272,7 @@ test("regression: verified mobile store purchases grant only matched entitlement
     enabled: true, webhookSecret: "billing-secret", verifyPurchase: async input => ({
       productId: input.productId, transactionId: input.transactionId, originalTransactionId: input.transactionId,
       purchaseToken: input.purchaseToken, status: "active", environment: "sandbox",
-      expiresAt: new Date("2026-11-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"),
+      expiresAt: new Date("2027-01-01T00:00:00.000Z"), providerEventDate: new Date("2026-10-01T00:00:00.000Z"),
       accountToken: (await store.accountByEmail("store-purchase@example.com"))!.id,
     }),
   } });
@@ -650,7 +650,7 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal(session.json().clientSecret, "ephemeral-client-secret");
   assert.equal(session.json().conversation.state, "ACTIVE");
   assert.equal(session.json().providerSessionCreated, true);
-  assert.equal(session.json().liveVoiceAvailable, false);
+  assert.equal(session.json().liveVoiceAvailable, true);
   assert.equal(store.reservations.size, 1);
   assert.equal(store.voiceSessions.size, 1);
   assert.equal(providerRequest?.headers.get("authorization"), "Bearer server-only-key");

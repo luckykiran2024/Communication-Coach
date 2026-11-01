@@ -92,7 +92,7 @@ export function Screen({ children, topInset = false }: { children: ReactNode; to
   const { width } = useWindowDimensions();
   const edges = topInset ? ["top", "bottom", "left", "right"] as const : ["bottom", "left", "right"] as const;
   const behavior = Platform.OS === "ios" ? "padding" : Platform.OS === "android" ? "height" : undefined;
-  const showNavigation = ["/home", "/progress", "/settings", "/appearance"].includes(pathname)
+  const showNavigation = ["/home", "/progress", "/settings", "/appearance", "/voice"].includes(pathname)
     || pathname.startsWith("/workshop") || pathname.startsWith("/practice/");
   return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={edges}>
     <View pointerEvents="none" accessible={false} style={[StyleSheet.absoluteFill, { height: 560, opacity: theme.isDark ? 0.92 : 0.68 }]}>
@@ -113,22 +113,23 @@ export function Screen({ children, topInset = false }: { children: ReactNode; to
 
 function BottomNavigation({ pathname }: { pathname: string }) {
   const theme = useTheme();
-  const items: { label: string; icon: IconName; route: "/home" | "/workshop/daily" | "/progress" | "/settings"; active: boolean }[] = [
+  const items: { label: string; icon: IconName; route: "/home" | "/workshop/daily" | "/voice" | "/progress" | "/settings"; active: boolean }[] = [
     { label: "Home", icon: "home", route: "/home", active: pathname === "/home" },
     { label: "Practice", icon: "play", route: "/workshop/daily", active: pathname.startsWith("/workshop") || pathname.startsWith("/practice/") },
+    { label: "AI Coach", icon: "mic", route: "/voice", active: pathname === "/voice" },
     { label: "Progress", icon: "insights", route: "/progress", active: pathname === "/progress" },
     { label: "Profile", icon: "person", route: "/settings", active: pathname === "/settings" || pathname === "/appearance" },
   ];
-  return <View style={{ position: "absolute", left: 14, right: 14, bottom: 10, minHeight: 70, borderRadius: 24,
-    flexDirection: "row", alignItems: "center", justifyContent: "space-around", paddingHorizontal: 8,
+  return <View style={{ position: "absolute", left: 10, right: 10, bottom: 10, minHeight: 66, borderRadius: 22,
+    flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 4,
     backgroundColor: theme.surface, borderColor: theme.border, borderWidth: 1,
     shadowColor: theme.glow, shadowOpacity: theme.isDark ? 0.55 : 0.25, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 14 }}>
     {items.map(item => <Pressable key={item.label} accessibilityRole="button" accessibilityLabel={item.label}
-      onPress={() => router.replace(item.route)} style={({ pressed }) => ({ minWidth: 64, minHeight: 58, borderRadius: 18,
-        alignItems: "center", justifyContent: "center", gap: 4, opacity: pressed ? 0.7 : 1,
+      onPress={() => router.replace(item.route)} style={({ pressed }) => ({ flex: 1, minHeight: 54, borderRadius: 16,
+        alignItems: "center", justifyContent: "center", gap: 3, opacity: pressed ? 0.7 : 1,
         backgroundColor: item.active ? theme.accentSurface : "transparent" })}>
-      <Icon name={item.icon} size={22} color={item.active ? theme.accent : theme.muted} />
-      <Text style={{ color: item.active ? theme.accent : theme.muted, fontFamily, fontSize: 11,
+      <Icon name={item.icon} size={20} color={item.active ? theme.accent : theme.muted} />
+      <Text style={{ color: item.active ? theme.accent : theme.muted, fontFamily, fontSize: 10,
         fontWeight: item.active ? "700" : "500" }}>{item.label}</Text>
     </Pressable>)}
   </View>;
@@ -162,6 +163,55 @@ export function Card({ children, tone = "default" }: { children: ReactNode; tone
     {tone === "accent" && <GradientWash start={theme.accentSurface} end={theme.surface} />}
     {children}
   </View>;
+}
+
+export function Disclosure({ summary, children }: { summary: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  return <View style={{ gap: 8 }}>
+    <Copy>{summary}</Copy>
+    <Pressable accessibilityRole="button" accessibilityLabel={open ? "Show less" : "Learn more"} onPress={() => setOpen(prev => !prev)}
+      style={{ alignSelf: "flex-start", paddingVertical: 4 }}>
+      <Text style={{ color: theme.accent, fontFamily, fontSize: 14, fontWeight: "600" }}>
+        {open ? "Show less ▴" : "Learn more ▾"}
+      </Text>
+    </Pressable>
+    {open && <View style={{ paddingTop: 4, gap: 10 }}>{children}</View>}
+  </View>;
+}
+
+export function PillTag({ label, tone = "default" }: { label: string; tone?: "default" | "accent" | "positive" }) {
+  const theme = useTheme();
+  const bg = tone === "accent" ? theme.accentSurface : tone === "positive" ? (theme.isDark ? "#064e3b" : "#dcfce7") : theme.border;
+  const fg = tone === "accent" ? theme.accent : tone === "positive" ? theme.positive : theme.ink;
+  return <View style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, backgroundColor: bg, alignSelf: "flex-start" }}>
+    <Text style={{ color: fg, fontFamily, fontSize: 11, fontWeight: "700", letterSpacing: 0.5 }}>{label.toUpperCase()}</Text>
+  </View>;
+}
+
+export function SkeletonCard() {
+  const theme = useTheme();
+  return <View style={{ padding: 20, borderRadius: 24, backgroundColor: theme.surface, borderWidth: 1, borderColor: theme.border, gap: 12 }}>
+    <View style={{ width: 120, height: 16, borderRadius: 8, backgroundColor: theme.border, opacity: 0.5 }} />
+    <View style={{ width: "80%", height: 24, borderRadius: 12, backgroundColor: theme.border, opacity: 0.5 }} />
+    <View style={{ width: "100%", height: 38, borderRadius: 8, backgroundColor: theme.border, opacity: 0.3 }} />
+  </View>;
+}
+
+export function EmptyState({ title, description, actionTitle, onAction, icon = "spark" }: {
+  title: string; description: string; actionTitle?: string; onAction?(): void; icon?: IconName;
+}) {
+  const theme = useTheme();
+  return <Card>
+    <View style={{ alignItems: "center", paddingVertical: 12, gap: 12 }}>
+      <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: theme.accentSurface, alignItems: "center", justifyContent: "center" }}>
+        <Icon name={icon} size={28} color={theme.accent} />
+      </View>
+      <Text style={{ color: theme.ink, fontFamily, fontSize: 18, fontWeight: "700", textAlign: "center" }}>{title}</Text>
+      <Text style={{ color: theme.muted, fontFamily, fontSize: 15, textAlign: "center", lineHeight: 22 }}>{description}</Text>
+      {actionTitle && onAction && <Action title={actionTitle} onPress={onAction} />}
+    </View>
+  </Card>;
 }
 
 export function Action({ title, onPress, secondary = false, disabled = false, busy = false, icon }: {

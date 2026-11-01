@@ -59,6 +59,43 @@ const appleNotificationVerifier = createAppleNotificationVerifierFromEnv(process
 const googlePubSubAuthenticator = createGooglePubSubAuthenticatorFromEnv(process.env);
 const database = env.DEV_MEMORY_STORE ? null : new PrismaClient();
 const store = env.DEV_MEMORY_STORE ? new MemoryStore() : prismaStore(database!);
+if (env.DEV_MEMORY_STORE) {
+  const { hashPassword } = await import("./password");
+  const user = await store.createAccount("soma.kiran20@gmail.com", await hashPassword("Password12345678"), { version: "2026-10-10", acceptedAt: new Date() });
+  await store.markEmailVerified(user.id, new Date());
+  await store.saveProfile(user.id, {
+    displayName: "Soma Kiran",
+    primaryLanguage: "English",
+    coachingLanguage: "English",
+    function: "Engineering",
+    jobTitle: "Engineering Leader",
+    careerLevel: "Executive",
+    industry: "Technology",
+    audience: "Executive leadership and global engineering teams",
+    situations: "Strategic alignment and technical vision",
+    goal: "Explain ideas clearly",
+    challenges: "Concise executive summaries",
+    practiceMinutes: 10,
+    planId: "professional",
+    timezone: "Asia/Kolkata",
+    reducedMotion: false,
+  });
+  await store.saveEntitlement({
+    id: "seed-entitlement-soma",
+    userId: user.id,
+    provider: "apple",
+    productId: "com.communicationcoach.professional.monthly",
+    transactionId: "seed-tx-soma",
+    originalTransactionId: "seed-tx-soma",
+    purchaseToken: "seed-token-soma",
+    status: "active",
+    environment: "sandbox",
+    expiresAt: new Date(Date.now() + 365 * 24 * 3600 * 1000),
+    providerEventDate: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+}
 export const app = await buildApp(store, {
   runtime: env.RUNTIME, cronSecret: env.CRON_SECRET,
   assessment: {

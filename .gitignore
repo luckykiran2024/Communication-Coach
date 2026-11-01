@@ -15,3 +15,5 @@ apps/mobile/ios/
 /packages/core/dist/
 /apps/mobile/temp-android-export/
 /artifacts/
+*.apk
+temp-ui.xml

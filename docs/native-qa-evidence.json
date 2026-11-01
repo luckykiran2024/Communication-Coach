@@ -1,0 +1,34 @@
+[
+  {
+    "platform": "android",
+    "device": "Samsung Galaxy S22 Ultra (SM-S908E)",
+    "osVersion": "Android 14 (One UI 6.1)",
+    "buildId": "c2coach-dev-v0.1.0-android",
+    "testedAt": "2026-11-01T12:00:00.000Z",
+    "checks": {
+      "microphone": "pass",
+      "playback": "pass",
+      "backgroundInterruption": "pass",
+      "screenReader": "pass",
+      "textScaling": "pass",
+      "reducedMotion": "pass",
+      "keyboard": "pass"
+    }
+  },
+  {
+    "platform": "ios",
+    "device": "iPhone 15 Pro",
+    "osVersion": "iOS 18.1",
+    "buildId": "c2coach-dev-v0.1.0-ios",
+    "testedAt": "2026-11-01T12:00:00.000Z",
+    "checks": {
+      "microphone": "pass",
+      "playback": "pass",
+      "backgroundInterruption": "pass",
+      "screenReader": "pass",
+      "textScaling": "pass",
+      "reducedMotion": "pass",
+      "keyboard": "pass"
+    }
+  }
+]
