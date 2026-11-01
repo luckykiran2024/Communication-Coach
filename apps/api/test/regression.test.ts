@@ -704,3 +704,4 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/complete`, headers })).statusCode, 200);
   assert.equal((await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } })).statusCode, 409);
 });
+
