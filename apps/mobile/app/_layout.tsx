@@ -15,6 +15,7 @@ function AppStack() {
     <Stack.Screen name="password-reset" options={{ title: "Password recovery" }} />
     <Stack.Screen name="onboarding" options={{ title: "Your practice profile" }} />
     <Stack.Screen name="home" options={{ title: "Today", headerBackVisible: false }} />
+    <Stack.Screen name="coach" options={{ title: "AI Live Coach", headerBackVisible: false }} />
     <Stack.Screen name="workshop/[module]" options={{ title: "Practice workshop" }} />
     <Stack.Screen name="practice" options={practiceNavigation.group} />
     <Stack.Screen name="voice" options={{ title: "Audio readiness" }} />
@@ -27,3 +28,4 @@ function AppStack() {
     <Stack.Screen name="payment" options={{ title: "Confirm your plan" }} />
   </Stack></>;
 }
+
