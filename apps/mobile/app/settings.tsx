@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, Linking, Switch, Text, View } from "react-native";
+import { Alert, Image, Linking, Platform, Share, Switch, Text, View } from "react-native";
 import { Redirect, router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { brand, coachAccents, colorThemeDetails, type CoachAccent } from "@coach/core";
@@ -9,11 +9,11 @@ import { Action, Card, Choices, Copy, Field, Heading, Icon, Screen, usePreferenc
 import { AppearanceMode } from "../src/appearance-controls";
 
 const socialLinks = [
-  { name: "Twitter", url: process.env.EXPO_PUBLIC_TWITTER_URL ?? "https://twitter.com/" },
-  { name: "Facebook", url: process.env.EXPO_PUBLIC_FACEBOOK_URL ?? "https://www.facebook.com/" },
-  { name: "Instagram", url: process.env.EXPO_PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/" },
-  { name: "Reddit", url: process.env.EXPO_PUBLIC_REDDIT_URL ?? "https://www.reddit.com/" },
-];
+  { name: "Twitter", url: process.env.EXPO_PUBLIC_TWITTER_URL },
+  { name: "Facebook", url: process.env.EXPO_PUBLIC_FACEBOOK_URL },
+  { name: "Instagram", url: process.env.EXPO_PUBLIC_INSTAGRAM_URL },
+  { name: "Reddit", url: process.env.EXPO_PUBLIC_REDDIT_URL },
+].filter((link): link is { name: string; url: string } => Boolean(link.url?.startsWith("https://")));
 
 export default function Settings() {
   const auth = useAuth();
@@ -24,8 +24,10 @@ export default function Settings() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [voiceUsage, setVoiceUsage] = useState<VoiceUsage | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [usageError, setUsageError] = useState("");
   useEffect(() => { setAvatarDraft(avatarUri); }, [avatarUri]);
-  useEffect(() => { if (auth.token) void request<typeof voiceUsage>("/v1/me/voice-usage", auth.token).then(setVoiceUsage).catch(() => setVoiceUsage(null)); }, [auth.token]);
+  useEffect(() => { if (auth.token) void request<VoiceUsage>("/v1/me/voice-usage", auth.token).then(setVoiceUsage).catch(() => setUsageError("Plan details are unavailable. Open Manage practice plan to retry.")); }, [auth.token]);
   useEffect(() => { void ImagePicker.getPendingResultAsync().then(result => { if (result && "canceled" in result && !result.canceled && result.assets[0]?.uri) { setAvatarUri(result.assets[0].uri); setAvatarDraft(result.assets[0].uri); setMessage("Display picture restored from your device."); } }); }, [setAvatarUri]);
   if (auth.loading) return <Screen><Copy>Loading your settings…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
@@ -47,8 +49,26 @@ export default function Settings() {
   async function openSocial(name: string, url: string) {
     try { await Linking.openURL(url); } catch { setError(`Could not open ${name}.`); }
   }
+  async function exportAccount() {
+    setExporting(true); setError("");
+    try {
+      const data = JSON.stringify(await request<unknown>("/v1/me/export", auth.token), null, 2);
+      if (Platform.OS === "web") {
+        const url = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+        const link = document.createElement("a"); link.href = url; link.download = "c2coach-account-export.json";
+        link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setMessage("Your account export is ready in Downloads. It contains personal information.");
+      } else {
+        await Share.share({ title: "C2Coach account export", message: data });
+      }
+    } catch (failure) { setError((failure as Error).message); }
+    finally { setExporting(false); }
+  }
   function confirmDeleteAccount() {
-    Alert.alert("Delete account?", "This permanently removes your profile, practice history, sessions and entitlements. This cannot be undone.", [{ text: "Keep account", style: "cancel" }, { text: "Delete permanently", style: "destructive", onPress: () => auth.deleteAccount().catch(failure => setError(failure.message)) }]);
+    const deleteAccount = () => auth.deleteAccount().catch(failure => setError(failure.message));
+    const warning = "This permanently removes your profile, practice history, sessions and linked sign-in identity. This cannot be undone. Deleting your account does not cancel a store subscription; cancel it in Manage practice plan first.";
+    if (Platform.OS === "web") { if (window.confirm(warning)) void deleteAccount(); return; }
+    Alert.alert("Delete account?", warning, [{ text: "Keep account", style: "cancel" }, { text: "Delete permanently", style: "destructive", onPress: deleteAccount }]);
   }
   return <Screen>
     <Heading eyebrow={brand.name}>Make the app yours.</Heading>
@@ -79,20 +99,22 @@ export default function Settings() {
 
     <Card>
       <Heading eyebrow="Your practice">Membership & Account</Heading>
-      <Copy>Current plan: {voiceUsage?.planTitle ?? profile.planId}</Copy>
+      <Copy>Current plan: {voiceUsage?.planTitle ?? (usageError ? "Unavailable" : "Loading…")}</Copy>
+      {Boolean(usageError) && <Copy>{usageError}</Copy>}
       {voiceUsage && <Copy>{voiceUsage.lifetimeFreeLimit ? `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} free voice sessions remaining (lifetime).` : `${voiceUsage.sessionsRemaining} of ${voiceUsage.sessionsAllowed} voice sessions remaining this month.`}</Copy>}
       <Action title="Manage practice plan" icon="clock" onPress={() => router.push("/plans")} />
       <Action title="View my progress" secondary icon="progress" onPress={() => router.push("/progress")} />
       <Action title="Edit practice profile" secondary icon="person" onPress={() => router.push("/onboarding")} />
       <Action title="Security & password recovery" secondary onPress={() => router.push("/password-reset")} />
       <Action title="About, terms & privacy" secondary onPress={() => router.push("/legal")} />
+      <Action title="Export my account data" secondary busy={exporting} onPress={() => void exportAccount()} />
+      <Copy>Your export contains personal information. Share it only with an app or destination you trust.</Copy>
     </Card>
 
-    <Card>
+    {socialLinks.length > 0 && <Card>
       <Heading eyebrow="Stay connected">Follow us</Heading>
-      <Copy>Replace these platform destinations with your branded profile links before launch.</Copy>
       {socialLinks.map(link => <Action key={link.name} title={`Follow on ${link.name}`} secondary onPress={() => void openSocial(link.name, link.url)} />)}
-    </Card>
+    </Card>}
 
     {Boolean(message) && <Copy>{message}</Copy>}
     {Boolean(error) && <Copy error>{error}</Copy>}

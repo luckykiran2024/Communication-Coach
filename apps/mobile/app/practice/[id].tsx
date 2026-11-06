@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { AccessibilityInfo, Platform, Text, TextInput, View } from "react-native";
+import { AccessibilityInfo, AppState, Platform, Switch, Text, TextInput, View } from "react-native";
 import * as Speech from "expo-speech";
 import { modules, practicePrograms, type CoachAccent, type Scenario } from "@coach/core";
+import { ReportContent } from "../../src/report-content";
+import { withDeadline } from "../../src/deadline";
 import { request } from "../../src/api";
 import { useAuth } from "../../src/auth";
 import { connectRealtimeCall, type RealtimeCall } from "../../src/realtime";
@@ -34,17 +36,27 @@ export default function PracticeDetail() {
   const [liveCall, setLiveCall] = useState<RealtimeCall | null>(null);
   const [liveSessionId, setLiveSessionId] = useState("");
   const [liveStartedAt, setLiveStartedAt] = useState<number | null>(null);
+  const [voiceConsent, setVoiceConsent] = useState(false);
   const [liveBusy, setLiveBusy] = useState(false);
   const [liveMessage, setLiveMessage] = useState("");
   const liveCallRef = useRef<RealtimeCall | null>(null);
   const transcriptQueue = useRef<Promise<void>>(Promise.resolve());
   const transcriptFailure = useRef(false);
+  const mounted = useRef(true);
+  const connectionGeneration = useRef(0);
+  const connectionAbort = useRef<AbortController | null>(null);
+  const sessionRef = useRef<{ id: string; token: string; startedAt: number } | null>(null);
+  const stopPromise = useRef<Promise<void> | null>(null);
+  const sessionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const speechGeneration = useRef(0);
   const speechTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    mounted.current = true;
     if (!auth.token || !id) return;
-    request<Practice>(`/v1/me/conversations/${id}`, auth.token).then(setPractice).catch(failure => setError((failure as Error).message));
-    return () => { if (speechTimer.current) clearTimeout(speechTimer.current); if (Platform.OS === "web" && typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel(); else void Speech.stop(); liveCallRef.current?.close(); liveCallRef.current = null; };
+    const subscription = AppState.addEventListener("change", state => { if (state !== "active") void stopLiveVoice(); });
+    request<Practice>(`/v1/me/conversations/${id}`, auth.token).then(value => { if (mounted.current) setPractice(value); }).catch(failure => { if (mounted.current) setError((failure as Error).message); });
+    return () => { mounted.current = false; subscription.remove(); void stopLiveVoice(); speechGeneration.current += 1; if (speechTimer.current) clearTimeout(speechTimer.current); if (Platform.OS === "web" && typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel(); else void Speech.stop(); liveCallRef.current?.close(); liveCallRef.current = null; };
   }, [auth.token, id]);
   if (auth.loading) return <Screen><Copy>Loading…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
@@ -61,44 +73,50 @@ export default function PracticeDetail() {
   const promptText = `${practice.scenario.context} ${activeQuestion}`;
 
   function speakPrompt() {
-    setSpeechMessage("");
-    setPromptState("speaking");
-    if (Platform.OS === "web" && typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    stopSpeaking();
+    const generation = ++speechGeneration.current;
+    const update = (message: string, state: PromptState = "ready") => {
+      if (speechGeneration.current !== generation) return;
+      if (speechTimer.current) clearTimeout(speechTimer.current);
+      setPromptState(state); setSpeechMessage(message);
+    };
+    setPromptState("speaking"); setSpeechMessage("Speaking the prompt…");
+    speechTimer.current = setTimeout(() => {
+      if (speechGeneration.current !== generation) return;
+      stopSpeaking();
+      setSpeechMessage("Speech did not finish. You can read the prompt and continue by text, or check your device's speech settings.");
+    }, 60000);
+    if (Platform.OS === "web") {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        update("Speech is unavailable in this browser. Read the prompt and continue by text."); return;
+      }
       const utterance = new SpeechSynthesisUtterance(promptText);
       utterance.lang = accentLanguage(voiceAccent);
-      const browserVoices = window.speechSynthesis.getVoices();
-      const requestedLanguage = accentLanguage(voiceAccent).toLowerCase();
-      utterance.voice = browserVoices.find(voice => voice.lang.toLowerCase().replaceAll("_", "-") === requestedLanguage) ?? null;
-      utterance.onend = () => { setPromptState("ready"); setSpeechMessage("Prompt finished. Your turn to respond."); };
-      utterance.onerror = () => { setPromptState("ready"); setSpeechMessage("The prompt could not be spoken on this device."); };
-      window.speechSynthesis.speak(utterance);
-      setSpeechMessage("Speaking the prompt…");
+      utterance.voice = window.speechSynthesis.getVoices().find(voice =>
+        voice.lang.toLowerCase().replaceAll("_", "-") === utterance.lang.toLowerCase()) ?? null;
+      utterance.onend = () => update("Prompt finished. Your turn to respond.");
+      utterance.onerror = () => update("This browser could not play speech. Read the prompt and continue by text, or use your phone's installed speech voice.");
+      try { window.speechSynthesis.speak(utterance); }
+      catch { update("Speech is unavailable in this browser. Read the prompt and continue by text."); }
       return;
     }
-    if (Platform.OS !== "web") {
-      void Speech.stop();
-      void Speech.getAvailableVoicesAsync().then(voices => {
-        const requestedLanguage = accentLanguage(voiceAccent).toLowerCase();
-        const matchingVoice = voices.find(voice => voice.language.toLowerCase().replaceAll("_", "-") === requestedLanguage);
-        Speech.speak(promptText, { language: accentLanguage(voiceAccent), voice: matchingVoice?.identifier, rate: 0.9, onDone: () => { setPromptState("ready"); setSpeechMessage(matchingVoice || voiceAccent !== "Indian English" ? "Prompt finished. Your turn to respond." : "Prompt finished. Your turn to respond. For an Indian English voice, install an en-IN voice in your phone’s text-to-speech settings." ); }, onStopped: () => setPromptState("idle"), onError: () => { AccessibilityInfo.announceForAccessibility(promptText); setPromptState("ready"); setSpeechMessage("Native speech could not start. Check that a text-to-speech voice is installed in your device settings."); } });
-      }).catch(() => {
-        Speech.speak(promptText, { language: accentLanguage(voiceAccent), rate: 0.9, onDone: () => { setPromptState("ready"); setSpeechMessage("Prompt finished. Your turn to respond."); }, onStopped: () => setPromptState("idle"), onError: () => { AccessibilityInfo.announceForAccessibility(promptText); setPromptState("ready"); setSpeechMessage("Native speech could not start. Check that a text-to-speech voice is installed in your device settings."); } });
+    void Speech.getAvailableVoicesAsync().catch(() => []).then(voices => {
+      if (speechGeneration.current !== generation) return;
+      const voice = voices.find(item => item.language.toLowerCase().replaceAll("_", "-") === accentLanguage(voiceAccent).toLowerCase());
+      Speech.speak(promptText, { language: accentLanguage(voiceAccent), voice: voice?.identifier, rate: 0.9,
+        onDone: () => update("Prompt finished. Your turn to respond."),
+        onStopped: () => update("Prompt stopped.", "idle"),
+        onError: () => { AccessibilityInfo.announceForAccessibility(promptText); update("Check that a speech voice is installed in your device settings. You can continue by text."); },
       });
-      setSpeechMessage("Speaking the prompt aloud…");
-      return;
-    }
-    AccessibilityInfo.announceForAccessibility(promptText);
-    setSpeechMessage("Prompt sent to your device accessibility voice.");
-    speechTimer.current = setTimeout(() => { setPromptState("ready"); setSpeechMessage("Your turn to respond."); }, Math.min(8000, Math.max(2500, promptText.length * 32)));
+    });
   }
 
   function stopSpeaking() {
+    speechGeneration.current += 1;
     if (speechTimer.current) clearTimeout(speechTimer.current);
     if (Platform.OS === "web" && typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     else void Speech.stop();
-    setPromptState("idle");
-    setSpeechMessage("Prompt stopped.");
+    setPromptState("idle"); setSpeechMessage("Prompt stopped.");
   }
 
   async function saveResponse() {
@@ -153,6 +171,10 @@ export default function PracticeDetail() {
 
   async function startLiveVoice() {
     if (!auth.token || !id || !practice || Platform.OS === "web") { setLiveMessage("Live voice requires an Android or iOS development build."); return; }
+    if (liveBusy || sessionRef.current || !voiceConsent) return;
+    const generation = ++connectionGeneration.current;
+    const controller = new AbortController(); connectionAbort.current = controller;
+    const current = () => mounted.current && connectionGeneration.current === generation && !controller.signal.aborted;
     setLiveBusy(true); setError(""); setLiveMessage("Connecting the coach microphone…");
     let sessionId = "";
     let call: RealtimeCall | null = null;
@@ -172,43 +194,77 @@ export default function PracticeDetail() {
       });
     };
     try {
-      const result = await request<{ sessionId: string; clientSecret: string; model: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
+      const result = await request<{ sessionId: string; clientSecret: string; model: string; expiresAt: string; conversation: { state: string } }>("/v1/voice/sessions", auth.token, "POST", { conversationId: id, scenarioId: practice.scenario.id });
       sessionId = result.sessionId;
-      call = await connectRealtimeCall({ clientSecret: result.clientSecret, model: result.model, onEvent: event => {
+      if (!current()) {
+        await request(`/v1/voice/sessions/${sessionId}/stop`, auth.token, "POST", { consumedSeconds: 0 }).catch(() => undefined);
+        return;
+      }
+      sessionRef.current = { id: sessionId, token: auth.token, startedAt: Date.now() };
+      call = await connectRealtimeCall({ clientSecret: result.clientSecret, model: result.model, signal: controller.signal,
+        onProviderCallCreated: async providerCallId => {
+          // Bind even after cancellation so server cleanup can terminate a late-created call.
+          const bind = () => request(`/v1/voice/sessions/${sessionId}/bind`, auth.token, "POST", { providerCallId });
+          try { await bind(); } catch { await bind(); }
+        }, onEvent: event => {
+        if (!current()) return;
         if (event.type === "error") setLiveMessage("The coach voice reported an error. You can stop and retry.");
         if (event.type === "response.output_audio_transcript.done" || event.type === "response.audio_transcript.done") { setLiveMessage("Coach is speaking…"); persistTranscript(event, "assistant"); }
         if (event.type === "conversation.item.input_audio_transcription.completed") { setLiveMessage("Coach heard your response."); persistTranscript(event, "user"); }
       } });
-      await request(`/v1/voice/sessions/${sessionId}/bind`, auth.token, "POST", { providerCallId: call.providerCallId });
-      liveCallRef.current = call; setLiveCall(call); setLiveSessionId(result.sessionId); setLiveStartedAt(Date.now()); setLiveMessage("Coach is listening. Speak naturally; the prompt is being spoken aloud."); setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
+      if (!current()) call.close();
+      else liveCallRef.current = call;
+      if (!current()) {
+        call.close();
+        await request(`/v1/voice/sessions/${sessionId}/stop`, auth.token, "POST", { consumedSeconds: 0 }).catch(() => undefined);
+        return;
+      }
+      const expiresAt = Date.parse(result.expiresAt);
+      sessionTimer.current = setTimeout(() => { void stopLiveVoice(); }, Number.isFinite(expiresAt) ? Math.max(0, Math.min(420000, expiresAt - Date.now())) : 420000);
+      setLiveCall(call); setLiveSessionId(result.sessionId); setLiveStartedAt(Date.now()); setLiveMessage("Coach is listening. Speak naturally; the prompt is being spoken aloud."); setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: result.conversation.state } } : current);
     } catch (failure) {
       call?.close();
+      if (liveCallRef.current === call) liveCallRef.current = null;
       if (sessionId) await request(`/v1/voice/sessions/${sessionId}/stop`, auth.token, "POST", { consumedSeconds: 0 }).catch(() => undefined);
-      setLiveMessage((failure as Error).message);
+      if (sessionRef.current?.id === sessionId) sessionRef.current = null;
+      if (current()) setLiveMessage((failure as Error).message);
     }
-    finally { setLiveBusy(false); }
+    finally { if (current()) setLiveBusy(false); }
   }
 
   async function stopLiveVoice() {
-    if (!liveCall || !auth.token || !liveSessionId) return;
-    setLiveBusy(true);
-    const consumedSeconds = Math.max(0, Math.round((Date.now() - (liveStartedAt ?? Date.now())) / 1000));
-    liveCall.close();
-    liveCallRef.current = null;
-    try {
-      await transcriptQueue.current;
-      const result = await request<{ consumedSeconds: number }>(
-        `/v1/voice/sessions/${liveSessionId}/stop`, auth.token, "POST", { consumedSeconds },
-      );
-      setLiveMessage(`Live practice ended. ${result.consumedSeconds} seconds were charged to your allowance.`);
-      setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current);
-    }
-    catch (failure) { setError((failure as Error).message); }
-    finally { setLiveCall(null); setLiveSessionId(""); setLiveStartedAt(null); setLiveBusy(false); }
+    connectionGeneration.current += 1;
+    connectionAbort.current?.abort();
+    if (sessionTimer.current) clearTimeout(sessionTimer.current);
+    liveCallRef.current?.close(); liveCallRef.current = null;
+    if (stopPromise.current) return stopPromise.current;
+    const session = sessionRef.current;
+    if (!session) { if (mounted.current) { setLiveBusy(false); setLiveCall(null); } return; }
+    sessionRef.current = null;
+    if (mounted.current) setLiveBusy(true);
+    const consumedSeconds = Math.max(0, Math.round((Date.now() - session.startedAt) / 1000));
+    const pending = (async () => {
+      try {
+        await withDeadline(transcriptQueue.current, 5000).catch(() => { transcriptFailure.current = true; });
+        const result = await request<{ consumedSeconds: number }>(
+          "/v1/voice/sessions/" + session.id + "/stop", session.token, "POST", { consumedSeconds },
+        );
+        if (mounted.current) {
+          setLiveMessage("Live practice ended. " + result.consumedSeconds + " seconds were charged to your allowance.");
+          setPractice(current => current ? { ...current, conversation: { ...current.conversation, state: "INTERRUPTED" } } : current);
+        }
+      } catch (failure) { if (mounted.current) setError((failure as Error).message); }
+      finally {
+        stopPromise.current = null;
+        if (mounted.current) { setLiveCall(null); setLiveSessionId(""); setLiveStartedAt(null); setLiveBusy(false); }
+      }
+    })();
+    stopPromise.current = pending;
+    return pending;
   }
 
   const isSpeaking = promptState === "speaking";
-  const canStartLive = ["CREATED", "INTERRUPTED"].includes(practice.conversation.state);
+  const canStartLive = Platform.OS !== "web" && ["CREATED", "INTERRUPTED"].includes(practice.conversation.state);
   const statusText = isSpeaking ? "Coach is speaking" : promptState === "ready" ? "Your turn to speak" : "Ready when you are";
   return <Screen>
     <Heading eyebrow={`${module?.title ?? "Practice"} · ${practicePrograms[practice.scenario.level - 1]?.title ?? "Practice programme"}`}>{practice.scenario.title.replace(/\s*·\s*(?:Clarity foundation|Structured message|Evidence and trade-offs|Audience adaptation|Leadership transfer)$/i, "")}</Heading>
@@ -240,10 +296,12 @@ export default function PracticeDetail() {
       <Text style={{ color: theme.ink, textAlign: "center", fontWeight: "700", fontSize: 17 }}>{statusText}</Text>
       <Copy>{speechMessage || (promptState === "ready" ? "Tap the microphone to record your answer." : "Tap the microphone and let the coach set the scene out loud.")}</Copy>
       {isSpeaking && <Action title="Stop speaking" secondary icon="mic" onPress={stopSpeaking} />}
-      <Action title={liveCall ? "Stop live coach" : practice.liveVoiceAvailable ? "Start AI live coach" : "AI live coach unavailable"}
-        icon="mic" disabled={liveBusy || (!liveCall && (!canStartLive || !practice.liveVoiceAvailable))}
+      <Copy>Live AI voice sends microphone audio and transcripts to the AI provider. Transcripts are saved to your practice history. Avoid confidential information.</Copy>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}><Switch accessibilityLabel="Allow live AI audio and transcript processing" value={voiceConsent} onValueChange={setVoiceConsent} /><View style={{ flex: 1 }}><Copy>I agree to start live AI audio and transcript processing.</Copy></View></View>
+      <Action title={liveCall ? "Stop live coach" : Platform.OS === "web" ? "Live voice requires the mobile app" : practice.liveVoiceAvailable ? "Start AI live coach" : "AI live coach unavailable"}
+        icon="mic" disabled={liveBusy || (!liveCall && (!voiceConsent || !canStartLive || !practice.liveVoiceAvailable))}
         busy={liveBusy} onPress={() => void (liveCall ? stopLiveVoice() : startLiveVoice())} />
-      {!practice.liveVoiceAvailable && <Copy>Live AI requires an enabled server voice provider and a verified Android/iOS WebRTC build. Text practice and local microphone recording remain available; this button stays disabled until those checks pass.</Copy>}
+      {(Platform.OS === "web" || !practice.liveVoiceAvailable) && <Copy>Live AI requires an enabled server voice provider and a verified Android/iOS WebRTC build. Text practice and local microphone recording remain available; this button stays disabled until those checks pass.</Copy>}
       {Boolean(liveMessage) && <Copy>{liveMessage}</Copy>}
     </Card>
     <Card><View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}><Icon name="client" size={22} color={theme.accent} /><Heading eyebrow="Your turn">Make it conversational</Heading></View><Copy>Answer out loud as if a real colleague were in front of you. Use the local audio check to record and play back your response while live AI voice is being connected.</Copy><Action title="Open microphone check" icon="recording" onPress={() => router.push("/voice")} /></Card>
@@ -272,6 +330,7 @@ export default function PracticeDetail() {
       </Copy>}
     </Card>
     <Card><Heading eyebrow="Live AI voice">Conversational mode</Heading><Copy>The live coach uses a short-lived server-issued session key. Your standard API key never enters the mobile app. Stop the session when you finish so the server can settle your allowance.</Copy></Card>
+    {practice.turns.some(turn => turn.role === "assistant") && <ReportContent conversationId={id} target="voice" />}
     <Action title="Back to today" secondary onPress={() => router.replace("/home")} />
   </Screen>;
 }

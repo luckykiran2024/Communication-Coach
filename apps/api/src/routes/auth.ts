@@ -70,7 +70,7 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
 
 async function signInWithIdentity(
   provider: "google" | "microsoft",
-  identity: { email: string; subject: string; emailVerified: boolean },
+  identity: { email: string; subject: string; emailVerified: boolean; supabaseUserId?: string },
   deps: RouteDependencies,
   password?: string,
   legal?: { legalAccepted?: boolean; legalVersion?: string },
@@ -79,6 +79,10 @@ async function signInWithIdentity(
   const linkedUser = linked ? await deps.store.accountById(linked.userId) : null;
   if (linked && !linkedUser) throw new ApiError(401, "The provider identity is no longer linked to an account.");
   const existing = linkedUser ?? await deps.store.accountByEmail(identity.email);
+  if (existing?.deletionStartedAt) {
+    if (identity.supabaseUserId && existing.supabaseUserId !== identity.supabaseUserId) throw new ApiError(409, "Account deletion is pending. Contact support to finish deletion.");
+    return issueSession(existing, deps);
+  }
   if (!linked && existing && !existing.emailVerifiedAt) {
     if (!password) throw new ApiError(409, "Verify this email with your password first, or reset your password.");
     if (!await verifyPassword(password, existing.passwordHash)) throw new ApiError(401, "Email or password is incorrect.");
@@ -99,5 +103,6 @@ async function signInWithIdentity(
     };
     await deps.store.saveOAuthIdentity(oauthIdentity);
   }
+  if (identity.supabaseUserId) await deps.store.linkSupabaseUser(user.id, identity.supabaseUserId);
   return issueSession(user, deps);
 }

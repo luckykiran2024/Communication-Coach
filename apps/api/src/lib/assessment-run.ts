@@ -3,7 +3,7 @@ import type { Account, AssessmentRun, Conversation } from "../store";
 import { ConflictError } from "../store";
 import { ApiError } from "./errors";
 
-export const assessmentLeaseMs = 60000;
+export const assessmentLeaseMs = 90000;
 export const assessmentRunLimit = 3;
 
 export function newAssessmentRun(

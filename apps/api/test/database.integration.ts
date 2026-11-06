@@ -15,6 +15,32 @@ import { verifiedTestDatabaseUrl } from "./database-fixture";
 
 const testTransactionOptions = { maxWait: 30000, timeout: 30000 };
 
+test("PostgreSQL deletion fence serializes voice setup and cascades saved reports", async context => {
+  const url = verifiedTestDatabaseUrl().toString();
+  const db = new PrismaClient({ datasources: { db: { url } }, transactionOptions: testTransactionOptions });
+  const secondDb = new PrismaClient({ datasources: { db: { url } }, transactionOptions: testTransactionOptions });
+  const store = prismaStore(db); const second = prismaStore(secondDb);
+  const users: string[] = [];
+  context.after(async () => { await db.user.deleteMany({ where: { id: { in: users } } }); await db.$disconnect(); await secondDb.$disconnect(); });
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const user = await store.createAccount(`${randomUUID()}@deletion.integration.example`, "unused");
+    users.push(user.id);
+    const reservation = { id: randomUUID(), userId: user.id, dayKey: "2026-11-06", seconds: 60, expiresAt: new Date(Date.now() + 60000) };
+    const results = await Promise.allSettled([store.beginAccountDeletion(user.id, new Date()), second.reserveUsage(reservation, 120)]);
+    assert.equal(results.filter(result => result.status === "fulfilled").length, 1);
+    if (results[1].status === "fulfilled") { await second.settleUsage(reservation.id, 0); await store.beginAccountDeletion(user.id, new Date()); }
+    assert.ok((await second.accountById(user.id))?.deletionStartedAt);
+    await assert.rejects(second.reserveUsage({ ...reservation, id: randomUUID() }, 120), /deletion is pending/);
+    const id = randomUUID(); const now = new Date();
+    await store.createConversation({ id, userId: user.id, scenarioId: scenarios[0].id, state: "INTERRUPTED", createdAt: now, updatedAt: now });
+    const reportId = randomUUID();
+    await store.saveContentReport({ id: reportId, userId: user.id, conversationId: id, target: "voice", reason: "unsafe", details: "Synthetic database fixture", status: "open", createdAt: now, resolvedAt: null });
+    assert.equal((await second.contentReport(reportId))?.details, "Synthetic database fixture");
+    await store.deleteAccount(user.id);
+    assert.equal(await second.contentReport(reportId), null);
+  }
+});
+
 function trackedRateStore(db: PrismaClient, keys: Set<string>) {
   const store = prismaStore(db);
   const increment = store.incrementRateLimit;

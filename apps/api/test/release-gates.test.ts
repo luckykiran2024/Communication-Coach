@@ -6,7 +6,7 @@ test("release gates: source pushes cannot automatically migrate or replace produ
   const config = JSON.parse(readFileSync(new URL("../vercel.json", import.meta.url), "utf8"));
   assert.equal(config.git.deploymentEnabled.main, false);
   assert.equal(config.git.deploymentEnabled["test-apk-ready"], false);
-  assert.ok(config.crons[0].schedule && /^[0-9* ]+$/.test(config.crons[0].schedule));
+  assert.equal(config.crons[0].schedule, "* * * * *");
 });
 
 test("release gates: mobile updates require a separate manual workflow dispatch", () => {
@@ -24,6 +24,8 @@ test("release gates: store sandbox uses real native billing without silently inh
   assert.equal(sandbox.android.buildType, "app-bundle");
   assert.equal(sandbox.env.APP_VARIANT, "production");
   assert.equal(sandbox.env.EXPO_PUBLIC_PAYMENT_PREVIEW, "false");
-  assert.equal(sandbox.env.EXPO_PUBLIC_API_URL, "https://communication-coach-api.vercel.app/api");
+  assert.equal(sandbox.env.COACH_ENVIRONMENT, "staging");
+  assert.equal(sandbox.env.EXPO_PUBLIC_SUPABASE_URL, "https://szebsownsnvyrpwlbyau.supabase.co");
+  assert.equal(sandbox.env.EXPO_PUBLIC_API_URL, undefined, "Supply the accepted staging URL through the preview environment or workflow variable");
   assert.equal(config.submit["store-sandbox"], undefined);
 });

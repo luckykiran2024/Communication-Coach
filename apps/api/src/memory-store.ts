@@ -9,6 +9,13 @@ import { checkedAssessment, checkedAssessmentUsage } from "./lib/assessment-reco
 import { assessmentLeaseMs, newAssessmentRun } from "./lib/assessment-run";
 
 export class MemoryStore implements Store {
+  readonly reports = new Map<string, import("./store").ContentReport>();
+  async saveContentReport(report: import("./store").ContentReport) { this.reports.set(report.id, structuredClone(report)); }
+  async contentReports() { return [...this.reports.values()].sort((a, b) => a.status.localeCompare(b.status) || b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 100); }
+  async contentReport(id: string) { return this.reports.get(id) ?? null; }
+  async resolveContentReport(id: string, now: Date) { const report = this.reports.get(id); if (!report || report.status !== "open") return false; report.status = "resolved"; report.resolvedAt = now; return true; }
+  async linkSupabaseUser(userId: string, supabaseUserId: string) { const user = this.accounts.get(userId); if (!user) throw new Error("Account not found"); user.supabaseUserId = supabaseUserId; }
+  async accountOAuthIdentities(userId: string) { return [...this.oauthIdentities.values()].filter(identity => identity.userId === userId); }
   readonly rateLimitStorage = "memory" as const;
   private rateLimitBuckets = new Map<string, { current: number; resetAt: number }>();
   async incrementRateLimit(keyHash: string, windowMs: number, now: Date) {
@@ -129,7 +136,20 @@ export class MemoryStore implements Store {
   async sessionByHash(hash: string) { return this.sessions.get(hash) ?? null; }
   async deleteSession(hash: string) { this.sessions.delete(hash); }
   async deleteSessions(userId: string) { for (const [hash, session] of this.sessions) if (session.userId === userId) this.sessions.delete(hash); }
+  async beginAccountDeletion(userId: string, now: Date) {
+    await this.withUsageLock(`account:${userId}`, async () => {
+      const pending = [...this.voiceSessions.values()].some(row => row.userId === userId && (
+        row.status === "active" || (row.providerCallId && !row.providerTerminatedAt) || (!row.providerCallId && row.expiresAt > now)));
+      if (pending || [...this.reservations.values()].some(row => row.userId === userId && row.seconds > row.consumedSeconds)) {
+        throw new ConflictError("Voice setup or cleanup is pending. Stop voice and try deleting again shortly.");
+      }
+      const user = this.accounts.get(userId);
+      if (!user) throw new ConflictError("Account not found.");
+      user.deletionStartedAt = now;
+    });
+  }
   async deleteAccount(userId: string) {
+    for (const [id, report] of this.reports) if (report.userId === userId) this.reports.delete(id);
     this.accounts.delete(userId);
     for (const [hash, token] of this.emailTokens) if (token.userId === userId) this.emailTokens.delete(hash);
     this.profiles.delete(userId);
@@ -169,11 +189,13 @@ export class MemoryStore implements Store {
   async reservationSeconds(reservationId: string) { return this.reservations.get(reservationId)?.seconds ?? null; }
   async reserveUsage(reservation: UsageReservation, allowanceSeconds: number) {
     const key = `${reservation.userId}:${reservation.dayKey}`;
-    await this.withUsageLock(key, async () => {
+    await this.withUsageLock(`account:${reservation.userId}`, () => this.withUsageLock(key, async () => {
+      const user = this.accounts.get(reservation.userId);
+      if (!user || user.deletionStartedAt) throw new ConflictError("Account deletion is pending.");
       const usage = await this.usage(reservation.userId, reservation.dayKey);
       if (usage.reservedSeconds + reservation.seconds > allowanceSeconds) throw new ConflictError("Daily voice allowance is exhausted.");
       this.reservations.set(reservation.id, { ...reservation, consumedSeconds: 0 });
-    });
+    }));
   }
   async settleUsage(reservationId: string, consumedSeconds: number) { const row = this.reservations.get(reservationId); if (!row) throw new Error("Usage reservation not found"); row.consumedSeconds = Math.min(consumedSeconds, row.seconds); row.seconds = row.consumedSeconds; }
   async voiceMonthUsage(userId: string, monthKey: string) {
@@ -377,7 +399,7 @@ export class MemoryStore implements Store {
   async activeVoiceSession(userId: string) {
     return [...this.voiceSessions.values()].find(session => session.userId === userId && session.status === "active") ?? null;
   }
-  async bindVoiceProviderCall(userId: string, id: string, providerCallId: string) { const session = await this.voiceSession(userId, id); if (!session) throw new Error("Voice session not found"); if (session.status !== "active") throw new ConflictError("Voice session is already closed."); session.providerCallId = providerCallId; return session; }
+  async bindVoiceProviderCall(userId: string, id: string, providerCallId: string) { const session = await this.voiceSession(userId, id); if (!session) throw new Error("Voice session not found"); if (session.providerCallId && session.providerCallId !== providerCallId) throw new ConflictError("Voice session is bound to another call."); session.providerCallId = providerCallId; return session; }
   async markVoiceProviderTerminated(id: string, terminatedAt: Date) { const session = this.voiceSessions.get(id); if (session) session.providerTerminatedAt = terminatedAt; }
   async pendingVoiceProviderCalls() { return [...this.voiceSessions.values()].filter(session => session.status !== "active" && Boolean(session.providerCallId) && !session.providerTerminatedAt); }
   async endVoiceSession(userId: string, id: string, endedAt: Date, status: "ended" | "expired", consumedSeconds: number) {

@@ -18,13 +18,16 @@ export default function PasswordReset() {
   async function submit(confirm: boolean) {
     setError("");
     setMessage("");
+    if (!confirm && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("Enter a valid email address."); return; }
+    if (confirm && !token.trim()) { setError("Enter the code from your reset email."); return; }
+    if (confirm && (password.length < 12 || password.length > 128)) { setError("Use a password with 12–128 characters."); return; }
     if (confirm && password !== confirmation) { setError("Passwords must match."); return; }
     setBusy(true);
     try {
       const path = confirm ? "confirm" : "request";
       const result = await request<{ message: string }>(
         `/v1/auth/password-reset/${path}`, null, "POST",
-        confirm ? { token: token.trim(), password } : { email },
+        confirm ? { token: token.trim(), password } : { email: email.trim() },
       );
       if (confirm) {
         await auth.signOut();

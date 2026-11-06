@@ -1,9 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { ApiError, request, type Me } from "./api";
 import { signInWithSupabaseGoogle } from "./supabase-oauth";
 import { legalVersion } from "@coach/core";
+import { SessionController } from "./session-controller";
 type Auth = { token: string | null; me: Me | null; loading: boolean; error: string;
   signIn(email: string, password: string, register: boolean, accepted?: boolean): Promise<void>;
   signInWithProvider(provider: "google" | "microsoft", accessToken: string, accepted?: boolean): Promise<void>;
@@ -17,66 +18,48 @@ async function persist(token: string | null) {
   else await SecureStore.deleteItemAsync(key);
 }
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [me, setMe] = useState<Me | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  async function load(current: string) {
-    try { setMe(await request<Me>("/v1/me", current)); setError(""); }
-    catch (failure) {
-      if (failure instanceof ApiError && failure.status === 401) { await persist(null); setToken(null); setMe(null); }
-      throw failure;
-    }
-  }
+  const [session] = useState(() => new SessionController<Me>({
+    read: () => Platform.OS === "web" ? Promise.resolve(null) : SecureStore.getItemAsync(key),
+    write: persist, load: current => request<Me>("/v1/me", current),
+    expired: error => error instanceof ApiError && error.status === 401,
+  }));
+  const state = useSyncExternalStore(session.subscribe, session.snapshot, session.snapshot);
   useEffect(() => {
-    (async () => {
-      try {
-        const saved = Platform.OS === "web" ? null : await SecureStore.getItemAsync(key);
-        if (saved) { setToken(saved); await load(saved); }
-      } catch (failure) { setError(failure instanceof Error ? failure.message : "Could not restore your session."); }
-      finally { setLoading(false); }
-    })();
-  }, []);
+    void session.restore();
+    return session.cancelPending;
+  }, [session]);
   const value: SupabaseAuth = {
-    token, me, loading, error,
-    async refresh() { if (token) await load(token); },
+    ...state,
+    refresh: () => session.refresh(),
     async signIn(email, password, register, accepted) {
-      const response = await request<{ token: string }>(register ? "/v1/auth/register" : "/v1/auth/login", null, "POST",
-        { email, password, ...(register ? { legalAccepted: accepted === true, legalVersion } : {}) });
-      await persist(response.token); setToken(response.token); await load(response.token);
+      await session.authenticate(() => request<{ token: string }>(register ? "/v1/auth/register" : "/v1/auth/login", null, "POST",
+        { email, password, ...(register ? { legalAccepted: accepted === true, legalVersion } : {}) }));
     },
     async signInWithProvider(provider, accessToken, accepted) {
       const legal = accepted ? { legalAccepted: true, legalVersion } : {};
       const credential = provider === "google" ? { provider, accessToken, ...legal } : { provider, idToken: accessToken, ...legal };
-      const response = await request<{ token: string }>("/v1/auth/oauth", null, "POST", credential);
-      await persist(response.token); setToken(response.token); await load(response.token);
+      await session.authenticate(() => request<{ token: string }>("/v1/auth/oauth", null, "POST", credential));
     },
     async signInWithSupabaseGoogle(password, accepted) {
-      await signInWithSupabaseGoogle(async accessToken => {
-        const response = await request<{ token: string }>("/v1/auth/supabase", null, "POST", {
-          accessToken, ...(password ? { password } : {}), ...(accepted ? { legalAccepted: true, legalVersion } : {}),
+      await session.authenticate(async () => {
+        let response: { token: string } | undefined;
+        await signInWithSupabaseGoogle(async accessToken => {
+          response = await request<{ token: string }>("/v1/auth/supabase", null, "POST", {
+            accessToken, ...(password ? { password } : {}), ...(accepted ? { legalAccepted: true, legalVersion } : {}),
+          });
         });
-        await persist(response.token); setToken(response.token); await load(response.token);
+        if (!response) throw new Error("Google sign-in was cancelled. Please try again.");
+        return response;
       });
     },
     async signOut() {
-      if (token) {
-        try { await request("/v1/auth/logout", token, "POST"); }
-        catch (failure) { if (!(failure instanceof ApiError && failure.status === 401)) throw failure; }
-      }
-      await persist(null); setToken(null); setMe(null); setError("");
+      await session.signOut(current => request("/v1/auth/logout", current, "POST"));
     },
     async signOutAll() {
-      if (token) {
-        try { await request("/v1/auth/logout-all", token, "POST"); }
-        catch (failure) { if (!(failure instanceof ApiError && failure.status === 401)) throw failure; }
-      }
-      await persist(null); setToken(null); setMe(null); setError("");
+      await session.confirmAndClear(current => request("/v1/auth/logout-all", current, "POST"), true);
     },
     async deleteAccount() {
-      if (!token) return;
-      await request("/v1/me", token, "DELETE");
-      await persist(null); setToken(null); setMe(null); setError("");
+      await session.confirmAndClear(current => request("/v1/me", current, "DELETE"));
     },
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;

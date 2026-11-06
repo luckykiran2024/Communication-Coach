@@ -90,7 +90,7 @@ export default function WorkshopPath() {
     </Card>
     {completedIndex >= 0 && <Card tone="accent"><Heading eyebrow="Exercise complete">Nice work. Let’s keep going.</Heading><Copy>Your response and independent retry are saved. Continue with the next exercise, or explore more examples below.</Copy></Card>}
     {scenarios === null && !error && <Copy>Loading your exercises…</Copy>}
-    {error && <><Copy error>{error}</Copy><Action title="Retry" secondary onPress={() => void load()} /></>}
+    {Boolean(error) && <><Copy error>{error}</Copy><Action title="Retry" secondary onPress={() => void load()} /></>}
     {activeScenario ? <Card>
       <Heading eyebrow={`Exercise ${activeIndex + 1} of ${pathScenarios.length} · ${practicePrograms[selectedProgramLevel - 1].title}`}>{displayScenarioTitle(activeScenario.title)}</Heading>
       <Copy>{activeScenario.context}</Copy>

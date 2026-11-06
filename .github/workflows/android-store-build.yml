@@ -19,10 +19,16 @@ jobs:
         run: npm ci
       - name: Generate Prisma client
         run: npm run db:generate
+      - name: Block vulnerable release dependencies
+        run: npm audit --audit-level=high
       - name: Typecheck workspaces
         run: npm run typecheck
       - name: Run release tests serially
         run: node --require=./scripts/node-os-compat.cjs ./node_modules/tsx/dist/cli.mjs --test --test-concurrency=1 packages/core/test/*.test.ts apps/api/test/*.test.ts scripts/*.test.ts
+      - name: Verify staging backend matches this candidate
+        env:
+          STAGING_API_URL: ${{ vars.COACH_STAGING_API_URL }}
+        run: node scripts/check-staging-candidate.mjs
       - name: Start EAS Android App Bundle build
         working-directory: apps/mobile
         env:
@@ -30,11 +36,12 @@ jobs:
           APP_VARIANT: production
           APP_NAME: C2Coach
           APP_IDENTIFIER: com.c2coach.app
-          EXPO_PUBLIC_API_URL: https://communication-coach-api.vercel.app/api
+          COACH_ENVIRONMENT: staging
+          EXPO_PUBLIC_API_URL: ${{ vars.COACH_STAGING_API_URL }}
           EXPO_PUBLIC_PRIVACY_EMAIL: support@c2coach.work
-          EXPO_PUBLIC_PRIVACY_URL: https://c2coach.work
+          EXPO_PUBLIC_PRIVACY_URL: https://communication-coach-api.vercel.app/privacy
           EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED: "true"
-          EXPO_PUBLIC_SUPABASE_URL: https://nrrmhftccqsofjvoaffm.supabase.co
-          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_epmtO5_9eHCx00XC5iBy5Q_u6ya9u8D
+          EXPO_PUBLIC_SUPABASE_URL: https://szebsownsnvyrpwlbyau.supabase.co
+          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_DN2tL9QocNqdDwLjnapXNw_oEAebReW
           EXPO_PUBLIC_PAYMENT_PREVIEW: "false"
         run: npx --yes eas-cli@24.12.0 build --platform android --profile store-sandbox --non-interactive --no-wait

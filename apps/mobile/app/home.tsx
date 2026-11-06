@@ -21,8 +21,10 @@ export default function Home() {
   const [recommendations, setRecommendations] = useState<Recommendations | null>(null);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   async function load() {
+    setLoading(true);
     try {
       const [currentUsage, recentResponse, progressSnapshot, currentRecommendations] = await Promise.all([
         request<VoiceUsage>("/v1/me/voice-usage", auth.token),
@@ -37,7 +39,7 @@ export default function Home() {
       setError("");
     } catch (failure) {
       setError((failure as Error).message);
-    }
+    } finally { setLoading(false); }
   }
 
   useEffect(() => {
@@ -65,10 +67,12 @@ export default function Home() {
     );
   }
   if (!auth.me.profile) return <Redirect href="/onboarding" />;
+  if (loading) return <Screen><Copy>Loading your practice and progress…</Copy><SkeletonCard /><SkeletonCard /></Screen>;
+  if (!usage || !progress || !recommendations) return <Screen><Copy error>{error || "Practice data is unavailable."}</Copy><Action title="Retry" onPress={() => void load()} /></Screen>;
 
   const profile = auth.me.profile;
   const topScenario = recommendations?.scenarios[0];
-  const activeUnfinished = recent.find(item => item.conversation.state !== "FEEDBACK_READY");
+  const activeUnfinished = recent.find(item => ["CREATED", "CONNECTING", "LIVE", "INTERRUPTED", "ASSESSING", "FAILED"].includes(item.conversation.state));
 
   async function startRecommended() {
     if (!auth.token || !topScenario || starting) return;
@@ -100,7 +104,7 @@ export default function Home() {
           <Text style={{ color: theme.muted, fontSize: 13, fontWeight: "600", letterSpacing: 0.5 }}>WELCOME BACK</Text>
           <Heading>{profile.displayName}</Heading>
         </View>
-        <PillTag label={usage?.planTitle ?? profile.planId} tone="accent" />
+        <PillTag label={usage.planTitle} tone="accent" />
       </View>
 
       <EmailVerificationBanner />

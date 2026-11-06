@@ -22,11 +22,11 @@ function isIsoUtcTimestamp(value: string) {
   return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value) && !Number.isNaN(Date.parse(value));
 }
 
-export function validateNativeQaEvidence(value: unknown) {
+export function validateNativeQaEvidence(value: unknown, platforms: readonly NativeQaPlatform[] = nativeQaPlatforms) {
   const errors: string[] = [];
-  if (!Array.isArray(value) || value.length !== nativeQaPlatforms.length) return { valid: false, errors: ["Evidence must contain exactly one Android and one iOS record."], evidence: [] as NativeQaEvidence[] };
+  if (!Array.isArray(value) || value.length !== platforms.length) return { valid: false, errors: [`Evidence must contain exactly one record for each required platform: ${platforms.join(", ")}.`], evidence: [] as NativeQaEvidence[] };
   const evidence: NativeQaEvidence[] = [];
-  for (const platform of nativeQaPlatforms) {
+  for (const platform of platforms) {
     const record = value.find(item => isRecord(item) && item.platform === platform);
     if (!isRecord(record)) { errors.push(`Missing ${platform} evidence.`); continue; }
     for (const field of ["device", "osVersion", "buildId", "testedAt"] as const) if (typeof record[field] !== "string" || !record[field].trim()) errors.push(`${platform}.${field} is required.`);
@@ -39,8 +39,8 @@ export function validateNativeQaEvidence(value: unknown) {
   return { valid: errors.length === 0, errors, evidence };
 }
 
-export function loadNativeQaEvidence(path: string | undefined) {
+export function loadNativeQaEvidence(path: string | undefined, platforms: readonly NativeQaPlatform[] = nativeQaPlatforms) {
   if (!path) return { valid: false, errors: ["NATIVE_QA_EVIDENCE_PATH is not configured."], evidence: [] as NativeQaEvidence[] };
-  try { return validateNativeQaEvidence(JSON.parse(readFileSync(path, "utf8"))); }
+  try { return validateNativeQaEvidence(JSON.parse(readFileSync(path, "utf8")), platforms); }
   catch { return { valid: false, errors: [`Could not read native QA evidence at ${path}.`], evidence: [] as NativeQaEvidence[] }; }
 }

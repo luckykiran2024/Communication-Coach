@@ -524,7 +524,9 @@ test("regression: conversation creation authorizes scenarios and preserves owner
   const completed = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders });
   assert.equal(completed.statusCode, 200);
   assert.equal(completed.json().conversation.state, "COMPLETED");
-  assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders })).statusCode, 409);
+  const repeatedCompletion = await app.inject({ method: "POST", url: `/v1/me/conversations/${id}/complete`, headers: firstHeaders });
+  assert.equal(repeatedCompletion.statusCode, 200);
+  assert.equal(repeatedCompletion.json().conversation.completedAt, completed.json().conversation.completedAt);
   const exported = await app.inject({ url: "/v1/me/export", headers: firstHeaders });
   assert.equal(exported.statusCode, 200);
   assert.equal(exported.json().user.email, validCredentials.email);
@@ -561,7 +563,7 @@ test("regression: database readiness reports dependency failure without exposing
 test("regression: live lifecycle reserves usage and reaches ACTIVE only after provider connection", async () => {
   const store = new MemoryStore();
   const conversationId = randomUUID();
-  const userId = randomUUID();
+  const userId = (await store.createAccount("live-lifecycle@example.com", "unused")).id;
   const now = new Date("2026-09-24T00:00:00.000Z");
   await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "CREATED", createdAt: now, updatedAt: now });
   const provider: VoiceProvider = { name: "test-provider", async connect() { return { providerSessionId: "provider-session", expiresAt: new Date(now.getTime() + 600_000) }; }, async terminate() {} };
@@ -574,7 +576,7 @@ test("regression: live lifecycle reserves usage and reaches ACTIVE only after pr
 test("regression: provider failure releases the reservation and never leaves a connecting session", async () => {
   const store = new MemoryStore();
   const conversationId = randomUUID();
-  const userId = randomUUID();
+  const userId = (await store.createAccount("failed-lifecycle@example.com", "unused")).id;
   const now = new Date("2026-09-24T00:00:00.000Z");
   await store.createConversation({ id: conversationId, userId, scenarioId: "engineering-delay", state: "CREATED", createdAt: now, updatedAt: now });
   const provider: VoiceProvider = { name: "disabled-provider", async connect() { throw new Error("provider disabled"); }, async terminate() {} };
@@ -585,7 +587,7 @@ test("regression: provider failure releases the reservation and never leaves a c
 
 test("regression: expired voice sessions settle usage and leave learning resumable", async () => {
   const store = new MemoryStore();
-  const userId = randomUUID();
+  const userId = (await store.createAccount("expired-lifecycle@example.com", "unused")).id;
   const conversationId = randomUUID();
   const reservationId = randomUUID();
   const sessionId = randomUUID();
@@ -702,6 +704,10 @@ test("regression: configured realtime voice creates a reserved provider session 
   assert.equal((await app.inject({ method: "POST", url: `/v1/voice/sessions/${retryVoice.json().sessionId}/stop`,
     headers, payload: { consumedSeconds: 0 } })).statusCode, 200);
   assert.equal((await app.inject({ method: "POST", url: `/v1/me/conversations/${conversation.json().conversation.id}/complete`, headers })).statusCode, 200);
-  assert.equal((await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } })).statusCode, 409);
+  const usageBeforeReplay = (await store.usage(registration.json().user.id, "2026-10-06")).consumedSeconds;
+  const replayedStop = await app.inject({ method: "POST", url: `/v1/voice/sessions/${session.json().sessionId}/stop`, headers, payload: { consumedSeconds: 90 } });
+  assert.equal(replayedStop.statusCode, 200);
+  assert.equal(replayedStop.json().consumedSeconds, 120);
+  assert.equal((await store.usage(registration.json().user.id, "2026-10-06")).consumedSeconds, usageBeforeReplay);
 });
 

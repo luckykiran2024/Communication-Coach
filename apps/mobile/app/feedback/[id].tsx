@@ -4,6 +4,7 @@ import type { FeedbackAssessment } from "@coach/core";
 import { useAuth } from "../../src/auth";
 import { request } from "../../src/api";
 import { Action, Card, Copy, Heading, Screen } from "../../src/ui";
+import { ReportContent } from "../../src/report-content";
 import { CoachingFeedback } from "../../src/coaching-feedback";
 
 type Feedback = { feedback: FeedbackAssessment; nextScenarioId: string | null; scenario?: { title: string } | null };
@@ -41,6 +42,7 @@ export default function FeedbackScreen() {
     {error ? <Copy error>{error}</Copy> : !result && <Copy>Loading verified feedback…</Copy>}
     {result && <>
       <CoachingFeedback feedback={result.feedback} />
+      <ReportContent conversationId={id} target="feedback" />
       <Card><Heading eyebrow="Independent transfer">{result.feedback.transferResult.replaceAll("_", " ")}</Heading>
         <Copy>Rubric: {result.feedback.rubricVersion} · Model: {result.feedback.modelVersion}</Copy>
       </Card>

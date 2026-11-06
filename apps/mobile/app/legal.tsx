@@ -4,7 +4,7 @@ import { legalVersion } from "@coach/core";
 import { Action, Card, Copy, Heading, Screen } from "../src/ui";
 
 const privacyEmail = process.env.EXPO_PUBLIC_PRIVACY_EMAIL ?? "support@c2coach.work";
-const privacyUrl = process.env.EXPO_PUBLIC_PRIVACY_URL ?? "https://c2coach.work";
+const privacyUrl = process.env.EXPO_PUBLIC_PRIVACY_URL ?? "https://communication-coach-api.vercel.app/privacy";
 
 export default function Legal() {
   return <Screen>
@@ -25,12 +25,13 @@ export default function Legal() {
       <Copy>C2Coach processes your email and sign-in identity, practice profile, written responses, exercise history, progress, session records, and—when a paid plan is available—store purchase identifiers. These records operate the account, tailor practice, measure progress, protect the service, and provide support.</Copy>
       <Copy>Google sign-in uses Google and Supabase Authentication. The app backend and account data use Vercel and Supabase. If you use AI assessment or live voice when enabled, the relevant practice text, transcript, or audio is sent to the configured AI provider to produce coaching. Store purchases are processed by Google Play or Apple; C2Coach does not receive your full card details.</Copy>
       <Copy>The microphone check records only on your device for playback and is not uploaded. Live voice practice, when enabled, is a separate feature that may transmit audio and transcripts. Avoid sharing third-party or workplace secrets in either mode.</Copy>
-      <Copy>We keep account and practice data while your account is active, then delete application records when you use the account-deletion action, subject to records we must retain for security, transactions, or law. Google/Supabase authentication records require separate deletion handling; that process must be verified before public release.</Copy>
+      <Copy>We keep account and practice data while your account is active. Account deletion removes application records and the linked Supabase sign-in identity where applicable, subject to records we must retain for security, transactions, or law. If deletion cannot finish, the app shows an error and you can retry in Settings. Deleting your account does not cancel a store subscription; cancel it separately in Google Play or Apple.</Copy>
+      <Copy>You can report unsafe, offensive or incorrect AI content from saved feedback or the practice transcript. Reports include your selected practice, reason and optional details so an authorised reviewer can investigate.</Copy>
       <Copy>We do not sell your practice responses for advertising. You can request an account export, sign out, or delete your account in Settings. The app may use service logs to diagnose failures and prevent abuse.</Copy>
       {privacyEmail ? <Copy>Privacy and support contact: {privacyEmail}.</Copy>
         : <Copy>Privacy and support contact is not configured in this test build; public release remains blocked until one is published.</Copy>}
       <Copy>Website: https://c2coach.work.</Copy>
-      {privacyUrl && <Action title="Open published Privacy Policy" secondary onPress={() => void Linking.openURL(privacyUrl)} />}
+      {Boolean(privacyUrl) && <Action title="Open published Privacy Policy" secondary onPress={() => void Linking.openURL(privacyUrl)} />}
     </Card>
 
     <Action title="Back" secondary onPress={() => router.back()} />

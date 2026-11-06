@@ -7,6 +7,21 @@ import { MemoryStore } from "./memory-store";
 import { randomUUID } from "node:crypto";
 const credentials = { email: "learner@example.com", password: "a-long-test-password" };
 const profile = { displayName: "Sam", function: "Engineering", jobTitle: "Engineer", careerLevel: "Experienced individual contributor", audience: "Product team", goal: "Present recommendations" };
+
+test("readiness does not mistake a saved cron secret for an enabled scheduler", async () => {
+  const previous = process.env.SCHEDULER_ENABLED;
+  const app = await buildApp(new MemoryStore(), { runtime: "serverless", cronSecret: "c".repeat(32) });
+  try {
+    delete process.env.SCHEDULER_ENABLED;
+    assert.equal((await app.inject({ url: "/ready" })).json().capabilities.scheduler, false);
+    process.env.SCHEDULER_ENABLED = "true";
+    assert.equal((await app.inject({ url: "/ready" })).json().capabilities.scheduler, true);
+  } finally {
+    if (previous === undefined) delete process.env.SCHEDULER_ENABLED;
+    else process.env.SCHEDULER_ENABLED = previous;
+    await app.close();
+  }
+});
 test("account creation requires current terms once and stores the acceptance receipt", async context => {
   const store = new MemoryStore();
   const now = new Date("2026-10-24T10:00:00.000Z");
@@ -150,7 +165,7 @@ test("voice usage is calculated on the profile timezone and remains fail-closed"
 });
 test("usage reservations cap concurrent voice time and release unused seconds on settlement", async () => {
   const store = new MemoryStore();
-  const userId = randomUUID();
+  const userId = (await store.createAccount("usage@example.com", "unused")).id;
   const firstReservationId = randomUUID();
   await store.reserveUsage({ id: firstReservationId, userId, dayKey: "2026-09-24", seconds: 900, expiresAt: new Date() }, 1200);
   await assert.rejects(() => store.reserveUsage({ id: randomUUID(), userId, dayKey: "2026-09-24", seconds: 400, expiresAt: new Date() }, 1200), /exhausted/);
@@ -164,7 +179,7 @@ test("usage reservations cap concurrent voice time and release unused seconds on
 
 test("ten parallel usage reservations cannot exceed the allowance", async () => {
   const store = new MemoryStore();
-  const userId = randomUUID();
+  const userId = (await store.createAccount("parallel-usage@example.com", "unused")).id;
   const attempts = await Promise.allSettled(Array.from({ length: 10 }, () => store.reserveUsage({
     id: randomUUID(),
     userId,

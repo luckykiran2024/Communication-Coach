@@ -3,6 +3,7 @@
   "git": {
     "deploymentEnabled": {
       "main": false,
+      "codex/android-device-preview-20261106": false,
       "test-apk-ready": false
     }
   },
@@ -25,16 +26,18 @@
   ],
   "functions": {
     "api/index.js": {
-      "maxDuration": 30
+      "maxDuration": 60,
+      "includeFiles": "prisma/supabase-ca.crt"
     },
     "api/[...path].js": {
-      "maxDuration": 30
+      "maxDuration": 60,
+      "includeFiles": "prisma/supabase-ca.crt"
     }
   },
   "crons": [
     {
       "path": "/api/internal/cron/reap-voice-sessions",
-      "schedule": "0 3 * * *"
+      "schedule": "* * * * *"
     }
   ]
 }

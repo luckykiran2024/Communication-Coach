@@ -25,7 +25,7 @@ const privacyHtml = `<!doctype html>
   <article>
     <div class="brand">C2Coach</div>
     <h1>Privacy Policy</h1>
-    <p class="meta"><strong>Effective date:</strong> 29 October 2026</p>
+    <p class="meta"><strong>Effective date:</strong> 6 November 2026</p>
     <p>C2Coach is a business communication practice application operated in India. This policy explains how C2Coach collects, uses, shares and protects information when you use the mobile application and related services.</p>
 
     <h2>Information we collect</h2>
@@ -43,6 +43,7 @@ const privacyHtml = `<!doctype html>
 
     <h2>AI and voice processing</h2>
     <p>Practice responses, transcripts and relevant profile context may be sent to contracted AI or voice-processing providers to generate coaching, feedback or speech features. C2Coach does not sell personal information. Automated feedback is provided for communication practice and should not be treated as professional, legal, medical, financial or employment advice.</p>
+    <p>The local microphone check records on your device for playback and does not upload audio. Live AI voice is a separate feature that sends audio and transcripts to the AI provider with your agreement. You can report unsafe, offensive or incorrect saved AI content in the app; your selected practice, report reason and optional details are available to authorised reviewers.</p>
 
     <h2>Service providers</h2>
     <p>We may use service providers for cloud hosting, databases and authentication, AI processing, analytics, email delivery and app-store billing. These providers process information on our behalf under their own security and privacy obligations. Current providers may include Vercel, Supabase, OpenAI, Google and Apple where their services are enabled.</p>
@@ -58,6 +59,7 @@ const privacyHtml = `<!doctype html>
 
     <h2>Your choices and rights</h2>
     <p>You may access and update profile information in the app, control microphone permission in device settings, request correction or deletion of personal information, and withdraw optional permissions. Depending on applicable law, additional rights may apply.</p>
+    <p>Settings provides an account export and account deletion. Deletion also removes the linked Supabase sign-in identity where applicable. If deletion fails, retry in Settings or contact support. Deleting the account does not cancel a store subscription; cancel it separately in Google Play or Apple.</p>
 
     <h2>Children</h2>
     <p>C2Coach is intended for working professionals and is not directed to children under 13. We do not knowingly collect personal information from children under 13.</p>
@@ -115,6 +117,7 @@ const accountDeletionHtml = `<!doctype html>
 
     <h2>Data deleted</h2>
     <p>Deletion removes the C2Coach account, profile and learning preferences, authentication sessions, practice conversations and responses, feedback and scores, progress records, voice-session records, and subscription entitlement links associated with the account.</p>
+    <p>The linked Supabase sign-in identity is also deleted where applicable. Stop live voice before deleting. If a provider operation or cleanup is pending, the app preserves the account so you can retry. Account deletion does not cancel your Google Play or Apple subscription; cancel it in the relevant store.</p>
 
     <h2>Data that may be retained</h2>
     <p>Limited transaction, fraud-prevention, security or legal-compliance records may be retained where required by law or reasonably necessary to protect users and the service. App-store purchase records remain subject to Google Play or Apple retention rules. Any retained records are restricted to those purposes and are not used to continue the deleted account.</p>

@@ -14,16 +14,20 @@
     },
     "preview": {
       "developmentClient": false,
+      "autoIncrement": true,
       "channel": "preview",
       "environment": "preview",
       "distribution": "internal",
       "android": { "buildType": "apk" },
       "env": {
         "APP_VARIANT": "preview",
-        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
+        "COACH_ENVIRONMENT": "staging",
+        "EXPO_PUBLIC_API_URL": "https://communication-coach-staging-api-luckykiran2024s-projects.vercel.app/api",
         "EXPO_PUBLIC_PRIVACY_EMAIL": "support@c2coach.work",
-        "EXPO_PUBLIC_PRIVACY_URL": "https://c2coach.work",
+        "EXPO_PUBLIC_PRIVACY_URL": "https://communication-coach-api.vercel.app/privacy",
         "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://szebsownsnvyrpwlbyau.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_DN2tL9QocNqdDwLjnapXNw_oEAebReW",
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "true"
       }
     },
@@ -31,7 +35,6 @@
       "extends": "preview",
       "channel": "test-preview",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://communication-coach-test-api-luckykiran2024s-projects.vercel.app/api",
         "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true"
       }
     },
@@ -40,9 +43,8 @@
       "channel": "local-preview",
       "environment": "development",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
         "EXPO_PUBLIC_PRIVACY_EMAIL": "support@c2coach.work",
-        "EXPO_PUBLIC_PRIVACY_URL": "https://c2coach.work"
+        "EXPO_PUBLIC_PRIVACY_URL": "https://communication-coach-api.vercel.app/privacy"
       }
     },
     "store-sandbox": {
@@ -54,10 +56,12 @@
         "APP_VARIANT": "production",
         "APP_NAME": "C2Coach",
         "APP_IDENTIFIER": "com.c2coach.app",
-        "EXPO_PUBLIC_API_URL": "https://communication-coach-api.vercel.app/api",
+        "COACH_ENVIRONMENT": "staging",
         "EXPO_PUBLIC_PRIVACY_EMAIL": "support@c2coach.work",
-        "EXPO_PUBLIC_PRIVACY_URL": "https://c2coach.work",
+        "EXPO_PUBLIC_PRIVACY_URL": "https://communication-coach-api.vercel.app/privacy",
         "EXPO_PUBLIC_SUPABASE_OAUTH_ENABLED": "true",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://szebsownsnvyrpwlbyau.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_DN2tL9QocNqdDwLjnapXNw_oEAebReW",
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "false"
       }
     },
@@ -69,8 +73,9 @@
         "APP_VARIANT": "production",
         "APP_NAME": "C2Coach",
         "APP_IDENTIFIER": "com.c2coach.app",
+        "COACH_ENVIRONMENT": "production",
         "EXPO_PUBLIC_PRIVACY_EMAIL": "support@c2coach.work",
-        "EXPO_PUBLIC_PRIVACY_URL": "https://c2coach.work",
+        "EXPO_PUBLIC_PRIVACY_URL": "https://communication-coach-api.vercel.app/privacy",
         "EXPO_PUBLIC_PAYMENT_PREVIEW": "false",
         "EXPO_PUBLIC_STORE_PRODUCT_PREFIX": "com.c2coach.app",
         "EXPO_PUBLIC_GOOGLE_BASE_PLAN_ID": "monthly"

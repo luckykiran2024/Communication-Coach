@@ -1,13 +1,20 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 if (process.env.DATABASE_ACCESS_AUDIT_CONFIRMED !== "true") {
   throw new Error("Explicit DATABASE_ACCESS_AUDIT_CONFIRMED=true is required for live read-only ACL verification.");
 }
 const url = new URL(process.env.DATABASE_URL ?? "");
-if (!url.hostname.endsWith(".supabase.com") || !url.username.includes("nrrmhftccqsofjvoaffm")
+const projectRef = process.env.DATABASE_ACCESS_AUDIT_PROJECT_REF ?? "nrrmhftccqsofjvoaffm";
+const approvedProjects = new Set(["nrrmhftccqsofjvoaffm", "szebsownsnvyrpwlbyau"]);
+if (!approvedProjects.has(projectRef)
+  || !["postgres:", "postgresql:"].includes(url.protocol)
+  || url.hostname !== "aws-0-ap-northeast-1.pooler.supabase.com"
+  || decodeURIComponent(url.username).split(".").at(-1) !== projectRef
+  || url.port !== "5432"
+  || url.searchParams.get("sslmode") !== "require" || url.searchParams.get("sslaccept") !== "strict"
   || (url.searchParams.get("schema") ?? "public") !== "public") {
   throw new Error("Use only the approved Supabase project's public-schema audit connection.");
 }
@@ -15,8 +22,7 @@ const database = new PrismaClient({ datasources: { db: { url: url.toString() } }
 after(() => database.$disconnect());
 const migrationPath = "../prisma/migrations/202610101500_public_data_api_lockdown/migration.sql";
 const migration = readFileSync(new URL(migrationPath, import.meta.url), "utf8");
-const expectedTables = ["AuthSession", "Conversation", "ConversationTurn", "CustomScenario", "CustomScenarioRevision",
-  "Entitlement", "OAuthIdentity", "PurchaseIntent", "UsageReservation", "User", "UserProfile", "VoiceSession", "_prisma_migrations"];
+const expectedTables = [...Prisma.dmmf.datamodel.models.map(model => model.dbName ?? model.name), "_prisma_migrations"].sort();
 
 test("live access: every public table has RLS and no API-role table or column privileges", async () => {
   const result = await database.$transaction(async transaction => {
@@ -38,12 +44,12 @@ test("live access: every public table has RLS and no API-role table or column pr
 });
 
 for (const role of ["anon", "authenticated"] as const) {
-  test(`live access: ${role} zero-row reads are denied on all 13 public tables`, async () => {
+  test(`live access: ${role} zero-row reads are denied on all ${expectedTables.length} public tables`, async () => {
     for (const table of expectedTables) {
       await assert.rejects(database.$transaction(async transaction => {
         await transaction.$executeRawUnsafe("SET TRANSACTION READ ONLY");
         await transaction.$executeRawUnsafe(`SET LOCAL ROLE ${role}`);
-        await transaction.$queryRawUnsafe(`SELECT 1 FROM public."${table}" WHERE false`);
+        await transaction.$queryRawUnsafe(`SELECT 1 FROM public."${table.replaceAll('"', '""')}" WHERE false`);
       }), (error: unknown) => {
         const failure = error as { meta?: { code?: string } };
         return failure.meta?.code === "42501";

@@ -10,7 +10,7 @@ import type { VoiceSession } from "../store";
 import type { RouteDependencies } from "./context";
 
 const voiceSessionSchema = z.object({ conversationId: z.string().uuid(), scenarioId: z.string().min(1).max(100) }).strict();
-const voiceStopSchema = z.object({ consumedSeconds: z.number().int().min(0).max(420).default(0) }).strict().default({});
+const voiceStopSchema = z.object({ consumedSeconds: z.number().int().min(0).max(420).default(0) }).strict().default({ consumedSeconds: 0 });
 const voiceProviderCallSchema = z.object({ providerCallId: z.string().regex(/^[A-Za-z0-9._:-]{1,200}$/) }).strict();
 const voiceTranscriptSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -169,6 +169,13 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     const parsed = voiceProviderCallSchema.safeParse(request.body);
     if (!id || !parsed.success) throw new ApiError(400, "Provide a valid provider call identifier.");
     const session = await deps.store.bindVoiceProviderCall(user.id, id, parsed.data.providerCallId);
+    // A connection can finish after the user leaves. Keep its identifier for cleanup.
+    if (session.status !== "active" && deps.realtimeProvider && !session.providerTerminatedAt) {
+      try {
+        await deps.realtimeProvider.terminate(parsed.data.providerCallId);
+        await deps.store.markVoiceProviderTerminated(session.id, deps.now());
+      } catch { request.log.warn("Late voice call queued for scheduled termination"); }
+    }
     return reply.send({ sessionId: session.id, providerCallId: session.providerCallId, message: "Provider call bound for server-side termination." });
   });
   app.post("/v1/voice/sessions/:id/transcript", async (request, reply) => {
@@ -196,9 +203,8 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     if (!parsed.success) throw new ApiError(400, "Provide a valid consumed duration.");
     const session = await deps.store.voiceSession(user.id, id);
     if (!session) return reply.code(404).send({ error: "Voice session not found." });
-    if (session.status !== "active") throw new ApiError(409, "Voice session is already closed.");
     let providerTermination: "completed" | "not_bound" | "failed" = "not_bound";
-    if (deps.realtimeProvider && session.providerCallId) {
+    if (deps.realtimeProvider && session.providerCallId && !session.providerTerminatedAt) {
       try {
         await deps.realtimeProvider.terminate(session.providerCallId);
         await deps.store.markVoiceProviderTerminated(session.id, deps.now());
@@ -207,14 +213,20 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
         providerTermination = "failed";
       }
     }
-    const endedAt = deps.now();
+    const endedAt = session.endedAt ?? deps.now();
     const reservedSeconds = await deps.store.reservationSeconds(session.reservationId);
     if (reservedSeconds === null) throw new ApiError(409, "Voice usage reservation is no longer available.");
     const consumedSeconds = elapsedSeconds(session.startedAt, endedAt, reservedSeconds);
     if (parsed.data.consumedSeconds > consumedSeconds) {
       request.log.debug({ clientConsumedSecondsHint: parsed.data.consumedSeconds, serverConsumedSeconds: consumedSeconds }, "Voice usage hint exceeds server elapsed time");
     }
-    await deps.store.endVoiceSession(user.id, id, endedAt, "ended", consumedSeconds);
+    if (session.status === "active") {
+      try { await deps.store.endVoiceSession(user.id, id, endedAt, "ended", consumedSeconds); }
+      catch (failure) {
+        const latest = await deps.store.voiceSession(user.id, id);
+        if (!latest || latest.status === "active") throw failure;
+      }
+    }
     const conversation = await deps.store.conversation(user.id, session.conversationId);
     if (conversation?.state === "ACTIVE") await deps.store.updateConversationState(user.id, session.conversationId, "INTERRUPTED");
     return { sessionId: id, status: "ended", consumedSeconds, conversationState: "INTERRUPTED", providerTermination };

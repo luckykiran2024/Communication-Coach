@@ -11,10 +11,11 @@ export default function Plans() {
   const theme = useTheme();
   const [catalog, setCatalog] = useState<Catalog | null>(null); const [usage, setUsage] = useState<VoiceUsage | null>(null); const [recommendations, setRecommendations] = useState<Recommendations | null>(null); const [error, setError] = useState("");
   async function load() { try { const [currentCatalog, currentUsage, currentRecommendations] = await Promise.all([request<Catalog>("/v1/catalog"), request<VoiceUsage>("/v1/me/voice-usage", auth.token), request<Recommendations>("/v1/me/scenarios", auth.token)]); setCatalog(currentCatalog); setUsage(currentUsage); setRecommendations(currentRecommendations); setError(""); } catch (failure) { setError((failure as Error).message); } }
-  useEffect(() => { void load(); }, []);
+  useEffect(() => { if (auth.token) void load(); }, [auth.token]);
   if (auth.loading) return <Screen><Copy>Loading plans…</Copy></Screen>;
   if (!auth.token) return <Redirect href="/" />;
   if (!auth.me?.profile) return <Redirect href="/onboarding" />;
+  if (!catalog || !usage || !recommendations) return <Screen><Copy error={Boolean(error)}>{error || "Loading your active plan…"}</Copy>{Boolean(error) && <Action title="Retry" onPress={() => void load()} />}</Screen>;
   const currentPlanId = usage?.planId ?? auth.me.profile.planId;
   const activeExerciseCount = recommendations?.scenarios.length ?? 0;
   async function manageCurrentSubscription() {
@@ -30,7 +31,7 @@ export default function Plans() {
     {!catalog && !error && <Copy>Loading plans…</Copy>}
     {Boolean(error) && <><Copy error>{error}</Copy><Action title="Retry" onPress={load} /></>}
     {catalog?.plans.map(plan => { const selected = currentPlanId === plan.id; const freeDowngrade = plan.id === "free" && !selected; return <Card key={plan.id}><Heading eyebrow={selected ? `${plan.title} · active plan` : plan.title}>{plan.targetPriceInr === 0 ? "Free" : `₹${plan.targetPriceInr} / month`}</Heading><Copy>{plan.voiceSessionsPerMonth} voice sessions per {plan.id === "free" ? "lifetime" : "month"} · up to {Math.floor(plan.maxSessionSeconds / 60)} minutes each.</Copy><Copy>Includes: {plan.modules.map(moduleId => moduleId === "management" ? "Professional & Business Communication" : moduleId === "leadership" ? "Leadership" : "Daily Communication").join(" · ")}</Copy>{freeDowngrade && <Copy>Cancel the paid subscription in your store. Free access begins after the paid billing period ends.</Copy>}<Action title={selected ? "Active plan" : freeDowngrade ? "Cancel paid plan in store" : "Review package"} secondary={selected || freeDowngrade} disabled={selected} onPress={() => freeDowngrade ? void manageCurrentSubscription() : router.push({ pathname: "/payment", params: { planId: plan.id } })} /></Card>; })}
-    <Copy>Plan access is controlled by your verified store subscription. In development, the server’s DEV_PLAN_ID selects the active plan; profile selection alone does not change entitlements.</Copy>
+    <Copy>Plan access is controlled by your verified store subscription. Choosing a plan does not change your subscription until the store confirms it.</Copy>
     <Copy>{catalog?.priceNotice ?? "Actual storefront pricing will be configured before release."}</Copy>
   </Screen>;
 }

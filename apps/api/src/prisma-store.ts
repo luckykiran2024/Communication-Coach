@@ -13,15 +13,23 @@ import { prismaAssessmentRuns } from "./lib/prisma-assessment-runs";
 const currentPhase = (phase: string): ConversationTurn["phase"] =>
   phase === "independent_retry" ? "independent_retry" : "primary";
 type AccountRow = { id: string; email: string; passwordHash: string; role: string; emailVerifiedAt: Date | null;
-  legalVersion: string | null; legalAcceptedAt: Date | null };
+  legalVersion: string | null; legalAcceptedAt: Date | null; supabaseUserId?: string | null; deletionStartedAt?: Date | null };
 const accountFromRow = (row: AccountRow): Account => ({
   id: row.id, email: row.email, passwordHash: row.passwordHash,
   role: row.role === "manager" ? "manager" : "learner", emailVerifiedAt: row.emailVerifiedAt,
   legalVersion: row.legalVersion, legalAcceptedAt: row.legalAcceptedAt,
+  supabaseUserId: row.supabaseUserId,
+  deletionStartedAt: row.deletionStartedAt,
 });
 const accountFromNullableRow = (row: AccountRow | null): Account | null => row ? accountFromRow(row) : null;
 export function prismaStore(db: PrismaClient): Store {
   return {
+    async saveContentReport(report) { await db.contentReport.create({ data: report }); },
+    async contentReports() { return await db.contentReport.findMany({ orderBy: [{ status: "asc" }, { createdAt: "desc" }], take: 100 }) as import("./store").ContentReport[]; },
+    async contentReport(id) { return await db.contentReport.findUnique({ where: { id } }) as import("./store").ContentReport | null; },
+    async resolveContentReport(id, now) { return (await db.contentReport.updateMany({ where: { id, status: "open" }, data: { status: "resolved", resolvedAt: now } })).count === 1; },
+    async linkSupabaseUser(userId, supabaseUserId) { await db.user.update({ where: { id: userId }, data: { supabaseUserId } }); },
+    async accountOAuthIdentities(userId) { return await db.oAuthIdentity.findMany({ where: { userId } }) as OAuthIdentity[]; },
     ...prismaAssessmentRuns(db),
     rateLimitStorage: "postgres",
     async incrementRateLimit(keyHash, windowMs, now) {
@@ -59,7 +67,11 @@ export function prismaStore(db: PrismaClient): Store {
         WHERE voice."userId" = ${userId}::uuid AND voice."status" IN ('ended', 'expired')
       `;
     },
-    async ready() { await db.$queryRaw`SELECT 1`; },
+    async ready() {
+      await db.$queryRaw`SELECT 1`;
+      await db.user.findFirst({ select: { id: true, supabaseUserId: true, deletionStartedAt: true } });
+      await db.contentReport.findFirst({ select: { id: true } });
+    },
     async createAccount(email, passwordHash, legalAcceptance) {
       try { return accountFromRow(await db.user.create({ data: { email, passwordHash,
         legalVersion: legalAcceptance?.version, legalAcceptedAt: legalAcceptance?.acceptedAt } })); }
@@ -132,7 +144,21 @@ export function prismaStore(db: PrismaClient): Store {
     sessionByHash: tokenHash => db.authSession.findUnique({ where: { tokenHash } }),
     async deleteSession(tokenHash) { await db.authSession.deleteMany({ where: { tokenHash } }); },
     async deleteSessions(userId) { await db.authSession.deleteMany({ where: { userId } }); },
-    async deleteAccount(userId) { await db.user.delete({ where: { id: userId } }); },
+    async beginAccountDeletion(userId, now) {
+      await db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${userId}::uuid FOR UPDATE`;
+        const pendingVoice = await transaction.voiceSession.count({ where: { userId, OR: [
+          { status: "active" }, { providerCallId: { not: null }, providerTerminatedAt: null },
+          { providerCallId: null, expiresAt: { gt: now } },
+        ] } });
+        const reservations = await transaction.usageReservation.findMany({ where: { userId } });
+        if (pendingVoice || reservations.some(row => row.reservedSeconds > row.consumedSeconds)) {
+          throw new ConflictError("Voice setup or cleanup is pending. Stop voice and try deleting again shortly.");
+        }
+        await transaction.user.update({ where: { id: userId }, data: { deletionStartedAt: now } });
+      });
+    },
+    async deleteAccount(userId) { await db.user.deleteMany({ where: { id: userId } }); },
     async profile(userId) {
       const stored = await db.userProfile.findUnique({ where: { userId } });
       return stored ? profileSchema.parse(stored.data) : null;
@@ -159,6 +185,9 @@ export function prismaStore(db: PrismaClient): Store {
     },
     async reserveUsage(reservation, allowanceSeconds) {
       await db.$transaction(async transaction => {
+        await transaction.$queryRaw`SELECT id FROM "User" WHERE id = ${reservation.userId}::uuid FOR UPDATE`;
+        const user = await transaction.user.findUnique({ where: { id: reservation.userId } });
+        if (!user || user.deletionStartedAt) throw new ConflictError("Account deletion is pending.");
         await transaction.$executeRaw`
           SELECT pg_advisory_xact_lock(
             hashtext(${reservation.userId} || ':' || ${reservation.dayKey})::bigint
@@ -422,8 +451,8 @@ export function prismaStore(db: PrismaClient): Store {
       return row ? { ...row, status: row.status as VoiceSession["status"] } : null;
     },
     async bindVoiceProviderCall(userId: string, id: string, providerCallId: string) {
-      const updated = await db.voiceSession.updateMany({ where: { id, userId, status: "active" }, data: { providerCallId } });
-      if (updated.count !== 1) throw new ConflictError("Voice session is already closed.");
+      const updated = await db.voiceSession.updateMany({ where: { id, userId, OR: [{ providerCallId: null }, { providerCallId }] }, data: { providerCallId } });
+      if (updated.count !== 1) throw new ConflictError("Voice session is missing or bound to another call.");
       const row = await db.voiceSession.findUniqueOrThrow({ where: { id } });
       return { ...row, status: row.status as VoiceSession["status"] };
     },

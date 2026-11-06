@@ -13,6 +13,9 @@ model User {
   emailVerifiedAt DateTime?
   legalVersion String?
   legalAcceptedAt DateTime?
+  supabaseUserId String? @unique @db.Uuid
+  deletionStartedAt DateTime?
+  contentReports ContentReport[]
   emailTokens EmailVerificationToken[]
   role         String @default("learner")
   createdAt    DateTime @default(now())
@@ -26,6 +29,20 @@ model User {
   voiceSessions VoiceSession[]
   voiceMonthUsage VoiceMonthUsage[]
   assessmentRuns AssessmentRun[]
+}
+
+model ContentReport {
+  id String @id @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversationId String @db.Uuid
+  target String
+  reason String
+  details String
+  status String @default("open")
+  createdAt DateTime
+  resolvedAt DateTime?
+  @@index([status, createdAt])
 }
 
 model UsageReservation {

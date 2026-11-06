@@ -23,6 +23,9 @@ export async function authenticate(request: FastifyRequest, deps: AuthDependenci
   if (!session || session.expiresAt <= deps.now()) throw new ApiError(401, "Your session has expired. Please sign in.");
   const user = await deps.store.accountById(session.userId);
   if (!user) throw new ApiError(401, "Sign in to continue.");
+  if (user.deletionStartedAt && !["GET", "HEAD", "DELETE"].includes(request.method)) {
+    throw new ApiError(409, "Account deletion is pending. Retry Delete account in Settings to finish.");
+  }
   return { user, tokenHash };
 }
 

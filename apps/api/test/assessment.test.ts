@@ -49,7 +49,8 @@ function output(turnId: string, quote = retry, transferResult = "demonstrated") 
 }
 
 test("assessment: valid grounded feedback is owner-only, persistent and used for mastery", async context => {
-  const fixture = await setup(context, { assess: async input => output(input.turns[1].id) });
+  let calls = 0;
+  const fixture = await setup(context, { assess: async input => { calls++; return output(input.turns[1].id); } });
   assert.equal((await fixture.complete()).statusCode, 200);
   assert.equal((await fixture.store.conversation(fixture.user.id, fixture.id))?.state, "FEEDBACK_READY");
   const feedback = await fixture.app.inject({ url: `/v1/me/conversations/${fixture.id}/feedback`, headers: fixture.headers });
@@ -67,7 +68,11 @@ test("assessment: valid grounded feedback is owner-only, persistent and used for
   } })).json();
   assert.equal((await fixture.app.inject({ url: `/v1/me/conversations/${fixture.id}/feedback`,
     headers: { authorization: `Bearer ${other.token}` } })).statusCode, 404);
-  assert.equal((await fixture.complete()).statusCode, 409);
+  const repeated = await fixture.complete();
+  assert.equal(repeated.statusCode, 200);
+  assert.equal(repeated.json().feedback.id, feedback.json().feedback.id);
+  assert.equal(calls, 1);
+  assert.equal((await fixture.app.inject({ url: "/v1/me/progress", headers: fixture.headers })).json().successfulRetries, 1);
 });
 
 test("assessment: hallucinated quotes retry once, fail closed and retain learner turns", async context => {
@@ -79,6 +84,19 @@ test("assessment: hallucinated quotes retry once, fail closed and retain learner
   assert.equal((await fixture.store.conversation(fixture.user.id, fixture.id))?.state, "FAILED");
   assert.equal((await fixture.store.conversationTurns(fixture.user.id, fixture.id)).length, 2);
   assert.equal(await fixture.store.assessment(fixture.user.id, fixture.id), null);
+});
+
+test("local completion can be retried without changing measured progress or completion time", async context => {
+  const fixture = await setup(context, undefined, false);
+  const first = await fixture.complete();
+  assert.equal(first.statusCode, 200);
+  const before = (await fixture.app.inject({ url: "/v1/me/progress", headers: fixture.headers })).json();
+  const repeated = await fixture.complete();
+  assert.equal(repeated.statusCode, 200);
+  assert.deepEqual(repeated.json().conversation, first.json().conversation);
+  assert.deepEqual(repeated.json().evidence, first.json().evidence);
+  assert.deepEqual((await fixture.app.inject({ url: "/v1/me/progress", headers: fixture.headers })).json(), before);
+  assert.equal(fixture.store.assessmentUsageRows.size, 0);
 });
 
 test("assessment: a corrected retry succeeds and all paid attempts stay in the usage ledger", async context => {

@@ -1,4 +1,6 @@
 import type { ExpoConfig } from "expo/config";
+import { assertStagingMobileEnvironment } from "./staging-config.cjs";
+assertStagingMobileEnvironment(process.env);
 const variant = process.env.APP_VARIANT ?? "development";
 const baseId = process.env.APP_IDENTIFIER ?? "com.c2coach.app";
 const production = variant === "production";
@@ -29,15 +31,15 @@ if (production && microsoftClientId && !configuredClientId(microsoftClientId)) {
 const config: ExpoConfig = {
   owner: "luckysoma",
   name: (process.env.APP_NAME ?? "C2Coach") + (production ? "" : " " + variant),
-  slug: "communication-platform", scheme: "communicationcoach", version: "0.1.0",
+  slug: "communication-platform", scheme: "communicationcoach", version: "0.2.0",
   icon: "./assets/springbok-app-icon.png",
   extra: { eas: { projectId: "e874ae5c-f1cb-4d6b-bcf5-19b25231c0fd" } },
-  runtimeVersion: { policy: "appVersion" },
+  runtimeVersion: { policy: "fingerprint" },
   updates: { url: "https://u.expo.dev/e874ae5c-f1cb-4d6b-bcf5-19b25231c0fd", checkAutomatically: "ON_LOAD", fallbackToCacheTimeout: 0 },
   orientation: "portrait", userInterfaceStyle: "automatic",
   ios: { bundleIdentifier: production ? baseId : baseId + "." + variant, supportsTablet: true },
-  android: { package: production ? baseId : baseId + "." + variant, softwareKeyboardLayoutMode: "resize", adaptiveIcon: { foregroundImage: "./assets/springbok-adaptive-foreground-v2.png", backgroundColor: "#10251e" } },
-  plugins: ["expo-router", "expo-secure-store", "expo-image-picker", "expo-iap", "expo-updates", "expo-system-ui", ["expo-build-properties", { android: { usesCleartextTraffic: !production && apiUrl.startsWith("http://") } }], ["expo-audio", { microphonePermission: "Allow microphone access for your speaking practice.", enableBackgroundRecording: false, enableBackgroundPlayback: false }], ["@config-plugins/react-native-webrtc", { microphonePermission: "Allow microphone access for your live speaking practice.", cameraPermission: "Allow camera access for future practice features." }]],
-  web: { bundler: "metro", favicon: "./assets/springbok-app-icon.png" },
+  android: { package: production ? baseId : baseId + "." + variant, softwareKeyboardLayoutMode: "resize", blockedPermissions: ["android.permission.CAMERA"], adaptiveIcon: { foregroundImage: "./assets/springbok-adaptive-foreground-v2.png", backgroundColor: "#10251e" } },
+  plugins: ["expo-router", "expo-secure-store", "expo-image-picker", "expo-iap", "expo-updates", "expo-system-ui", ["expo-build-properties", { android: { usesCleartextTraffic: !production && apiUrl.startsWith("http://") } }], ["expo-audio", { microphonePermission: "Allow microphone access for your speaking practice.", enableBackgroundRecording: false, enableBackgroundPlayback: false }], ["@config-plugins/react-native-webrtc", { microphonePermission: "Allow microphone access for your live speaking practice." }]],
+  web: { bundler: "metro", output: "single", favicon: "./assets/springbok-app-icon.png" },
 };
 export default config;

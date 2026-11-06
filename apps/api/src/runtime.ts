@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { fileURLToPath } from "node:url";
+import { deploymentDatabaseUrl } from "./deployment-target";
 import { runtimeEnvironmentSchema } from "./runtime-env";
 import { buildApp } from "./app";
 import { prismaStore } from "./prisma-store";
@@ -11,7 +13,8 @@ import {
   createAppleNotificationVerifierFromEnv, createGooglePubSubAuthenticatorFromEnv, createStorePurchaseVerifierFromEnv,
 } from "./store-verifier";
 
-process.env.DATABASE_URL ??= process.env.Communicatio_Caoch_DATABASE_URL;
+const configuredDatabaseUrl = deploymentDatabaseUrl(process.env, fileURLToPath(new URL("../prisma/supabase-ca.crt", import.meta.url)));
+if (configuredDatabaseUrl) process.env.DATABASE_URL = configuredDatabaseUrl;
 const env = runtimeEnvironmentSchema.parse(process.env);
 if (!env.DEV_MEMORY_STORE && !env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required unless DEV_MEMORY_STORE=true");
@@ -25,6 +28,7 @@ const supabaseOAuth = {
   enabled: env.SUPABASE_OAUTH_ENABLED,
   url: env.SUPABASE_URL,
   publishableKey: env.SUPABASE_PUBLISHABLE_KEY,
+  adminKey: env.SUPABASE_SERVICE_ROLE_KEY,
 };
 if (supabaseOAuth.enabled && !supabaseOAuthConfigured(supabaseOAuth)) {
   throw new Error("Configure a hosted SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY before enabling Supabase OAuth.");
@@ -59,43 +63,6 @@ const appleNotificationVerifier = createAppleNotificationVerifierFromEnv(process
 const googlePubSubAuthenticator = createGooglePubSubAuthenticatorFromEnv(process.env);
 const database = env.DEV_MEMORY_STORE ? null : new PrismaClient();
 const store = env.DEV_MEMORY_STORE ? new MemoryStore() : prismaStore(database!);
-if (env.DEV_MEMORY_STORE) {
-  const { hashPassword } = await import("./password");
-  const user = await store.createAccount("soma.kiran20@gmail.com", await hashPassword("Password12345678"), { version: "2026-10-10", acceptedAt: new Date() });
-  await store.markEmailVerified(user.id, new Date());
-  await store.saveProfile(user.id, {
-    displayName: "Soma Kiran",
-    primaryLanguage: "English",
-    coachingLanguage: "English",
-    function: "Engineering",
-    jobTitle: "Engineering Leader",
-    careerLevel: "Executive",
-    industry: "Technology",
-    audience: "Executive leadership and global engineering teams",
-    situations: "Strategic alignment and technical vision",
-    goal: "Explain ideas clearly",
-    challenges: "Concise executive summaries",
-    practiceMinutes: 10,
-    planId: "professional",
-    timezone: "Asia/Kolkata",
-    reducedMotion: false,
-  });
-  await store.saveEntitlement({
-    id: "seed-entitlement-soma",
-    userId: user.id,
-    provider: "apple",
-    productId: "com.communicationcoach.professional.monthly",
-    transactionId: "seed-tx-soma",
-    originalTransactionId: "seed-tx-soma",
-    purchaseToken: "seed-token-soma",
-    status: "active",
-    environment: "sandbox",
-    expiresAt: new Date(Date.now() + 365 * 24 * 3600 * 1000),
-    providerEventDate: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-}
 export const app = await buildApp(store, {
   runtime: env.RUNTIME, cronSecret: env.CRON_SECRET,
   assessment: {

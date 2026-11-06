@@ -60,7 +60,7 @@ test("supabase: identity is fetched from the pinned Auth server, not decoded fro
       return Response.json(providerUser());
     },
   });
-  assert.deepEqual(identity, { email, subject, emailVerified: true });
+  assert.deepEqual(identity, { email, subject, emailVerified: true, supabaseUserId: userId });
 });
 
 test("supabase: new Google account gets a revocable application session", async context => {

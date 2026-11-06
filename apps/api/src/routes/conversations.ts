@@ -35,7 +35,6 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
   app.get("/v1/me/export", async request => {
     const { user } = await authenticate(request, deps);
     const profile = await deps.store.profile(user.id);
-    if (!profile) throw new ApiError(409, "Complete your profile first.");
     const learningRecords = await deps.store.learningRecords(user.id);
     const records = learningRecords.map(({ conversation, turns, assessment }) => ({
       conversation: {
@@ -143,6 +142,20 @@ export function register(app: FastifyInstance, deps: RouteDependencies) {
     if (!id) throw new ApiError(400, "A conversation id is required.");
     const conversation = await deps.store.conversation(user.id, id);
     if (!conversation) return reply.code(404).send({ error: "Conversation not found." });
+    if (conversation.state === "FEEDBACK_READY") {
+      const feedback = await deps.store.assessment(user.id, id);
+      if (!feedback) throw new ApiError(409, "Verified AI feedback is not ready.");
+      return { conversation: { id, state: "FEEDBACK_READY" }, feedback, evidenceSource: "ai_assessment" };
+    }
+    if (conversation.state === "COMPLETED") {
+      const saved = await deps.store.conversationTurns(user.id, id);
+      const primary = saved.find(turn => turn.role === "user" && turn.phase === "primary");
+      const retry = [...saved].reverse().find(turn => turn.role === "user" && turn.phase === "independent_retry");
+      const evidence = primary && retry ? assessCommunicationEvidence({ primary: primary.text, retry: retry.text }) : null;
+      return { conversation: { id, state: "COMPLETED", completedAt: conversation.updatedAt.toISOString() },
+        evidence: evidence ? { score: evidence.score, passed: evidence.passed } : null, evidenceSource: "local_check",
+        message: "Practice completed. Your saved result is available." };
+    }
     if (!["CREATED", "INTERRUPTED"].includes(conversation.state)) throw new ApiError(409, "This practice session is already closed.");
     const turns = await deps.store.conversationTurns(user.id, id);
     if (!turns.some(turn => turn.role === "user" && turn.phase === "primary")) {

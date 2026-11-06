@@ -146,10 +146,10 @@ export function CoachingFeedback({ feedback }: { feedback: FeedbackAssessment })
               {priority.coaching.steps.map((step, stepIndex) => (
                 <Copy key={stepIndex}>{`${stepIndex + 1}. ${step}`}</Copy>
               ))}
-              {priority.coaching.suggestedWording && (
+              {Boolean(priority.coaching.suggestedWording) && (
                 <>
                   <Copy>Suggested phrasing to practice:</Copy>
-                  <Quote text={priority.coaching.suggestedWording} />
+                  <Quote text={priority.coaching.suggestedWording!} />
                 </>
               )}
             </>

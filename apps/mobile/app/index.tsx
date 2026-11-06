@@ -10,8 +10,9 @@ import { Action, Card, Copy, Field, Heading, Screen } from "../src/ui";
 import { supabaseGoogleConfigured } from "../src/supabase-config";
 import { ApiError } from "../src/api";
 import { SpringbokLogo } from "../src/springbok-logo";
+import { tryCompleteAuthSession } from "../src/safe-storage";
 
-WebBrowser.maybeCompleteAuthSession();
+tryCompleteAuthSession(() => WebBrowser.maybeCompleteAuthSession());
 
 type SocialProps = { auth: ReturnType<typeof useAuth>; busy: boolean; register: boolean; accepted: boolean;
   setBusy(value: boolean): void; setMessage(value: string): void; onAcceptanceRequired(): void };
@@ -111,10 +112,18 @@ export default function Welcome() {
     onAcceptanceRequired: () => { setRegister(true); setSocialMessage("Please review and accept the Terms of Service before creating an account."); } };
   if (auth.loading) return <Screen topInset><Copy>Restoring your session…</Copy></Screen>;
   if (auth.token && auth.me) return <Redirect href={auth.me.profile ? "/home" : "/onboarding"} />;
+  if (auth.token) return <Screen topInset><Heading>Reconnect to your account</Heading>
+    <Copy>Your sign-in is saved. We could not load your account details.</Copy>
+    {Boolean(auth.error) && <Copy error>{auth.error}</Copy>}
+    <Action title="Try again" busy={busy} onPress={async () => { setBusy(true); try { await auth.refresh(); } catch { /* Session recovery displays the error. */ } finally { setBusy(false); } }} />
+    <Action title="Sign out on this device" secondary onPress={() => { void auth.signOut().catch(() => undefined); }} />
+  </Screen>;
   async function submit() {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("Enter a valid email address."); return; }
+    if (password.length < 12 || password.length > 128) { setError("Use a password with 12–128 characters."); return; }
     if (register && !accepted) { setError("Review and accept the Terms of Service to create an account."); return; }
     setBusy(true); setError("");
-    try { await auth.signIn(email, password, register, accepted); } catch (failure) { setError((failure as Error).message); } finally { setBusy(false); }
+    try { await auth.signIn(email.trim(), password, register, accepted); } catch (failure) { setError((failure as Error).message); } finally { setBusy(false); }
   }
   return <Screen topInset><SpringbokLogo size={96} repeat style={{ marginBottom: 16 }} /><Heading eyebrow={brand.name}>{brand.tagline}</Heading><Copy>A little practice. A clearer message. Build the communication skills your work calls for.</Copy>
     <Card><Heading eyebrow="Start with you">{register ? "Make room for your voice." : "Welcome back."}</Heading>
@@ -130,20 +139,19 @@ export default function Welcome() {
       {Boolean(error || auth.error) && <Copy error>{error || auth.error}</Copy>}
       <Action title={register ? "Create account" : "Sign in"} busy={busy} disabled={register && !accepted} onPress={submit} />
       <Action secondary title="Forgot password?" onPress={() => router.push("/password-reset")} />
-      <Copy>Or continue with</Copy>
+      {(supabaseConfigured || googleConfigured || microsoftConfigured) && <Copy>Or continue with</Copy>}
       {supabaseConfigured
         ? <SupabaseGoogleButton {...socialProps} />
         : googleConfigured
           ? <GoogleButton {...socialProps} />
-          : <Action title="Google sign-in · setup pending" secondary icon="person"
-            onPress={() => setSocialMessage("Google sign-in is awaiting provider configuration. Email and password still work.")} />}
-      {microsoftConfigured ? <MicrosoftButton {...socialProps} /> : <Action title="Set up Microsoft sign-in" secondary icon="client" onPress={() => setSocialMessage("Add EXPO_PUBLIC_MICROSOFT_CLIENT_ID to apps/mobile/.env, then restart Expo.")} />}
+          : null}
+      {microsoftConfigured && <MicrosoftButton {...socialProps} />}
       {Boolean(socialMessage) && <Copy>{socialMessage}</Copy>}
       <Action secondary title={register ? "Already have an account? Sign in" : "Create a new account"} onPress={() => { setRegister(!register); setError(""); setSocialMessage(""); }} />
     </Card>
-    <Copy>
+    {__DEV__ && <Copy>
       Development preview. Email verification and recovery require a configured email sender.
       Use test accounts until release verification is complete.
-    </Copy>
+    </Copy>}
   </Screen>;
 }

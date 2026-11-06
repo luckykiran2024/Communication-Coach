@@ -10,6 +10,7 @@ import { coachAccents, colorPalettes, normalizeColorTheme, type CoachAccent, typ
 import { normalizeThemeMode, type ThemeMode } from "./theme-preferences";
 import { radioSelection, wrappingTextStyle } from "./presentation";
 import { GradientWash } from "./gradient-wash";
+import { readWebPreference, writeWebPreference } from "./safe-storage";
 
 type IconName = "mic" | "person" | "client" | "recording" | "progress" | "spark" | "clock" | "play" | "settings" | "home" | "insights" | "coach";
 const icons: Record<IconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
@@ -33,14 +34,14 @@ type Preferences = { themeMode: ThemeMode; setThemeMode(mode: ThemeMode): void; 
 const PreferencesContext = createContext<Preferences | null>(null);
 const preferenceKeys = { theme: "coach-theme-v1", colorTheme: "coach-color-theme-v1", avatar: "coach-avatar-v1", voiceAccent: "coach-voice-accent-v1", reducedMotion: "coach-reduced-motion-v1" };
 async function readPreference(key: string) {
-  if (Platform.OS === "web") return typeof localStorage === "undefined" ? null : localStorage.getItem(key);
+  if (Platform.OS === "web") return readWebPreference(key);
   const SecureStore = await import("expo-secure-store");
-  return SecureStore.getItemAsync(key);
+  return SecureStore.getItemAsync(key).catch(() => null);
 }
 async function writePreference(key: string, value: string | null) {
-  if (Platform.OS === "web") { if (typeof localStorage !== "undefined") value === null ? localStorage.removeItem(key) : localStorage.setItem(key, value); return; }
+  if (Platform.OS === "web") { writeWebPreference(key, value); return; }
   const SecureStore = await import("expo-secure-store");
-  if (value === null) await SecureStore.deleteItemAsync(key); else await SecureStore.setItemAsync(key, value);
+  try { if (value === null) await SecureStore.deleteItemAsync(key); else await SecureStore.setItemAsync(key, value); } catch { /* Preferences remain usable in memory. */ }
 }
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [themeMode, setThemeModeState] = useState<ThemeMode>("light");
@@ -52,7 +53,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     void Promise.all([
       readPreference(preferenceKeys.theme), readPreference(preferenceKeys.colorTheme),
       readPreference(preferenceKeys.avatar), readPreference(preferenceKeys.voiceAccent),
-      readPreference(preferenceKeys.reducedMotion), AccessibilityInfo.isReduceMotionEnabled(),
+      readPreference(preferenceKeys.reducedMotion), AccessibilityInfo.isReduceMotionEnabled().catch(() => false),
     ]).then(([savedTheme, savedColorTheme, savedAvatar, savedVoiceAccent, savedReducedMotion, systemReducedMotion]) => {
       const nextTheme = normalizeThemeMode(savedTheme);
       setThemeModeState(nextTheme);
@@ -139,8 +140,8 @@ function BottomNavigation({ pathname }: { pathname: string }) {
 export function Heading({ children, eyebrow }: { children: ReactNode; eyebrow?: string }) {
   const theme = useTheme();
   return <View style={{ gap: 10, ...wrappingTextStyle }}>
-    {eyebrow && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 1.5 }}>
-      {eyebrow.toUpperCase()}
+    {Boolean(eyebrow) && <Text style={{ color: theme.positive, fontFamily, fontSize: 12, fontWeight: "700", letterSpacing: 1.5 }}>
+      {eyebrow?.toUpperCase()}
     </Text>}
     <Text accessibilityRole="header"
       style={{ color: theme.ink, fontFamily, fontSize: 28, fontWeight: "700", lineHeight: 34, letterSpacing: -0.5 }}>
@@ -210,7 +211,7 @@ export function EmptyState({ title, description, actionTitle, onAction, icon = "
       </View>
       <Text style={{ color: theme.ink, fontFamily, fontSize: 18, fontWeight: "700", textAlign: "center" }}>{title}</Text>
       <Text style={{ color: theme.muted, fontFamily, fontSize: 15, textAlign: "center", lineHeight: 22 }}>{description}</Text>
-      {actionTitle && onAction && <Action title={actionTitle} onPress={onAction} />}
+      {Boolean(actionTitle) && onAction && <Action title={actionTitle!} onPress={onAction} />}
     </View>
   </Card>;
 }

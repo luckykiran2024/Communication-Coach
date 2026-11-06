@@ -123,7 +123,8 @@ export async function createRouteDependencies(store: Store, options: BuildAppOpt
     realtimeConfigured,
     realtimeModel,
     assessmentEnabled, assessmentProvider, assessmentModel,
-    assessmentTimeoutMs: Math.min(30000, Math.max(1, options.assessment?.timeoutMs ?? 30000)),
+    // Leave 15 seconds within the hosting deadline for database settlement and the response.
+    assessmentTimeoutMs: Math.min(45000, Math.max(1, options.assessment?.timeoutMs ?? 45000)),
     assessmentDailyLimit: options.assessment?.dailyLimit ?? Number(process.env.ASSESSMENT_DAILY_LIMIT ?? 10),
     reapVoiceSessions,
     activePlan,

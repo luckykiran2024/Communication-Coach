@@ -14,9 +14,10 @@ export function sharedRateLimitStore(store: Store, now: () => Date, namespace = 
       });
     }
     child(routeOptions: unknown) {
-      const options = routeOptions as { path?: string; prefix?: string; method?: string | string[] };
+      const options = routeOptions as { routeInfo?: { url?: string; prefix?: string; method?: string | string[] } };
+      const route = options.routeInfo ?? {};
       const child = new SharedRateLimitStore(routeOptions);
-      child.namespace = `${namespace}:${options.method ?? "route"}:${options.prefix ?? ""}:${options.path ?? ""}`;
+      child.namespace = `${namespace}:${route.method ?? "route"}:${route.prefix ?? ""}:${route.url ?? ""}`;
       return child;
     }
   };

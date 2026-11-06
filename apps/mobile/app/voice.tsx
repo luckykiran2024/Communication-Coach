@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { AppState, Platform, Switch, View } from "react-native";
+import { AppState, Platform, View } from "react-native";
 import Constants from "expo-constants";
 import { Redirect, router } from "expo-router";
-import { AudioModule, RecordingPresets, setAudioModeAsync, useAudioPlayer, useAudioRecorder, useAudioRecorderState } from "expo-audio";
+import { AudioModule, RecordingPresets, setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus, useAudioRecorder, useAudioRecorderState } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import { useAuth } from "../src/auth";
 import { request, type VoiceCapabilities, type Recommendations } from "../src/api";
 import { Action, Card, Copy, Disclosure, Heading, Icon, PillTag, Screen, usePreferences, useTheme, VoiceWave } from "../src/ui";
 import { trackEvent } from "../src/telemetry";
+import { withDeadline } from "../src/deadline";
 
 type CoachState = "idle" | "listening" | "speaking" | "reconnecting";
 
@@ -18,13 +19,13 @@ export default function AICoachScreen() {
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(recorder, 200);
   const player = useAudioPlayer(null);
+  const playerStatus = useAudioPlayerStatus(player);
 
   const [coachState, setCoachState] = useState<CoachState>("idle");
-  const [consent, setConsent] = useState(true);
   const [uri, setUri] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [secondsRemaining, setSecondsRemaining] = useState(420); // 7 minutes = 420 seconds
+  const [secondsRemaining, setSecondsRemaining] = useState(60);
   const [recommendations, setRecommendations] = useState<Recommendations | null>(null);
 
   const active = useRef(false);
@@ -32,6 +33,15 @@ export default function AICoachScreen() {
   const file = useRef<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pendingCheck = useRef<AbortController | null>(null);
+  const preparing = useRef(false);
+  const [checkingMicrophone, setCheckingMicrophone] = useState(false);
+
+  function cancelQuickCheck() {
+    pendingCheck.current?.abort();
+    pendingCheck.current = null;
+    setCheckingMicrophone(false); setBusy(false);
+  }
 
   const [readiness, setReadiness] = useState("Connecting to AI voice engine…");
   const [capabilities, setCapabilities] = useState<VoiceCapabilities | null>(null);
@@ -39,6 +49,7 @@ export default function AICoachScreen() {
   async function removeFile() {
     player.pause();
     if (file.current && Platform.OS !== "web") await FileSystem.deleteAsync(file.current, { idempotent: true });
+    if (file.current?.startsWith("blob:") && Platform.OS === "web") URL.revokeObjectURL(file.current);
     file.current = null;
     if (alive.current) setUri(null);
   }
@@ -48,8 +59,9 @@ export default function AICoachScreen() {
     active.current = false;
     if (timer.current) clearTimeout(timer.current);
     if (countdownInterval.current) clearInterval(countdownInterval.current);
-    await recorder.stop();
-    await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true, shouldPlayInBackground: false });
+    try { await recorder.stop(); }
+    catch { if (alive.current) setError("The audio check could not stop cleanly. Check microphone permissions before trying again."); }
+    finally { await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true, shouldPlayInBackground: false }).catch(() => undefined); }
     file.current = recorder.uri;
     if (alive.current) {
       setUri(recorder.uri);
@@ -76,7 +88,7 @@ export default function AICoachScreen() {
       request<Recommendations>("/v1/me/scenarios", auth.token).catch(() => null),
       loadCapabilities(),
     ]).then(async ([result, recs, detected]) => {
-      if (recs) setRecommendations(recs);
+      if (recs && alive.current) setRecommendations(recs);
       const query = new URLSearchParams({
         platform: Platform.OS,
         nativeModuleAvailable: String(detected.nativeModuleAvailable),
@@ -96,6 +108,7 @@ export default function AICoachScreen() {
 
     const subscription = AppState.addEventListener("change", next => {
       if (next !== "active") {
+        cancelQuickCheck();
         player.pause();
         void stopAudio().catch(() => {
           if (alive.current) setError("Voice session interrupted.");
@@ -105,6 +118,7 @@ export default function AICoachScreen() {
 
     return () => {
       alive.current = false;
+      pendingCheck.current?.abort(); pendingCheck.current = null;
       subscription.remove();
       if (timer.current) clearTimeout(timer.current);
       if (countdownInterval.current) clearInterval(countdownInterval.current);
@@ -121,28 +135,38 @@ export default function AICoachScreen() {
   if (!auth.token) return <Redirect href="/" />;
 
   async function startQuickCheck() {
+    if (preparing.current) { setError("The previous microphone request is still closing. Check browser permissions or reload this page before trying again."); return; }
+    const operation = new AbortController();
+    pendingCheck.current = operation;
+    setCheckingMicrophone(true);
     setBusy(true);
     setError("");
     try {
-      const permission = await AudioModule.requestRecordingPermissionsAsync();
+      const permission = await withDeadline(AudioModule.requestRecordingPermissionsAsync(), 15000, operation.signal);
       if (!permission.granted) {
         setError("Microphone permission was denied. Please allow microphone access in device settings.");
         return;
       }
-      if (!alive.current || AppState.currentState !== "active") return;
+      if (!alive.current || operation.signal.aborted || AppState.currentState !== "active") return;
       await removeFile();
       await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true, shouldPlayInBackground: false });
-      await recorder.prepareToRecordAsync();
-      if (!alive.current || AppState.currentState !== "active") {
-        await recorder.stop();
-        file.current = recorder.uri;
-        await removeFile();
-        return;
-      }
+      if (operation.signal.aborted) return;
+      preparing.current = true;
+      const preparation = recorder.prepareToRecordAsync().then(async () => {
+        if (operation.signal.aborted || !alive.current || AppState.currentState !== "active") {
+          await recorder.stop();
+          await setAudioModeAsync({ allowsRecording: false });
+          file.current = recorder.uri;
+          await removeFile();
+          throw new Error("Microphone check cancelled.");
+        }
+      }).finally(() => { preparing.current = false; });
+      await withDeadline(preparation, 15000, operation.signal);
+      if (operation.signal.aborted || !alive.current) return;
       recorder.record();
       active.current = true;
       setCoachState("listening");
-      setSecondsRemaining(420);
+      setSecondsRemaining(60);
 
       countdownInterval.current = setInterval(() => {
         setSecondsRemaining(prev => {
@@ -158,9 +182,11 @@ export default function AICoachScreen() {
         void stopAudio().catch(failure => setError(failure.message));
       }, 60000);
     } catch (failure) {
-      setError((failure as Error).message);
+      operation.abort();
+      if (alive.current && pendingCheck.current === operation) setError((failure as Error).message);
     } finally {
-      if (alive.current) setBusy(false);
+      if (!active.current && !preparing.current) await setAudioModeAsync({ allowsRecording: false }).catch(() => undefined);
+      if (alive.current && pendingCheck.current === operation) { pendingCheck.current = null; setBusy(false); setCheckingMicrophone(false); }
     }
   }
 
@@ -217,28 +243,31 @@ export default function AICoachScreen() {
         {recorderState.isRecording ? (
           <View style={{ gap: 10 }}>
             <Action title="Stop recording & listen" icon="recording" onPress={() => void stopAudio()} />
-            <Action title="Interrupt Coach" secondary onPress={() => { player.pause(); setCoachState("listening"); }} />
           </View>
         ) : (
           <View style={{ gap: 10 }}>
-            <Action title="Start 7-Minute AI Practice" icon="play" busy={busy} onPress={() => void startFullPracticeSession()} />
-            <Action title="Quick Microphone & Accent Check" secondary icon="mic" busy={busy} onPress={() => void startQuickCheck()} />
+            <Action title="Open recommended practice" icon="play" busy={busy} onPress={() => void startFullPracticeSession()} />
+            <Action title="Quick Microphone Check" secondary icon="mic" busy={busy} onPress={() => void startQuickCheck()} />
+            {checkingMicrophone && <Action title="Cancel microphone request" secondary onPress={cancelQuickCheck} />}
           </View>
         )}
 
-        {uri && !recorderState.isRecording && (
+        {Boolean(uri) && !recorderState.isRecording && (
           <View style={{ gap: 8, marginTop: 4 }}>
-            <Action title="Play back my voice check" secondary onPress={() => { player.replace(uri); player.play(); }} />
+            <Action title={playerStatus.playing ? "Stop playback" : "Play back my voice check"} secondary onPress={() => {
+              try { if (playerStatus.playing) player.pause(); else if (uri) { player.replace(uri); player.play(); } }
+              catch { setError("This device could not play the sample. Try recording again or check audio output settings."); }
+            }} />
             <Action title="Delete audio sample" secondary onPress={() => void removeFile()} />
           </View>
         )}
       </Card>
 
       <Card>
-        <Heading eyebrow="Live Voice Architecture">Low-Latency Bidirectional Audio</Heading>
-        <Disclosure summary="OpenAI Realtime gpt-realtime-2.1 with native WebRTC stream.">
-          <Copy>Audio is streamed over WebRTC Opus at 24kHz with adaptive echo cancellation. The AI coach detects your pauses naturally and adjusts tone to your specified accent.</Copy>
-          <Copy>In native Android builds, speech connects directly to live sockets. In web preview mode, recording stays local on your machine.</Copy>
+        <Heading eyebrow="Microphone check">Record, listen and delete</Heading>
+        <Disclosure summary="Record a local sample for up to one minute.">
+          <Copy>This check records on your device for playback. It does not upload audio or assess your accent.</Copy>
+          <Copy>Live AI role-play is a separate feature in supported Android and iOS builds.</Copy>
         </Disclosure>
       </Card>
 

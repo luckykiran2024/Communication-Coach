@@ -4,6 +4,7 @@ export type SupabaseOAuthOptions = {
   enabled?: boolean;
   url?: string;
   publishableKey?: string;
+  adminKey?: string;
   fetchImpl?: typeof fetch;
 };
 
@@ -46,5 +47,20 @@ export async function supabaseGoogleIdentity(token: string, options: SupabaseOAu
     || identity?.identity_data?.email_verified !== true) {
     throw new ApiError(401, "Sign in with a verified Google account to continue.");
   }
-  return { email, subject, emailVerified: true };
+  return { email, subject, emailVerified: true, supabaseUserId: data.id };
+}
+
+export async function deleteSupabaseIdentity(id: string, options: SupabaseOAuthOptions | undefined) {
+  if (!supabaseOAuthConfigured(options) || !options?.adminKey) {
+    throw new ApiError(503, "Identity deletion is unavailable. Your account has not been deleted. Please contact support or try again later.");
+  }
+  if (!/^[a-f0-9-]{36}$/i.test(id)) throw new ApiError(503, "Identity deletion requires a verified account identifier.");
+  let response: Response;
+  try {
+    response = await (options.fetchImpl ?? fetch)(new URL(`/auth/v1/admin/users/${encodeURIComponent(id)}`, options.url), {
+      method: "DELETE", headers: { apikey: options.adminKey, Authorization: `Bearer ${options.adminKey}` },
+      redirect: "error", signal: AbortSignal.timeout(10000),
+    });
+  } catch { throw new ApiError(503, "Identity deletion was interrupted. Please retry; your application records are still retained."); }
+  if (!response.ok && response.status !== 404) throw new ApiError(503, "Identity deletion is temporarily unavailable. Please retry.");
 }

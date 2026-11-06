@@ -17,8 +17,10 @@ import { register as registerProfileRoutes } from "./routes/profile";
 import { register as registerConversationRoutes } from "./routes/conversations";
 import { register as registerProgressRoutes } from "./routes/progress";
 import { register as registerVoiceRoutes } from "./routes/voice";
+import { register as registerContentReports } from "./routes/content-reports";
 import { safeEqual } from "./lib/safe-equal";
 import { sharedRateLimitStore } from "./lib/shared-rate-limit";
+import { requestPathForLog } from "./lib/request-log";
 
 export async function buildApp(store: Store, options: BuildAppOptions = {}) {
   if (process.env.NODE_ENV === "production" && process.env.VERCEL === "1" && store.rateLimitStorage !== "postgres") {
@@ -28,14 +30,25 @@ export async function buildApp(store: Store, options: BuildAppOptions = {}) {
     logger: options.logger
       ? {
         redact: ["req.headers.authorization", "req.headers.cookie", "req.headers.x-cron-secret"],
-        serializers: { req: request => ({ method: request.method, url: request.url }) },
+        serializers: { req: request => ({ method: request.method, url: requestPathForLog(request.url) }) },
       }
       : false,
     bodyLimit: 16384,
     trustProxy: false,
   });
   await app.register(helmet);
-  await app.register(cors, { origin: options.origins ?? ["http://localhost:3000", "http://localhost:8081"], methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"] });
+  await app.register(cors, {
+    origin: options.origins ?? [
+      "http://localhost:3000",
+      "http://localhost:8081",
+      "http://localhost:8082",
+      "http://192.168.0.16:3000",
+      "http://192.168.0.16:8081",
+      "http://192.168.0.16:8082",
+      /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+    ],
+    methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
+  });
   await app.register(rateLimit, {
     max: options.rateLimitMax ?? 100, timeWindow: 60000, skipOnError: false,
     store: sharedRateLimitStore(store, options.now ?? (() => new Date()), options.rateLimitNamespace),
@@ -75,7 +88,7 @@ export async function buildApp(store: Store, options: BuildAppOptions = {}) {
   app.addHook("onSend", async (_request, reply, payload) => { reply.header("Cache-Control", "no-store"); return payload; });
 
   registerPublicLegalRoutes(app);
-  registerHealthRoutes(app, deps);
+  registerHealthRoutes(app, deps, options);
   registerBillingRoutes(app, deps);
   registerScenarioRoutes(app, deps);
   registerManagerRoutes(app, deps);
@@ -85,5 +98,6 @@ export async function buildApp(store: Store, options: BuildAppOptions = {}) {
   registerConversationRoutes(app, deps);
   registerProgressRoutes(app, deps);
   registerVoiceRoutes(app, deps);
+  registerContentReports(app, deps);
   return app;
 }

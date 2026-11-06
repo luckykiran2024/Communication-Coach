@@ -33,6 +33,7 @@ export class OpenAIAssessmentProvider implements AssessmentProvider {
         ...(input.requestId ? { "X-Client-Request-Id": input.requestId } : {}) },
       body: JSON.stringify({
         model: input.model, store: false, max_output_tokens: 4000,
+        ...(/^gpt-5(?:-mini|-nano)?(?:-20\d\d-\d\d-\d\d)?$/.test(input.model) ? { reasoning: { effort: "low" } } : {}),
         instructions: assessmentInstructions,
         input: JSON.stringify({
           scenario: input.scenario, rubric, coachingAreas: coachingAreaLabels,

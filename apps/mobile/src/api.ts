@@ -6,15 +6,19 @@ export async function request<Result>(
   path: string, token?: string | null, method = "GET", body?: unknown, timeoutMs = 15000,
 ): Promise<Result> {
   let response: Response;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.min(60000, Math.max(1, timeoutMs)));
   try {
     response = await fetch(apiUrl + path, {
       method, headers: { ...(body ? { "Content-Type": "application/json" } : {}), ...(token ? { Authorization: "Bearer " + token } : {}) },
-      body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(Math.min(60000, Math.max(1, timeoutMs))),
+      body: body ? JSON.stringify(body) : undefined, signal: controller.signal,
     });
-  } catch { throw new Error("Cannot reach the server. Check your connection and API address."); }
+  } catch {
+    throw new Error(controller.signal.aborted ? "The request timed out. Check its status before retrying." : "Cannot reach the server. Check your connection and try again.");
+  } finally { clearTimeout(timer); }
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    throw new ApiError(data.error ?? "Unable to complete this request.", response.status);
+    throw new ApiError(data.error ?? (response.status === 504 ? "The server took too long to respond. Check the practice status before retrying." : "Unable to complete this request."), response.status);
   }
   return response.status === 204 ? undefined as Result : response.json();
 }

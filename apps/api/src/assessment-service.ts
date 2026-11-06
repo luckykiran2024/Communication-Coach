@@ -14,7 +14,7 @@ export async function assessConversation(input: {
     controller.signal.addEventListener("abort", () => reject(new Error("Assessment timed out")), { once: true });
   });
   void deadline.catch(() => undefined);
-  const timer = setTimeout(() => controller.abort(), input.timeoutMs ?? 30000);
+  const timer = setTimeout(() => controller.abort(), input.timeoutMs ?? 45000);
   try {
     for (const attempt of [1, 2]) {
       const usage: AssessmentUsage = {

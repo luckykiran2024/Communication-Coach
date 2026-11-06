@@ -11,7 +11,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
-    "deploy:vercel": "test -n \"$Communicatio_Caoch_DATABASE_URL\" || { echo \"Database URL integration variable is missing\" >&2; exit 1; }; npm run build -w @coach/core && DATABASE_URL=\"$Communicatio_Caoch_DATABASE_URL\" npm run db:migrate && npm run build:vercel && NODE_ENV=production node -e \"import('./api/index.js').then(() => console.log('API bootstrap import passed'))\""
+    "deploy:vercel": "node --require=../../scripts/node-os-compat.cjs ../../node_modules/tsx/dist/cli.mjs ../../scripts/deploy-api.mts"
   },
   "dependencies": {
     "@apple/app-store-server-library": "3.1.0",
@@ -21,10 +21,10 @@
     "@fastify/rate-limit": "^10.3.0",
     "@prisma/client": "6.19.2",
     "esbuild": "0.28.2",
-    "fastify": "5.12.5",
+    "fastify": "5.12.6",
     "google-auth-library": "11.1.0",
     "jose": "6.2.12",
-    "zod": "^3.25.76"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "prisma": "6.19.2"

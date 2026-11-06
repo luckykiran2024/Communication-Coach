@@ -4,7 +4,7 @@ import { brand } from "@coach/core";
 import { useEffect, useState } from "react";
 import { useAuth } from "../src/auth";
 import { request, type ProgressSnapshot } from "../src/api";
-import { Card, Copy, Heading, ProgressBar, Screen, useTheme } from "../src/ui";
+import { Action, Card, Copy, Heading, ProgressBar, Screen, useTheme } from "../src/ui";
 
 const minutes = (value: number) => value.toLocaleString(undefined, { maximumFractionDigits: 1 });
 
@@ -13,20 +13,23 @@ export default function Progress() {
   const theme = useTheme();
   const [progress, setProgress] = useState<ProgressSnapshot | null>(null);
   const [error, setError] = useState("");
+  const [reload, setReload] = useState(0);
   const token = auth.token;
   const profile = auth.me?.profile;
   useEffect(() => {
     let active = true;
     if (token && profile) {
+      setError(""); setProgress(null);
       request<ProgressSnapshot>("/v1/me/progress", token)
         .then(value => { if (active) setProgress(value); })
         .catch(failure => { if (active) setError((failure as Error).message); });
     }
     return () => { active = false; };
-  }, [token, profile]);
+  }, [token, profile, reload]);
   if (auth.loading) return <Screen><Copy>Loading your progress…</Copy></Screen>;
   if (!token) return <Redirect href="/" />;
   if (!profile) return <Redirect href="/onboarding" />;
+  if (!progress) return <Screen><Copy error={Boolean(error)}>{error || "Loading your measured progress…"}</Copy>{Boolean(error) && <Action title="Retry" onPress={() => setReload(value => value + 1)} />}</Screen>;
   const weeklyMinutes = progress?.weeklyPracticeMinutes ?? 0;
   const daily = progress?.dailyPractice ?? [];
   const areaRatings = progress?.areaRatings ?? [];

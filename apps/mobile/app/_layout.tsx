@@ -1,8 +1,21 @@
-import { Stack } from "expo-router";
+import { Stack, type ErrorBoundaryProps } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "../src/auth";
 import { PreferencesProvider, useTheme } from "../src/ui";
 import { practiceNavigation } from "../src/presentation";
+
+/** This fallback deliberately works even when a theme or auth provider fails. */
+export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
+  return <View style={{ flex: 1, justifyContent: "center", padding: 28, gap: 16, backgroundColor: "#f5f8f5" }}>
+    <Text accessibilityRole="header" style={{ fontSize: 24, fontWeight: "700", color: "#10251e" }}>Let’s try that again</Text>
+    <Text style={{ fontSize: 16, color: "#10251e" }}>This screen could not open. Your saved practice is still available when you reconnect.</Text>
+    <Pressable accessibilityRole="button" accessibilityLabel="Try opening the screen again" onPress={() => { void retry(); }}
+      style={{ minHeight: 48, justifyContent: "center", padding: 16, borderRadius: 12, backgroundColor: "#10251e" }}>
+      <Text style={{ color: "white", fontSize: 16 }}>Try again</Text>
+    </Pressable>
+  </View>;
+}
 export default function Layout() {
   return <PreferencesProvider><AuthProvider><AppStack /></AuthProvider></PreferencesProvider>;
 }

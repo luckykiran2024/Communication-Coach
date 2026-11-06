@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { releaseRuntimeConfigured } from "./release-capabilities.mjs";
 import { planIds, scenarios } from "@coach/core";
 import { contentCatalogReady, loadContentReviewEvidence } from "./content-release";
 import { loadNativeQaEvidence } from "./native-qa";
@@ -6,6 +7,7 @@ import { supabaseOAuthConfigured } from "../apps/api/src/lib/supabase-oauth";
 import { supabaseGoogleConfigured } from "../apps/mobile/src/supabase-config";
 import { createEmailSender } from "../apps/api/src/email-sender";
 import { billingProvidersSchema } from "../apps/api/src/billing-configuration";
+import { loadReleaseAcceptance } from "./release-acceptance";
 
 type CheckStatus = "PASS" | "BLOCKED" | "MANUAL";
 type Check = { name: string; status: CheckStatus; detail: string };
@@ -74,27 +76,49 @@ function check(name: string, status: CheckStatus, detail: string): Check {
   return { name, status, detail };
 }
 
-const checks: Check[] = [
-  check("Account email", process.env.EMAIL_PROVIDER === "resend" && createEmailSender()
-    && /^https:\/\//.test(process.env.ACCOUNT_EMAIL_LINK_BASE_URL ?? "")
-    ? "MANUAL" : "BLOCKED",
-  "Configure a verified sending domain and HTTPS recovery links, then verify delivery and account recovery on a real device."),
-  check("AI assessment", process.env.ASSESSMENT_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED",
-    "Enable ASSESSMENT_ENABLED and configure the provider only after controlled quality and cost verification."),
-  check("Serverless scheduler", process.env.RUNTIME === "server" ? "PASS"
-    : productionValue("CRON_SECRET") && (process.env.CRON_SECRET?.length ?? 0) >= 32 ? "MANUAL" : "BLOCKED",
-    "Serverless requires a verified every-minute scheduler and a private CRON_SECRET; Vercel Hobby is daily-only."),
-  check("PostgreSQL", productionValue("DATABASE_URL") && /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "") ? "PASS" : "BLOCKED", productionValue("DATABASE_URL") ? "DATABASE_URL is configured; run migrations and the isolated database test." : "Set DATABASE_URL to an isolated PostgreSQL database."),
-  check("Voice provider", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "Server provider credentials are configured." : "Set OPENAI_REALTIME_ENABLED=true and OPENAI_API_KEY."),
-  check("Store billing", validBillingConfiguration() ? "PASS" : "BLOCKED",
-    "Configure BILLING_PROVIDERS and credentials for every enabled store, products and notifications; verify real sandbox purchases."),
-  check("OAuth", validGoogleOAuthConfiguration() ? "PASS" : "BLOCKED",
-    "Configure matching Supabase Google OAuth settings, or direct Google native clients and server audiences. " +
-    "Verify live sign-in separately."),
-  check("Manager authentication", validManagerAllowlist() ? "PASS" : "BLOCKED", validManagerAllowlist() ? "Manager allowlist is configured with valid email addresses." : "Set MANAGER_EMAILS to one or more valid production manager email addresses."),
-  check("Native device QA", process.env.NATIVE_QA_SIGNOFF !== "true" ? "MANUAL" : loadNativeQaEvidence(process.env.NATIVE_QA_EVIDENCE_PATH).valid ? "PASS" : "BLOCKED", process.env.NATIVE_QA_SIGNOFF !== "true" ? "Physical Android and iOS development-build evidence is required." : loadNativeQaEvidence(process.env.NATIVE_QA_EVIDENCE_PATH).errors.join(" ")),
-  check("Content and release", !contentCatalogReady() ? "BLOCKED" : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? "MANUAL" : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).valid ? "PASS" : "BLOCKED", !contentCatalogReady() ? `${scenarios.length} scenarios fail the structural release gate.` : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? `${scenarios.length} scenarios are structurally ready; human content review and release sign-off are required.` : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).errors.join(" ")),
-];
+const acceptance = loadReleaseAcceptance();
+async function deployedCandidateReady() {
+  if (!acceptance.valid) return false;
+  try {
+    const base = process.env.EXPO_PUBLIC_API_URL ?? "";
+    if (!base.startsWith("https://") || /localhost|127\.0\.0\.1|example\./.test(base)) return false;
+    const response = await fetch(base.replace(/\/$/, "") + "/ready", { signal: AbortSignal.timeout(10000), redirect: "error" });
+    const value = await response.json();
+    return response.ok && releaseRuntimeConfigured(value)
+      && value.commit === process.env.RELEASE_COMMIT && value.deploymentId === acceptance.apiDeploymentId;
+  } catch { return false; }
+}
+async function main() {
+  const deploymentReady = await deployedCandidateReady();
+  const nativeQa = loadNativeQaEvidence(process.env.NATIVE_QA_EVIDENCE_PATH, process.env.RELEASE_PLATFORM === "android" ? ["android"] : undefined);
+  const checks: Check[] = [
+    check("Deployed candidate identity and schema", deploymentReady ? "PASS" : "BLOCKED", "The HTTPS API must report PostgreSQL readiness, migrated schema, and the exact accepted commit/deployment ID."),
+    check("Exact Android candidate acceptance", acceptance.valid ? "PASS" : "BLOCKED", acceptance.errors.join(" ") || "Manual acceptance matches the commit, build and actual AAB hash."),
+    check("Account email", process.env.EMAIL_PROVIDER === "resend" && createEmailSender()
+      && /^https:\/\//.test(process.env.ACCOUNT_EMAIL_LINK_BASE_URL ?? "")
+      ? acceptance.valid ? "PASS" : "MANUAL" : "BLOCKED",
+    "Configure a verified sending domain and HTTPS recovery links, then verify delivery and account recovery on a real device."),
+    check("AI assessment", process.env.ASSESSMENT_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED",
+      "Enable ASSESSMENT_ENABLED and configure the provider only after controlled quality and cost verification."),
+    check("Serverless scheduler", process.env.RUNTIME === "server" && acceptance.valid ? "PASS"
+      : process.env.SCHEDULER_ENABLED === "true" && productionValue("CRON_SECRET") && (process.env.CRON_SECRET?.length ?? 0) >= 32 && acceptance.valid ? "PASS" : "BLOCKED",
+      "Serverless requires a verified every-minute scheduler and a private CRON_SECRET; Vercel Hobby is daily-only."),
+    check("PostgreSQL", process.env.DEV_MEMORY_STORE !== "true" && acceptance.valid && productionValue("DATABASE_URL") && /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "") ? "PASS" : "BLOCKED", "Memory storage is forbidden; record migration and persistent-data acceptance for the candidate deployment."),
+    check("Voice provider", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "PASS" : "BLOCKED", process.env.OPENAI_REALTIME_ENABLED === "true" && productionValue("OPENAI_API_KEY") ? "Server provider credentials are configured." : "Set OPENAI_REALTIME_ENABLED=true and OPENAI_API_KEY."),
+    check("Store billing", validBillingConfiguration() ? "PASS" : "BLOCKED",
+      "Configure BILLING_PROVIDERS and credentials for every enabled store, products and notifications; verify real sandbox purchases."),
+    check("OAuth", validGoogleOAuthConfiguration() ? "PASS" : "BLOCKED",
+      "Configure matching Supabase Google OAuth settings, or direct Google native clients and server audiences. " +
+      "Verify live sign-in separately."),
+    check("Manager authentication", validManagerAllowlist() ? "PASS" : "BLOCKED", validManagerAllowlist() ? "Manager allowlist is configured with valid email addresses." : "Set MANAGER_EMAILS to one or more valid production manager email addresses."),
+    check("Native device QA", process.env.NATIVE_QA_SIGNOFF !== "true" ? "MANUAL" : nativeQa.valid && nativeQa.evidence.every(item => item.buildId === process.env.RELEASE_BUILD_ID) && acceptance.valid ? "PASS" : "BLOCKED", "Physical device evidence must match RELEASE_BUILD_ID. Set RELEASE_PLATFORM=android for an Android-only release. " + nativeQa.errors.join(" ")),
+    check("Content and release", !contentCatalogReady() ? "BLOCKED" : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? "MANUAL" : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).valid ? "PASS" : "BLOCKED", !contentCatalogReady() ? `${scenarios.length} scenarios fail the structural release gate.` : process.env.CONTENT_RELEASE_SIGNOFF !== "true" ? `${scenarios.length} scenarios are structurally ready; human content review and release sign-off are required.` : loadContentReviewEvidence(process.env.CONTENT_RELEASE_EVIDENCE_PATH).errors.join(" ")),
+  ];
 
-for (const result of checks) console.log(`[${result.status}] ${result.name}: ${result.detail}`);
-if (checks.some(result => result.status !== "PASS")) process.exitCode = 1;
+  for (const result of checks) console.log(`[${result.status}] ${result.name}: ${result.detail}`);
+  if (checks.some(result => result.status !== "PASS")) process.exitCode = 1;
+}
+void main().catch(() => {
+  console.error("Release preflight could not complete. Check the candidate configuration.");
+  process.exitCode = 1;
+});

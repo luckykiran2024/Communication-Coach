@@ -14,6 +14,8 @@ export type AssessmentRun = {
 export type Account = {
   id: string; email: string; passwordHash: string; role: "learner" | "manager"; emailVerifiedAt: Date | null;
   legalVersion: string | null; legalAcceptedAt: Date | null;
+  supabaseUserId?: string | null;
+  deletionStartedAt?: Date | null;
 };
 export type LegalAcceptance = { version: string; acceptedAt: Date };
 export type EmailTokenPurpose = "verify_email" | "password_reset";
@@ -41,7 +43,15 @@ export type Conversation = {
 export type ConversationTurn = { id: string; sessionId: string; role: ConversationTurnRole; phase: ConversationTurnPhase; text: string; createdAt: Date };
 export type LearningRecord = { conversation: Conversation; turns: ConversationTurn[]; assessment: Assessment | null };
 export type MeasuredVoiceSession = { conversationId: string; startedAt: Date; consumedSeconds: number | null };
+export type ContentReport = { id: string; userId: string; conversationId: string; target: "feedback" | "voice";
+  reason: string; details: string; status: "open" | "resolved"; createdAt: Date; resolvedAt: Date | null };
 export interface Store {
+  saveContentReport(report: ContentReport): Promise<void>;
+  contentReports(): Promise<ContentReport[]>;
+  contentReport(id: string): Promise<ContentReport | null>;
+  resolveContentReport(id: string, now: Date): Promise<boolean>;
+  linkSupabaseUser(userId: string, supabaseUserId: string): Promise<void>;
+  accountOAuthIdentities(userId: string): Promise<OAuthIdentity[]>;
   readonly rateLimitStorage: "memory" | "postgres";
   incrementRateLimit(keyHash: string, windowMs: number, now: Date): Promise<{ current: number; ttl: number }>;
   pruneRateLimits(now: Date): Promise<void>;
@@ -63,6 +73,7 @@ export interface Store {
   deleteSession(hash: string): Promise<void>;
   deleteSessions(userId: string): Promise<void>;
   deleteAccount(userId: string): Promise<void>;
+  beginAccountDeletion(userId: string, now: Date): Promise<void>;
   profile(userId: string): Promise<Profile | null>;
   saveProfile(userId: string, profile: Profile): Promise<void>;
   usage(userId: string, dayKey: string): Promise<UsageSnapshot>;
