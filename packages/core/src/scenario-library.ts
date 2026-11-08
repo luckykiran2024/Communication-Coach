@@ -1,3 +1,4 @@
+import { questionMatrix } from "./question-matrix";
 type ScenarioModule = "daily" | "management" | "leadership";
 type ScenarioTemplate = {
   slug: string; title: string; context: string; focus: string; task: string; transfer: string;
@@ -314,7 +315,7 @@ const templates: Record<ScenarioModule, ScenarioTemplate[]> = {
   ],
 };
 
-export const generatedScenarios = (["daily", "management", "leadership"] as const)
+const sharedScenarios = (["daily", "management", "leadership"] as const)
   .flatMap(module => templates[module].flatMap(template => levels.map(level => {
   return {
     id: `library-${module}-${template.slug}-l${level.level}`,
@@ -331,3 +332,20 @@ export const generatedScenarios = (["daily", "management", "leadership"] as cons
     level: level.level,
   };
 })));
+
+const matrixScenarios = questionMatrix.flatMap(item => levels.map(level => ({
+  id: `matrix-${item.module}-${item.function.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-l${level.level}`,
+  version: 1,
+  module: item.module,
+  functions: [item.function],
+  goal: item.goal,
+  title: `${item.function} · ${item.module === "daily" ? "Daily practice" : item.module === "management" ? "Professional practice" : "Leadership practice"}`,
+  context: item.context,
+  question: `${item.question} ${level.prompt}. Stay grounded in the facts given.`,
+  independentQuestion: `${item.retry} ${level.transfer}. Answer in your own words.`,
+  rubricVersion: `${item.module}-matrix-${level.level}`,
+  focus: item.module === "daily" ? "Everyday clarity" : item.module === "management" ? "Professional judgment" : "Leadership alignment",
+  level: level.level,
+})));
+
+export const generatedScenarios = [...matrixScenarios, ...sharedScenarios];

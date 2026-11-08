@@ -161,9 +161,9 @@ export function CoachingFeedback({ feedback }: { feedback: FeedbackAssessment })
       <Card tone="accent">
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <Icon name="spark" size={22} color={theme.accent} />
-          <SectionTitle>Model Golden Response</SectionTitle>
+          <SectionTitle>A stronger version of your answer</SectionTitle>
         </View>
-        <Copy>Here is how an executive leader articulates this under pressure:</Copy>
+        <Copy>Use this as an example of clearer wording, then make it your own:</Copy>
         <Quote text={review.strongerAnswer.text} />
         <Copy>{review.strongerAnswer.whyStronger}</Copy>
       </Card>

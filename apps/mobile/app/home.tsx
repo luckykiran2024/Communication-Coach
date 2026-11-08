@@ -7,6 +7,7 @@ import { useAuth } from "../src/auth";
 import { EmailVerificationBanner } from "../src/email-verification-banner";
 import { Action, Card, Copy, Disclosure, Heading, Icon, IconButton, PillTag, ProgressBar, Screen, SkeletonCard, usePreferences, useTheme } from "../src/ui";
 import { SpringbokLogo } from "../src/springbok-logo";
+import { AnimalLevelBadge, achievementBird } from "../src/animal-level-badge";
 import { trackEvent } from "../src/telemetry";
 
 type RecentPractice = { conversation: { id: string; state: string; createdAt: string }; scenario: { title: string; module: "daily" | "management" | "leadership" } };
@@ -90,7 +91,13 @@ export default function Home() {
 
   return (
     <Screen>
-      <View style={{ alignItems: "center" }}><SpringbokLogo size={76} repeat /></View>
+      <View style={{ alignItems: "center", gap: 8 }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+          <AnimalLevelBadge level={progress.mastery.level} title={progress.mastery.title} />
+          <PillTag label={`${progress.gamification.xp} XP`} tone="accent" />
+        </View>
+        <SpringbokLogo size={76} repeat />
+      </View>
 
       <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
         {avatarUri ? (
@@ -161,11 +168,17 @@ export default function Home() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <Icon name="progress" size={26} color={theme.positive} />
           <View style={{ flex: 1 }}>
-            <Heading eyebrow={`Streak · ${progress?.practiceDays ?? 1} day`}>{progress?.mastery.title ?? "Foundation"}</Heading>
+            <Heading eyebrow={`Current streak · ${progress?.currentStreakDays ?? 0} day${progress?.currentStreakDays === 1 ? "" : "s"}`}>{progress?.mastery.title ?? "Novice"}</Heading>
             <Copy>{progress?.mastery.successfulRetries ?? 0} retries completed · Level {progress?.mastery.level ?? 1}</Copy>
           </View>
         </View>
         <ProgressBar value={progress?.mastery.progressPercent ?? 0} color={theme.positive} />
+        <Copy>{progress.gamification.weeklyChallenge.title}: {progress.gamification.weeklyChallenge.completed}/{progress.gamification.weeklyChallenge.target}</Copy>
+        <ProgressBar value={progress.gamification.weeklyChallenge.completed / progress.gamification.weeklyChallenge.target * 100} color={theme.accent} />
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+          {progress.gamification.achievements.filter(item => item.unlocked).slice(-3).map(item =>
+            <PillTag key={item.id} label={`${achievementBird[item.id] ?? "🐦"} ${item.title}`} tone="positive" />)}
+        </View>
         <Action title="View detailed progress" secondary icon="progress" onPress={() => router.push("/progress")} />
       </Card>
 

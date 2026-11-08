@@ -1,4 +1,4 @@
-import type { EngagementLevel, MasteryProgress, Profile, Scenario, Plan } from "@coach/core";
+import type { CoachingReview, EngagementLevel, MasteryProgress, Profile, Scenario, Plan } from "@coach/core";
 import { Platform } from "react-native";
 export const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? (Platform.OS === "android" ? "http://10.0.2.2:4000" : "http://localhost:4000");
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -34,7 +34,9 @@ export type ProgressSnapshot = {
   totalSessions: number; completedSessions: number; weeklySessions: number; practiceMinutes: number;
   weeklyPracticeMinutes: number; measuredVoiceSeconds: number; measuredVoiceMinutes: number;
   textSessions: number; settledVoiceSessions: number; unknownVoiceDurations: number;
-  currentStreakDays: number; engagement: EngagementLevel; mastery: MasteryProgress;
+  currentStreakDays: number; longestStreakDays: number; practicedGoals: number; engagement: EngagementLevel; mastery: MasteryProgress;
+  gamification: { xp: number; weeklyChallenge: { title: string; completed: number; target: number };
+    achievements: { id: string; title: string; detail: string; unlocked: boolean }[] };
   practiceDays: number; completedScenarios: number; successfulRetries: number; evidenceAssessments: number;
   evidenceSource: "ai_assessment" | "local_check";
   dailyPractice: { day: string; minutes: number; sessions: number; textSessions: number }[];
@@ -42,6 +44,7 @@ export type ProgressSnapshot = {
   cumulativeScore: number | null; scoreMovement: number | null;
   assessmentTrend: { conversationId: string; day: string; score: number; cumulativeScore: number }[];
   areaRatings: { area: string; label: string; score: number | null }[];
+  latestReview: { conversationId: string; day: string; score: number; review: CoachingReview } | null;
   skillSignal: number | null; skillSignalStatus: "awaiting_assessment" | "available";
 };
 export type VoiceCapabilities = { platform: "android" | "ios" | "web"; transport: "react-native-webrtc"; nativeModuleAvailable: boolean; developmentBuild: boolean; providerConfigured: boolean; liveVoiceAvailable: boolean; code: "WEB_PREVIEW_ONLY" | "DEV_CLIENT_REQUIRED" | "PROVIDER_NOT_CONFIGURED" | "READY" };

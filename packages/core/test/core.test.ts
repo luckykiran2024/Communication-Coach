@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { assessCommunicationEvidence, getEngagementLevel, getMasteryLevel, profileSchema, recommendPlan, recommendScenarios, scenarios, transition, validateAssessment, voiceTransportStatus } from "../src/index";
+import { assessCommunicationEvidence, getEngagementLevel, getMasteryLevel, profileSchema, recommendPlan, recommendScenarios, questionMatrix, scenarios, transition, validateAssessment, voiceTransportStatus } from "../src/index";
 test("scenario library contains 100-plus levelled practice scenarios", () => {
   assert.ok(scenarios.length >= 100);
   assert.equal(scenarios.filter(scenario => scenario.id.startsWith("library-")).length, 120);
@@ -17,7 +17,7 @@ test("generated exercises use distinct scenario-specific speaking and transfer p
 });
 test("role context selects different scenarios without assigning ability", () => {
   const profile = profileSchema.parse({ displayName: "Asha", function: "Human Resources", jobTitle: "HRBP", careerLevel: "Senior leader", audience: "Business leader", goal: "Explain ideas clearly" });
-  assert.equal(recommendScenarios(profile)[0].id, "hr-engagement");
+  assert.equal(recommendScenarios(profile)[0].id, "matrix-daily-human-resources-l1");
   assert.equal(recommendScenarios(profile, scenarios, 1).every(scenario => scenario.level <= 1), true);
   assert.equal(recommendScenarios(profile, scenarios, 2).some(scenario => scenario.level === 2), true);
   assert.equal(profile.timezone, "Asia/Kolkata");
@@ -56,9 +56,23 @@ test("engagement levels reward practice activity without implying ability", () =
   assert.equal(getEngagementLevel({ completedSessions: 15, practiceMinutes: 200, currentStreakDays: 5 }).level, 5);
 });
 test("mastery levels require practice, scenarios, retries and evidence", () => {
-  assert.equal(getMasteryLevel({ practiceDays: 0, completedScenarios: 20, successfulRetries: 20, evidenceAssessments: 20 }).level, 1);
-  assert.equal(getMasteryLevel({ practiceDays: 2, completedScenarios: 1, successfulRetries: 1, evidenceAssessments: 1 }).level, 2);
+  assert.equal(getMasteryLevel({ practiceDays: 0, longestStreakDays: 0, completedScenarios: 20, practicedGoals: 4, successfulRetries: 20, evidenceAssessments: 20 }).level, 1);
+  assert.equal(getMasteryLevel({ practiceDays: 2, longestStreakDays: 1, completedScenarios: 1, practicedGoals: 1, successfulRetries: 1, evidenceAssessments: 1 }).level, 1);
+  assert.equal(getMasteryLevel({ practiceDays: 2, longestStreakDays: 2, completedScenarios: 1, practicedGoals: 1, successfulRetries: 1, evidenceAssessments: 1 }).level, 2);
   const evidence = assessCommunicationEvidence({ primary: "I will explain the evidence, the impact, and my recommendation for the next decision.", retry: "I recommend a staged plan because the data shows a risk. Next, I will confirm the owner and timeline." });
   assert.equal(evidence.passed, true);
   assert.equal(evidence.score, 100);
+});
+
+test("every professional function has a concrete question in all three modules", () => {
+  const roles = [...new Set(questionMatrix.map(item => item.function))];
+  assert.equal(roles.length, 12);
+  assert.equal(questionMatrix.length, 36);
+  for (const role of roles) {
+    for (const module of ["daily", "management", "leadership"]) {
+      const item = questionMatrix.find(row => row.function === role && row.module === module);
+      assert.ok(item?.context && item.question && item.retry, `${role} / ${module}`);
+      assert.equal(scenarios.filter(scenario => scenario.id.startsWith(`matrix-${module}-${role.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-l`)).length, 5);
+    }
+  }
 });

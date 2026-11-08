@@ -9,7 +9,7 @@ import { request } from "../../src/api";
 import { useAuth } from "../../src/auth";
 import { connectRealtimeCall, type RealtimeCall } from "../../src/realtime";
 import { textPracticeDescription } from "../../src/presentation";
-import { Action, Card, Copy, Heading, Icon, MicButton, Screen, usePreferences, useTheme, VoiceWave } from "../../src/ui";
+import { Action, Card, Copy, Disclosure, Heading, Icon, MicButton, Screen, usePreferences, useTheme, VoiceWave } from "../../src/ui";
 
 type Practice = {
   conversation: { id: string; scenarioId: string; state: string; createdAt: string; currentPhase: string };
@@ -290,6 +290,14 @@ export default function PracticeDetail() {
       <Copy>{practice.scenario.context}</Copy>
       <Copy>{retryStarted ? `Independent retry: ${practice.scenario.independentQuestion}` : practice.scenario.question}</Copy>
       <Copy>Focus: {practice.scenario.focus}</Copy>
+      <Disclosure summary="Feeling stuck? Show what to cover">
+        <Copy>Start with the situation: {practice.scenario.context}</Copy>
+        <Copy>1. Say your main point in one sentence.</Copy>
+        <Copy>2. Give one relevant fact or example. Say what you do not yet know.</Copy>
+        <Copy>3. Explain why it matters to the person listening.</Copy>
+        <Copy>4. Finish with a next step, owner, or question.</Copy>
+        <Copy>Try opening with: “Here is what I know so far…” You can pause, look at these points, and begin again.</Copy>
+      </Disclosure>
       <Copy>Coach voice: {voiceAccent}. The installed device voice supplies the final pronunciation.</Copy>
       <VoiceWave active={isSpeaking} color={theme.ink} />
       <MicButton active={isSpeaking} label={isSpeaking ? "Stop voice prompt" : promptState === "ready" ? "Record your answer" : "Hear prompt"} onPress={isSpeaking ? stopSpeaking : promptState === "ready" ? () => router.push("/voice") : speakPrompt} />

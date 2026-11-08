@@ -94,6 +94,12 @@ test("launch: streaks, weekly activity and mastery days use actual learner answe
   const empty: LearningRecord = { ...record, conversation: { ...record.conversation, id: randomUUID(), createdAt: now }, turns: [] };
   const result = progressSnapshot([record, empty], [], profile, now, false);
   assert.equal(result.currentStreakDays, 2);
+  assert.equal(result.longestStreakDays, 2);
+  assert.equal(result.practicedGoals, 1);
+  assert.equal(result.gamification.xp, 40);
+  assert.deepEqual(result.gamification.weeklyChallenge, { title: "Complete three practices in seven days", completed: 1, target: 3 });
+  assert.equal(result.gamification.achievements.find(item => item.id === "two-day-streak")?.unlocked, true);
+  assert.equal(progressSnapshot([record, empty], [], profile, new Date("2026-10-11T10:00:00Z"), false).currentStreakDays, 2);
   assert.equal(result.practiceDays, 2);
   assert.equal(result.weeklySessions, 1);
   assert.equal(result.dailyPractice.at(-1)?.textSessions, 1);
@@ -103,6 +109,8 @@ test("launch: streaks, weekly activity and mastery days use actual learner answe
   store.learningRecords = async () => [record, empty];
   const progress = await learnerScenarioProgress(store, record.conversation.userId, profile);
   assert.equal(progress.mastery.practiceDays, 2);
+  assert.equal(progress.mastery.longestStreakDays, 2);
+  assert.equal(progress.mastery.practicedGoals, 1);
 });
 
 test("launch: progress exposes evidence-backed cumulative coaching ratings and movement", () => {
@@ -131,6 +139,8 @@ test("launch: progress exposes evidence-backed cumulative coaching ratings and m
   assert.equal(result.cumulativeScore, 8.4);
   assert.equal(result.scoreMovement, 0.5);
   assert.equal(result.areaRatings.find(item => item.area === "opening")?.score, 8.5);
+  assert.equal(result.latestReview?.score, 8.9);
+  assert.equal(result.latestReview?.review.strongerAnswer.text.length > 0, true);
 });
 
 test("launch: future and assistant-only turns do not count as activity; unfinished learner work does", () => {
@@ -149,6 +159,8 @@ test("launch: future and assistant-only turns do not count as activity; unfinish
   const result = progressSnapshot([record], [], profile, now, false);
   assert.equal(result.currentStreakDays, 1);
   assert.equal(result.practiceDays, 0);
+  assert.equal(result.gamification.xp, 0);
+  assert.equal(result.gamification.weeklyChallenge.completed, 0);
   assert.equal(result.weeklySessions, 1);
   assert.equal(result.dailyPractice.at(-1)?.day, "10-11");
 });

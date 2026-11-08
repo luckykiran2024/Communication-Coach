@@ -8,6 +8,7 @@ export { legalVersion } from "./legal";
 import scenarioData from "../content/scenarios.json" with { type: "json" };
 import hrManagerDrafts from "../content/hr-manager-pack.json" with { type: "json" };
 import { generatedScenarios } from "./scenario-library";
+export { questionMatrix } from "./question-matrix";
 export const brand = { name: "Communication Coach", tagline: "Speak with clarity. Lead with confidence." };
 export { palette, colorThemes, colorPalettes, colorThemeDetails, normalizeColorTheme } from "./themes";
 export type { ColorTheme, ColorMode, ThemePalette } from "./themes";
@@ -90,22 +91,31 @@ export function getEngagementLevel(input: { completedSessions: number; practiceM
   return { level: current.level, title: current.title, points, nextLevelPoints: next?.threshold ?? null, pointsToNext: next ? Math.max(0, next.threshold - points) : 0, progressPercent: next ? Math.min(100, Math.max(0, ((points - current.threshold) / (next.threshold - current.threshold)) * 100)) : 100 };
 }
 export const masteryLevels = [
-  { level: 1, title: "Getting started", minimumPracticeDays: 0, completedScenarios: 0, successfulRetries: 0, evidenceAssessments: 0 },
-  { level: 2, title: "Finding your voice", minimumPracticeDays: 2, completedScenarios: 1, successfulRetries: 1, evidenceAssessments: 1 },
-  { level: 3, title: "Building momentum", minimumPracticeDays: 5, completedScenarios: 3, successfulRetries: 2, evidenceAssessments: 2 },
-  { level: 4, title: "Clear communicator", minimumPracticeDays: 10, completedScenarios: 6, successfulRetries: 4, evidenceAssessments: 4 },
-  { level: 5, title: "Conversation leader", minimumPracticeDays: 20, completedScenarios: 10, successfulRetries: 7, evidenceAssessments: 7 },
+  { level: 1, title: "Novice", minimumPracticeDays: 0, longestStreakDays: 0, completedScenarios: 0, practicedGoals: 0, successfulRetries: 0, evidenceAssessments: 0 },
+  { level: 2, title: "Beginner", minimumPracticeDays: 2, longestStreakDays: 2, completedScenarios: 1, practicedGoals: 1, successfulRetries: 1, evidenceAssessments: 1 },
+  { level: 3, title: "Intermediate", minimumPracticeDays: 5, longestStreakDays: 4, completedScenarios: 3, practicedGoals: 2, successfulRetries: 2, evidenceAssessments: 2 },
+  { level: 4, title: "Professional", minimumPracticeDays: 10, longestStreakDays: 7, completedScenarios: 6, practicedGoals: 3, successfulRetries: 4, evidenceAssessments: 4 },
+  { level: 5, title: "Mastery", minimumPracticeDays: 20, longestStreakDays: 14, completedScenarios: 10, practicedGoals: 4, successfulRetries: 7, evidenceAssessments: 7 },
 ] as const;
-export type MasteryProgress = {
-  level: number; title: string; practiceDays: number; completedScenarios: number; successfulRetries: number; evidenceAssessments: number;
-  nextLevel: number | null; progressPercent: number; nextRequirements: typeof masteryLevels[number] | null;
+export type MasteryInput = { practiceDays: number; longestStreakDays: number; completedScenarios: number; practicedGoals: number; successfulRetries: number; evidenceAssessments: number };
+export type MasteryProgress = MasteryInput & {
+  level: number; title: string; nextLevel: number | null; progressPercent: number; nextRequirements: typeof masteryLevels[number] | null;
 };
-export function getMasteryLevel(input: Pick<MasteryProgress, "practiceDays" | "completedScenarios" | "successfulRetries" | "evidenceAssessments">): MasteryProgress {
-  const reached = (level: typeof masteryLevels[number]) => input.practiceDays >= level.minimumPracticeDays && input.completedScenarios >= level.completedScenarios && input.successfulRetries >= level.successfulRetries && input.evidenceAssessments >= level.evidenceAssessments;
+export function getMasteryLevel(input: MasteryInput): MasteryProgress {
+  const evidence = input;
+  const reached = (level: typeof masteryLevels[number]) => evidence.practiceDays >= level.minimumPracticeDays
+    && evidence.longestStreakDays >= level.longestStreakDays && evidence.completedScenarios >= level.completedScenarios
+    && evidence.practicedGoals >= level.practicedGoals && evidence.successfulRetries >= level.successfulRetries
+    && evidence.evidenceAssessments >= level.evidenceAssessments;
   const current = [...masteryLevels].reverse().find(reached) ?? masteryLevels[0];
   const next = masteryLevels.find(level => level.level > current.level) ?? null;
-  const progressPercent = next ? Math.round(([input.practiceDays / Math.max(1, next.minimumPracticeDays), input.completedScenarios / Math.max(1, next.completedScenarios), input.successfulRetries / Math.max(1, next.successfulRetries), input.evidenceAssessments / Math.max(1, next.evidenceAssessments)].map(value => Math.min(1, value)).reduce((total, value) => total + value, 0) / 4) * 100) : 100;
-  return { level: current.level, title: current.title, ...input, nextLevel: next?.level ?? null, progressPercent, nextRequirements: next };
+  const metrics = next ? [
+    [evidence.practiceDays, next.minimumPracticeDays], [evidence.longestStreakDays, next.longestStreakDays],
+    [evidence.completedScenarios, next.completedScenarios], [evidence.practicedGoals, next.practicedGoals],
+    [evidence.successfulRetries, next.successfulRetries], [evidence.evidenceAssessments, next.evidenceAssessments],
+  ] : [];
+  const progressPercent = next ? Math.round(metrics.reduce((total, [value, target]) => total + Math.min(1, value / Math.max(1, target)), 0) / metrics.length * 100) : 100;
+  return { level: current.level, title: current.title, ...evidence, nextLevel: next?.level ?? null, progressPercent, nextRequirements: next };
 }
 export const credentialsSchema = z.object({
   email: z.string().trim().toLowerCase().email().max(254),
@@ -131,7 +141,7 @@ export function recommendScenarios(profile: Profile, catalog: readonly Scenario[
   const unseen = eligible.filter(scenario => !completedScenarioIds.includes(scenario.id));
   const source = unseen.length > 0 ? unseen : eligible;
   return source
-    .map(scenario => ({ scenario, rank: (scenario.functions.includes(profile.function) ? 2 : 0) + (scenario.goal === profile.goal ? 3 : 0) }))
+    .map(scenario => ({ scenario, rank: (scenario.functions.length === 1 && scenario.functions.includes(profile.function) ? 5 : scenario.functions.includes(profile.function) ? 2 : 0) + (scenario.goal === profile.goal ? 3 : 0) + (scenario.id.startsWith("matrix-") ? 1 : 0) }))
     .sort((first, second) => second.rank - first.rank || first.scenario.id.localeCompare(second.scenario.id))
     .map(item => item.scenario);
 }

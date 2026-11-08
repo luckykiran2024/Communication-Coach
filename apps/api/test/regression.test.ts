@@ -336,7 +336,7 @@ test("regression: progress is private and starts without invented skill scores",
   assert.equal(response.statusCode, 200);
   const progress = response.json();
   assert.deepEqual({ totalSessions: progress.totalSessions, completedSessions: progress.completedSessions, weeklySessions: progress.weeklySessions, practiceMinutes: progress.practiceMinutes, weeklyPracticeMinutes: progress.weeklyPracticeMinutes, currentStreakDays: progress.currentStreakDays, skillSignal: progress.skillSignal, skillSignalStatus: progress.skillSignalStatus }, { totalSessions: 0, completedSessions: 0, weeklySessions: 0, practiceMinutes: 0, weeklyPracticeMinutes: 0, currentStreakDays: 0, skillSignal: null, skillSignalStatus: "awaiting_assessment" });
-  assert.deepEqual(progress.mastery, { level: 1, title: "Getting started", practiceDays: 0, completedScenarios: 0, successfulRetries: 0, evidenceAssessments: 0, nextLevel: 2, progressPercent: 0, nextRequirements: { level: 2, title: "Finding your voice", minimumPracticeDays: 2, completedScenarios: 1, successfulRetries: 1, evidenceAssessments: 1 } });
+  assert.deepEqual(progress.mastery, { level: 1, title: "Novice", practiceDays: 0, longestStreakDays: 0, completedScenarios: 0, practicedGoals: 0, successfulRetries: 0, evidenceAssessments: 0, nextLevel: 2, progressPercent: 0, nextRequirements: { level: 2, title: "Beginner", minimumPracticeDays: 2, longestStreakDays: 2, completedScenarios: 1, practicedGoals: 1, successfulRetries: 1, evidenceAssessments: 1 } });
   assert.equal(progress.practiceDays, 0);
   assert.equal(progress.completedScenarios, 0);
   assert.equal(progress.successfulRetries, 0);
