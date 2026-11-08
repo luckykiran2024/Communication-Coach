@@ -82,7 +82,7 @@ test("account, profile, scenario recommendations and revocable sessions", async 
   assert.equal(store.sessions.has(token), false);
   assert.equal((await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: profile })).statusCode, 200);
   const scenarios = await app.inject({ url: "/v1/me/scenarios", headers });
-  assert.equal(scenarios.json().scenarios[0].id, "engineering-delay");
+  assert.equal(scenarios.json().scenarios[0].id, "matrix-leadership-engineering-l1");
   assert.equal((await app.inject({ method: "PUT", url: "/v1/me/profile", headers, payload: { ...profile, timezone: "UTC" } })).statusCode, 409);
   assert.equal((await app.inject({ method: "POST", url: "/v1/auth/logout", headers })).statusCode, 204);
   assert.equal((await app.inject({ url: "/v1/me", headers })).statusCode, 401);
