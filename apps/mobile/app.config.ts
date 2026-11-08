@@ -39,7 +39,7 @@ const config: ExpoConfig = {
   orientation: "portrait", userInterfaceStyle: "automatic",
   ios: { bundleIdentifier: production ? baseId : baseId + "." + variant, supportsTablet: true },
   android: { package: production ? baseId : baseId + "." + variant, softwareKeyboardLayoutMode: "resize", blockedPermissions: ["android.permission.CAMERA"], adaptiveIcon: { foregroundImage: "./assets/springbok-adaptive-foreground-v2.png", backgroundColor: "#10251e" } },
-  plugins: ["expo-router", "expo-secure-store", "expo-image-picker", "expo-iap", "expo-updates", "expo-system-ui", ["expo-build-properties", { android: { usesCleartextTraffic: !production && apiUrl.startsWith("http://") } }], ["expo-audio", { microphonePermission: "Allow microphone access for your speaking practice.", enableBackgroundRecording: false, enableBackgroundPlayback: false }], ["@config-plugins/react-native-webrtc", { microphonePermission: "Allow microphone access for your live speaking practice." }]],
+  plugins: ["expo-router", "expo-secure-store", "expo-image-picker", "expo-iap", "expo-updates", "expo-system-ui", ["expo-build-properties", { android: { usesCleartextTraffic: !production } }], ["expo-audio", { microphonePermission: "Allow microphone access for your speaking practice.", enableBackgroundRecording: false, enableBackgroundPlayback: false }], ["@config-plugins/react-native-webrtc", { microphonePermission: "Allow microphone access for your live speaking practice." }]],
   web: { bundler: "metro", output: "single", favicon: "./assets/springbok-app-icon.png" },
 };
 export default config;
